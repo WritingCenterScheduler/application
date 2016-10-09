@@ -59,7 +59,9 @@ def users():
     Get all users in the system
     """
     def user_stream(users):
+        yield "[ "
         for u in users:
-            yield u.to_json()
+            yield u.to_json() + ","
+        yield " ]"
     users = models.User.objects()
     return Response(user_stream(users), mimetype='application/json')
