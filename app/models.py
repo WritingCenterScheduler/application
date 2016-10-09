@@ -2,7 +2,11 @@ from mongoengine import *
 from . import config
 
 # Setup the mongo connection
-connect(config.DB_NAME)
+connect(config.DB_NAME,
+    username=config.DB_USERNAME,
+    password=config.DB_PASS,
+    host=config.DB_HOST,
+    port=config.DB_PORT)
 
 class Location(Document):
     name = StringField(requred=True)
