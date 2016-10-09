@@ -10,7 +10,7 @@ DEFAULT_CLOSE = "19:00"
 # Database config
 DB_NAME = "wss"
 DB_HOST = os.getenv("OPENSHIFT_MONGODB_DB_HOST", "localhost")
-DB_PORT = os.getenv("OPENSHIFT_MONGODB_DB_PORT", 27017)
+DB_PORT = int(os.getenv("OPENSHIFT_MONGODB_DB_PORT", 27017))
 DB_USERNAME = os.getenv("OPENSHIFT_MONGODB_DB_USERNAME", "local")
 DB_PASS = os.getenv("OPENSHIFT_MONGODB_DB_PASSWORD", "default")
 
