@@ -20,6 +20,12 @@ DEFAULT_AVAILABILITY = {
     "sat": [0 for i in range(TIMESLOTS_PER_DAY)],
 }
 
+DEFAULT_TIMESLOT_NEED = {
+    "a": 0,
+    "s1": 0,
+    "s2": 1,
+}
+
 DEFAULT_LOCATION_REQUIREMENTS = {
     "sun": [DEFAULT_TIMESLOT_NEED for i in range(TIMESLOTS_PER_DAY)],
     "mon": [DEFAULT_TIMESLOT_NEED for i in range(TIMESLOTS_PER_DAY)],
@@ -28,10 +34,4 @@ DEFAULT_LOCATION_REQUIREMENTS = {
     "thu": [DEFAULT_TIMESLOT_NEED for i in range(TIMESLOTS_PER_DAY)],
     "fri": [DEFAULT_TIMESLOT_NEED for i in range(TIMESLOTS_PER_DAY)],
     "sat": [DEFAULT_TIMESLOT_NEED for i in range(TIMESLOTS_PER_DAY)],
-}
-
-DEFAULT_TIMESLOT_NEED = {
-    "a": 0,
-    "s1": 0,
-    "s2": 1,
 }
