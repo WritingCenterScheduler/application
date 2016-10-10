@@ -5,6 +5,8 @@ import json
 from flask import Flask
 from flask import jsonify
 from flask import request
+from flask import redirect
+from flask import url_for
 from flask_login import LoginManager
 from flask_login import login_required
 from flask_login import login_user
@@ -61,6 +63,7 @@ def load_location(code):
 def login():
     user = user_from_sso(request.headers)
     login_user(user)
+    return redirect(url_for("index"))
 
 
 @schedule_app.route("/")
