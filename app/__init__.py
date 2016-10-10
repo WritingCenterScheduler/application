@@ -61,6 +61,8 @@ def load_location(code):
 
 @schedule_app.route("/login", methods=['GET'])
 def login():
+    print("----LOGIN-----")
+    print(request.headers)
     user = user_from_sso(request.headers)
     login_user(user)
     return redirect(url_for("index"))
@@ -72,6 +74,8 @@ def index():
     """
     Dump the headers
     """
+    print("----ROOT-----")
+    print(request.headers)
     return str(request.headers)
 
 
