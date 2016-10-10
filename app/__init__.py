@@ -7,9 +7,12 @@ from flask import jsonify
 from flask import request
 from flask import redirect
 from flask import url_for
+
+# import Login manager
 from flask_login import LoginManager
 from flask_login import login_required
 from flask_login import login_user
+from flask_login import current_user
 
 # import Mongo Exceptions
 from mongoengine import MultipleObjectsReturned, DoesNotExist
@@ -41,12 +44,14 @@ def user_from_sso(headers):
     """
     Given a header string, return the associated user.
     """
+    print("----SSO---")
     pid = headers.get("Pid", default=None)
     onyen = headers.get("Uid", default=None)
     email = headers.get("Eppn", default=None)
 
     if pid and onyen and email:
-        return load_user(pid)
+        # return load_user(pid)
+        return None
     else:
         return None
 
@@ -63,21 +68,18 @@ def load_location(code):
 @schedule_app.route("/login", methods=['GET'])
 def login():
     print("----LOGIN-----")
-    print(request.headers)
+    # print(request.headers)
     user = user_from_sso(request.headers)
     login_user(user)
     return redirect(url_for("index"))
 
 
 @schedule_app.route("/")
-@login_required
 def index():
     """
     Dump the headers
     """
-    print("----ROOT-----")
-    print(request.headers)
-    return str(request.headers)
+    return(str(request.headers))
 
 
 # Import app views
