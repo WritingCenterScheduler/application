@@ -30,6 +30,18 @@ def load_user(pid):
     except DoesNotExist as e:
         return None
 
+def load_location(code):
+    try:
+        return models.Location.objects.get(code=code)
+    except MultipleObjectsReturned as e:
+        return None
+    except DoesNotExist as e:
+        return None
+
+@schedule_app.route("/login", methods=['GET'])
+def login():
+    return "Pass"
+
 @schedule_app.route("/")
 def index():
     return "It works"
@@ -42,4 +54,4 @@ def db_test():
     return u.to_json()
 
 # Import app views
-from .api import user_views
+from .views import user_views

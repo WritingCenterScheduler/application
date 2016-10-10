@@ -31,8 +31,12 @@ class Location(Document):
         self.requirements = config.DEFAULT_LOCATION_REQUIREMENTS
 
 class Schedule(Document):
+    """
+    Represents a final or partially final schedule.
+    over all locations.
+    """
+    # TODO
     name = StringField(requred=True)
-
 
 class User(Document):
     last_name = StringField(requred=True)
@@ -76,3 +80,18 @@ class User(Document):
     @property
     def is_returner(self):
         return self.typecode[1] == "1"
+
+    def get_id(self):
+        return self.pid
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False

@@ -3,6 +3,8 @@ import json
 from flask import jsonify
 from flask import Response
 from flask import request
+from flask import render_template
+from flask_login import current_user
 
 from app import schedule_app
 from app import load_user
@@ -13,7 +15,11 @@ from mongoengine import MultipleObjectsReturned, DoesNotExist, NotUniqueError
 from .. import models
 from .. import responses
 
-@schedule_app.route("/user", methods=["POST"])
+#
+# API views
+#
+
+@schedule_app.route("/api/user", methods=["POST"])
 def add_user():
     """
     Create a new user with details specified in request body
@@ -26,7 +32,7 @@ def add_user():
         return responses.invalid(request.url, e)
 
     u = models.User()
-    
+
     try:
         u.init(
             pid=data['pid'],
@@ -42,7 +48,7 @@ def add_user():
 
     return responses.user_created(request.url, data['pid'])
 
-@schedule_app.route("/user/<path:pid>", methods=["GET"])
+@schedule_app.route("/api/user/<path:pid>", methods=["GET"])
 def user(pid):
     """
     Get or update the user specified by PID
@@ -53,10 +59,29 @@ def user(pid):
     else:
         return responses.invalid(request.url, "User does not exist")
 
-@schedule_app.route("/users", methods=["GET"])
+@schedule_app.route("/api/users", methods=["GET"])
 def users():
     """
     Get all users in the system
     """
     users = models.User.objects()
     return Response(users.to_json(), mimetype='application/json')
+
+#
+# UI Views
+#
+
+@schedule_app.route("/user/<pid>/settings/availability")
+def set_availability(pid):
+    """
+    View for a user to set their own availability
+    Method:
+        1) Generate the UI
+        2) POST the updates to /api/user/<id>
+    """
+    user = load_user(pid)
+    if user:
+        return render_template("user_availability.html",
+            user=user)
+    else: 
+        return responses.invalid(request.url, "User does not exist")
