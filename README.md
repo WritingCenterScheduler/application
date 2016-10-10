@@ -25,3 +25,7 @@
 # Deployment:
 
 This repo can be set to track to OpenShift.  Changes made to master then explicitly pushed to the wss remote.  Pushing to remote triggers reload of all cartridges and requirements.
+
+# Authentication:
+
+Because of how this is set up, all users hitting the app will be SSO authenticated.  

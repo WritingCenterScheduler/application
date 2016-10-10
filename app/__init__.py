@@ -6,6 +6,8 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from flask_login import LoginManager
+from flask_login import login_required
+from flask_login import login_user
 
 # import Mongo Exceptions
 from mongoengine import MultipleObjectsReturned, DoesNotExist
@@ -31,6 +33,21 @@ def load_user(pid):
     except DoesNotExist as e:
         return None
 
+
+def user_from_sso(headers):
+    """
+    Given a header string, return the associated user.
+    """
+    pid = headers.get("Pid", default=None)
+    onyen = headers.get("Uid", default=None)
+    email = headers.get("Eppn", default=None)
+
+    if pid and onyen and email:
+        return load_user(pid)
+    else:
+        return None
+
+
 def load_location(code):
     try:
         return models.Location.objects.get(code=code)
@@ -39,23 +56,22 @@ def load_location(code):
     except DoesNotExist as e:
         return None
 
+
 @schedule_app.route("/login", methods=['GET'])
 def login():
-    return "Pass"
+    user = user_from_sso(request.headers)
+    login_user(user)
+
 
 @schedule_app.route("/")
+@login_required
 def index():
     """
     Dump the headers
     """
-    return jsonify(request.headers)
+    return str(request.headers)
 
-@schedule_app.route("/db/test")
-def db_test():
-    u = models.User()
-    u.init(pid=6)
-    u.save()
-    return u.to_json()
 
 # Import app views
 from .views import user_views
+from .views import location_views
