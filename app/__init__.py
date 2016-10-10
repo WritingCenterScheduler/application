@@ -24,6 +24,7 @@ login_manager.init_app(schedule_app)
 
 # configure the app
 schedule_app.config["SECRET_KEY"] = config.SECRET_KEY
+login_manager.login_view = "login"
 
 
 @login_manager.user_loader
