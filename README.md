@@ -22,4 +22,6 @@
 * In deciding which employees to schedule first:
   * higher "type" number determines precidence.  For example, if a type 1 employee is needed, they are scheduled before a type 0.
   
-Test change
+# Deployment:
+
+This repo can be set to track to OpenShift.  Changes made to master then explicitly pushed to the wss remote.  Pushing to remote triggers reload of all cartridges and requirements.
