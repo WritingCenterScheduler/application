@@ -4,6 +4,7 @@ import json
 # import flask
 from flask import Flask
 from flask import jsonify
+from flask import request
 from flask_login import LoginManager
 
 # import Mongo Exceptions
@@ -44,7 +45,10 @@ def login():
 
 @schedule_app.route("/")
 def index():
-    return "It works"
+    """
+    Dump the headers
+    """
+    return jsonify(request.headers)
 
 @schedule_app.route("/db/test")
 def db_test():
