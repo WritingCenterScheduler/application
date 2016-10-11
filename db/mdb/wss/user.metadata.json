@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"wss.user"},{"v":1,"unique":true,"key":{"pid":1},"name":"pid_1","ns":"wss.user","background":false,"sparse":false}]}
