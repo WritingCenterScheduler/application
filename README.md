@@ -29,3 +29,26 @@ This repo can be set to track to OpenShift.  Changes made to master then explici
 # Authentication:
 
 Because of how this is set up, all users hitting the app will be SSO authenticated.  
+
+# Database
+
+Create the admin local user - running in UNAUTHENTICATED MODE
+
+```
+use wss
+
+db.createUser(
+    {
+        user: "local",
+        pwd: "default",
+        roles: [ "dbAdmin" , "read"]
+    }
+)
+
+db.grantRolesToUser(
+    "local",
+    [
+      { role: "read", db: "wss" }
+    ]
+)
+```
