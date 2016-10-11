@@ -45,14 +45,12 @@ def user_from_sso(headers):
     """
     Given a header string, return the associated user.
     """
-    print("----SSO---")
     pid = headers.get("Pid", default=None)
     onyen = headers.get("Uid", default=None)
     email = headers.get("Eppn", default=None)
 
     if pid and onyen and email:
-        # return load_user(pid)
-        return None
+        return load_user(pid)
     else:
         return None
 
@@ -68,11 +66,20 @@ def load_location(code):
 
 @schedule_app.route("/login", methods=['GET'])
 def login():
-    print("----LOGIN-----")
-    # print(request.headers)
     user = user_from_sso(request.headers)
-    login_user(user)
+    
+    if user:
+        # The user exists and was in the database.
+        login_user(user)
+    else:
+        # The user did not exist or was not in the database.
+        return redirect(url_for("login_failed"))
     return redirect(url_for("index"))
+
+
+@schedule_app.route("/login_failed")
+def login_failed():
+    return "Login Failed.  Please contact the system manager."
 
 
 @schedule_app.route("/")

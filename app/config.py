@@ -1,7 +1,7 @@
 import os
 import uuid
 
-SECRET_KEY = uuid.uuid4()
+SECRET_KEY = uuid.uuid4().bytes
 TIMESLOT_SIZE_MIN = 30
 TIMESLOTS_PER_DAY = 48
 DEFAULT_OPEN = "8:30"
