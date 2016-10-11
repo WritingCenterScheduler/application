@@ -1,36 +1,48 @@
 import json
-
-from flask import jsonify
-from flask import Response
-from flask import request
-from flask import render_template
-from flask_login import current_user
-
-from app import schedule_app
-from app import load_user
-
+# import flask
+from flask import jsonify, Response, request, render_template
+from flask_login import current_user, login_required
+# import from init
+from app import schedule_app, load_user
 # import Mongo Exceptions
 from mongoengine import MultipleObjectsReturned, DoesNotExist, NotUniqueError
-
-from .. import models
-from .. import responses
+# import local libraries
+from .. import models, responses, decorators
 
 #
 # API views
 #
 
+@schedule_app.route("/api/user/me", methods=["GET", "PUT"])
+@login_required
+def me():
+    """
+    Allow any user to get or update itselfs
+    ---
+    GET - get myself
+    PUT - update myself
+    """
+    if request.method == "GET":
+        return Response(current_user.to_json(), mimetype='application/json')
+    elif request.method == "PUT":
+        # Allow the user to update itself
+        return responses.not_implemented(request.url)
+    else:
+        return responses.bad_method(request.url, request.method)
+
 @schedule_app.route("/api/user", methods=["POST"])
+@login_required
+@decorators.requires_admin
 def add_user():
     """
-    Create a new user with details specified in request body
+    POST - Create a new user with details specified in the post data body
     """
     try:
         print(request.data)
         data = json.loads(request.data.decode("utf-8"))
-    
     except Exception as e:
         return responses.invalid(request.url, e)
-
+    
     u = models.User()
 
     try:
@@ -48,10 +60,14 @@ def add_user():
 
     return responses.user_created(request.url, data['pid'])
 
-@schedule_app.route("/api/user/<path:pid>", methods=["GET"])
+@schedule_app.route("/api/user/<path:pid>", methods=["GET", "PUT", "DELETE"])
+@login_required
+@decorators.requires_admin
 def user(pid):
     """
-    Get or update the user specified by PID
+    GET - gets the user with pid
+    PUT - updates the user with pid
+    DELETE - removes the user with pid
     """
     user = load_user(pid)
     if user:
@@ -60,9 +76,11 @@ def user(pid):
         return responses.invalid(request.url, "User does not exist")
 
 @schedule_app.route("/api/users", methods=["GET"])
+@login_required
+@decorators.requires_admin
 def users():
     """
-    Get all users in the system
+    GET - get all users in the system
     """
     users = models.User.objects()
     return Response(users.to_json(), mimetype='application/json')
@@ -72,6 +90,7 @@ def users():
 #
 
 @schedule_app.route("/user/<pid>/settings/availability")
+@login_required
 def set_availability(pid):
     """
     View for a user to set their own availability

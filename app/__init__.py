@@ -71,10 +71,10 @@ def login():
     if user:
         # The user exists and was in the database.
         login_user(user)
+        return redirect(url_for("index"))
     else:
         # The user did not exist or was not in the database.
         return redirect(url_for("login_failed"))
-    return redirect(url_for("index"))
 
 
 @schedule_app.route("/login_failed")
