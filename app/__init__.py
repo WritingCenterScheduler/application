@@ -27,7 +27,7 @@ login_manager.init_app(schedule_app)
 
 # configure the app
 schedule_app.config["SECRET_KEY"] = config.SECRET_KEY
-schedule_app.config["DEBUG"] = True
+schedule_app.config["DEBUG"] = config.LOCAL
 login_manager.login_view = "login"
 
 
@@ -36,8 +36,10 @@ def load_user(pid):
     try:
         return models.User.objects.get(pid=pid)
     except MultipleObjectsReturned as e:
+        print(str(pid) + " ---Primary Key Violated---")
         return None
     except DoesNotExist as e:
+        print(str(pid) + " ---Does not exist---")
         return None
 
 
@@ -50,7 +52,12 @@ def user_from_sso(headers):
     email = headers.get("Eppn", default=None)
 
     if pid and onyen and email:
-        return load_user(pid)
+        # update the user every time they log in with SSO
+        # TODO: ask ITS for more information about the user
+        user = load_user(pid)
+        user.email = email
+        user.save()
+        return user
     else:
         return None
 
@@ -66,7 +73,14 @@ def load_location(code):
 
 @schedule_app.route("/login", methods=['GET'])
 def login():
-    user = user_from_sso(request.headers)
+    
+    user = None
+
+    if config.LOCAL:
+        print("---LOCAL DEV---")
+        user = load_user(config.ADMIN_PID)
+    else:
+        user = user_from_sso(request.headers)
     
     if user:
         # The user exists and was in the database.

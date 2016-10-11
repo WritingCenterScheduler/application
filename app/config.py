@@ -1,7 +1,12 @@
 import os
 import uuid
 
-SECRET_KEY = uuid.uuid4().bytes
+# For the local environment
+ADMIN_PID = 720430213 # A user to test admin function on local dev
+NOADMIN_PID = 3 # A user to test non-admin function on local dev
+LOCAL = False if os.getenv("OPENSHIFT_MONGODB_DB_HOST", False) else True
+
+SECRET_KEY = "local" if LOCAL else uuid.uuid4().bytes # Regenerate the Secret key at startup in prod.
 TIMESLOT_SIZE_MIN = 30
 TIMESLOTS_PER_DAY = 48
 DEFAULT_OPEN = "8:30"

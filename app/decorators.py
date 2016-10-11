@@ -7,7 +7,7 @@ def requires_admin(f):
     def requires_admin_wrapper(*args, **kwargs):
 
         if current_user.is_admin:
-            return viewfn(*args, **kwargs)
+            return f(*args, **kwargs)
         else:
             return responses.illegal("Requires Admin")
 

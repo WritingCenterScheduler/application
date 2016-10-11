@@ -89,7 +89,7 @@ def users():
 # UI Views
 #
 
-@schedule_app.route("/user/<pid>/settings/availability")
+@schedule_app.route("/user/<pid>/settings")
 @login_required
 def set_availability(pid):
     """
