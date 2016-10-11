@@ -27,6 +27,7 @@ login_manager.init_app(schedule_app)
 
 # configure the app
 schedule_app.config["SECRET_KEY"] = config.SECRET_KEY
+schedule_app.config["DEBUG"] = True
 login_manager.login_view = "login"
 
 
@@ -75,6 +76,7 @@ def login():
 
 
 @schedule_app.route("/")
+@login_required
 def index():
     """
     Dump the headers
