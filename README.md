@@ -32,6 +32,8 @@ Because of how this is set up, all users hitting the app will be SSO authenticat
 
 # Database
 
+`mongorestore -d [your_db_name] [your_dump_dir] `
+
 Create the admin local user - running in UNAUTHENTICATED MODE
 
 ```
@@ -52,3 +54,9 @@ db.grantRolesToUser(
     ]
 )
 ```
+
+# Development:
+
+To develop:
+1. Start the mongo server in authenticated mode `sudo mongod --auth`
+2. Start the flask server in dev mode. `

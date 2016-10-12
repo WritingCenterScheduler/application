@@ -9,10 +9,10 @@ connect(config.DB_NAME,
     port=config.DB_PORT)
 
 class Location(Document):
-    name = StringField(requred=True)
+    name = StringField(required=True)
     code = IntField(unique=True)
-    open_at = StringField(requred=True)
-    close_at = StringField(requred=True)
+    open_at = StringField(required=True)
+    close_at = StringField(required=True)
     requirements = DictField()
     resolution_minutes = IntField()
 
@@ -36,11 +36,11 @@ class Schedule(Document):
     over all locations.
     """
     # TODO
-    name = StringField(requred=True)
+    name = StringField(required=True)
 
 class User(Document):
-    last_name = StringField(requred=True)
-    first_name = StringField(requred=True)
+    last_name = StringField(required=True)
+    first_name = StringField(required=True)
     pid = IntField(unique=True)
     email = EmailField()
     typecode = StringField()
