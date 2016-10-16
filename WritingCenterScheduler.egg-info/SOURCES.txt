@@ -1,0 +1,5 @@
+setup.py
+WritingCenterScheduler.egg-info/PKG-INFO
+WritingCenterScheduler.egg-info/SOURCES.txt
+WritingCenterScheduler.egg-info/dependency_links.txt
+WritingCenterScheduler.egg-info/top_level.txt

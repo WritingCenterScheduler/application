@@ -1,4 +1,283 @@
+
+<!--Dont really understand the purpose of the lines below.
+
 {% extends "header.html" %}
 {% block body %}
     <div id="availability-table"></div>
 {% endblock %}
+-->
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student sign-up</title>
+    <link rel="stylesheet" href="../static/css/foundation.css" />
+    
+    <script src="../static/js/vendor/modernizr.js"></script>
+    <!--<link rel="shortcut icon"  href=""/>-->
+
+    <link rel='stylesheet' href="../fullcalendar-3.0.1/lib/cupertino/jquery-ui.min.css" />
+    <link href="../fullcalendar-3.0.1/fullcalendar.css" rel="stylesheet" />
+    <link href="../fullcalendar-3.0.1/fullcalendar.print.css" rel='stylesheet' media='print' />
+    <script src="../fullcalendar-3.0.1/lib/moment.min.js"></script>
+    <script src="../fullcalendar-3.0.1/lib/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="../static/css/style.css" />
+
+
+  </head>
+
+
+
+
+  <body>
+    <div class = "header-main">
+        <br>
+        <h1 class = "header-bg">Student sign up:</h1>
+        <img class = "unc-logo" src="../images/UNC_CAS_blk_png 2.png">
+        <br>
+    </div>
+     
+      <!--Main content starts here-->
+        <div class = "queries-main">
+          <br><br><br>
+          <h1 class = "queries-heading1">Please provide the following details:</h1>
+          
+          
+
+          <!--Form element begins-->
+          <div class = "row">
+                <form action="php/mail.php" method="post" class="mail-form">
+                 <div class="large-2 columns"><p></p>
+                 </div>
+                      <div class="large-4 columns queries-input">
+                        <input name="firstname" type="text" class="form-control" placeholder="Name" data-validation="required">
+                         <input name="email" type="email" class="form-control" placeholder="Email" data-validation="email">
+                         <input name="PID" type="text" class="form-control" placeholder="PID" data-validation="required">
+                      </div>
+                     <div class="large-4 columns queries-textarea">
+                        <textarea name="body" class="form-control" placeholder="Spcial notes/consideration" data-validation="required"></textarea>
+                        
+                      </div>
+                    <div class="large-2 columns"><p></p></div>
+
+                </form>
+         </div>
+         <div class = "row">
+          <div class = "manual-table">
+          <table id = "inputTable">
+            
+          </table>
+            <script type="text/javascript">
+            
+            /*Default setting for the input table being created*/
+            var days = ["Timings", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            var timings = ["00:00","00:30","01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30","20:00", "20:30", "21:00", "21:30","22:00","22:30", "23:00", "23:30"];
+
+            
+            /*Creating the table*/
+            var str = "<tr>";
+            for (var i = 0; i <days.length; i ++ ){
+              str += "<th>" + days[i]+ "</th>";
+            }
+            str += "</tr>";
+            
+            for(var j = 0; j < timings.length; j++){
+              str += "<tr><th>" + timings[j]+ "</th>" + "<td></td>"+ "<td></td>"+ "<td></td>"+ "<td></td>"+ "<td></td>"+ "<td></td>"+ "<td></td></tr>";
+            }
+            document.getElementById("inputTable").innerHTML = str;
+
+            /*Setting the attributes for each of the cells in the table*/
+            var tds = document.getElementsByTagName('td');
+            for(var i = 0; i<tds.length; i++){
+              var currItem = tds[i];
+              currItem.setAttribute('class', 'cell');
+              currItem.setAttribute('value', '0');
+              currItem.setAttribute('onclick', 'select(this)');
+            }
+
+            /*This function toggles the value attribute to indicate a persons availability*/
+            function select(el){
+              var attr = el.getAttribute('class');
+              if (attr === 'cell'){
+                  el.setAttribute('class', 'activeCell');
+                  el.setAttribute('value', '1');
+                }else{
+                  el.setAttribute('class', 'cell');
+                  el.setAttribute('value', '0');
+                }
+            }
+            
+            /*Creating th JSON object that would be sent over to the server*/
+            //SAMPLE!!!
+           var toJson = {"_id": {"$oid": "57fd1eb45ef8323a2b8baa65"}, "last_name": "Davis", "first_name": "Brandon", "pid": 720430213, "email": "unknown@unc.edu", "typecode": "100", "availability": {"sun": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "mon": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "sat": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "tue": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "wed": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fri": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "thu": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, "resolution_minutes": 30}
+
+           //console.log(toJson);
+           //var contain = JSON.stringify(toJson);
+           //console.log(contain);
+           var sunday = [];
+           var mon = [];
+           var tue = [];
+           var wed = [];
+           var thu = [];
+           var fri = [];
+           var sat = [];
+           
+           var count = 0;
+           var tds = document.getElementsByTagName('td');
+           var x = tds[0].getAttribute("value");
+           console.log(x);
+           //THIS IS WHERE IT CRASHES. I get the feeling it is a result of the number of times the DOM is accessed. The idea here is that once the user clicks on a cell, the value attribute changes. Then, once the user presses submit, the JSON file should be created by taking the data from the information entered and by obtaining the value of each td element composed into array for their corresponding days and times. The following is my failed attempt at obtaining those values.
+           /*for(var i = 0; i < timings.length; (i + 6)){
+	            sunday[count] = tds[i].getAttribute("value"); 
+	            mon[count] = tds[i + 1].getAttribute('value');
+	            tue[count] = tds[i+2].getAttribute('value'); 
+	            wed[count] = tds[i+3].getAttribute('value'); 
+	            thu[count] = tds[i+4].getAttribute('value'); 
+	            fri[count] = tds[i+5].getAttribute('value'); 
+	            sat[count] = tds[i+6].getAttribute('value'); 
+	            
+	            count++;
+
+           }
+           console.log(mon);
+           console.log(tue);
+           console.log(wed);
+           console.log(thu);
+           */
+           var toJSON = {
+            "id": 12323424342423,
+            "last_name":"Khan",
+            "first_name":"Moazzam",
+            "pid":"7301399123",
+            "email":"khanmoazzam@hotmail.com",
+            "availability":{
+              "sun":[0,1,2],
+              "mon":[0,1,2],
+              "tue":[0,1,2],
+              "wed":[0,1,2],
+              "thu":[0,1,2],
+              "fri":[0,1,2],
+              "sat":[0,1,2],
+            },
+            "resolution_minutes": 30
+           };
+           console.log(toJSON);
+            </script>
+
+          </div>
+
+         </div>
+         <div class = "row">
+            <div id="calendar">
+              
+            </div>
+            <input type="submit" class="button success queries-success" value="Submit">
+         </div>
+        </div>
+        
+      <!--End of main content-->
+
+<!--Start of footer-->
+<div id = "footer">
+<footer>
+<div class="zurb-footer-bottom footer">
+  <br>
+  <div class="row">
+    <div class = "large-12 columns">
+    <p class="copyright">&copy;Learning and Writing center. Powered by: <a class = "mail-link" href = "mailto:moazzam@live.unc.com">COMP523</a>.</p>
+  </div>
+  </div>
+
+</div>
+</footer>
+</div><!-- #footer -->
+
+    <script src="../static/js/vendor/jquery.js"></script>
+    <script src="../static/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+    <script src="../fullcalendar-3.0.1/fullcalendar.min.js"></script>
+     <script>
+
+  $(document).ready(function() {
+
+    $('#calendar').fullCalendar({
+      theme: true,
+      header: {
+        left: '',
+        center: 'title',
+        right: 'agendaWeek'
+      },
+      defaultDate: '2016-09-12',
+      businessHours: true,
+      navLinks: true, // can click day/week names to navigate views
+      editable: true,
+      weekends: true,
+      "all-day" : false,
+      eventLimit: true, // allow "more" link when too many events
+      events: [
+        {
+          title: 'All Day Event',
+          start: '2016-09-01'
+        },
+        {
+          title: 'Long Event',
+          start: '2016-09-07',
+          end: '2016-09-10'
+        },
+        {
+          id: 999,
+          title: 'Repeating Event',
+          start: '2016-09-09T16:00:00'
+        },
+        {
+          id: 999,
+          title: 'Repeating Event',
+          start: '2016-09-16T16:00:00'
+        },
+        {
+          title: 'Conference',
+          start: '2016-09-11',
+          end: '2016-09-13'
+        },
+        {
+          title: 'Meeting',
+          start: '2016-09-12T10:30:00',
+          end: '2016-09-12T12:30:00'
+        },
+        {
+          title: 'Lunch',
+          start: '2016-09-12T12:00:00'
+        },
+        {
+          title: 'Meeting',
+          start: '2016-09-12T14:30:00'
+        },
+        {
+          title: 'Happy Hour',
+          start: '2016-09-12T17:30:00'
+        },
+        {
+          title: 'Dinner',
+          start: '2016-09-12T20:00:00'
+        },
+        {
+          title: 'Birthday Party',
+          start: '2016-09-13T07:00:00'
+        },
+        {
+          title: 'Click for Google',
+          url: 'http://google.com/',
+          start: '2016-09-28'
+        }
+      ]
+    });
+    
+  });
+
+</script>
+  </body>
+</html>
