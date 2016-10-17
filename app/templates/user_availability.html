@@ -1,37 +1,5 @@
-
-<!--Dont really understand the purpose of the lines below.
-
 {% extends "header.html" %}
 {% block body %}
-    <div id="availability-table"></div>
-{% endblock %}
--->
-<!doctype html>
-<html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student sign-up</title>
-    <link rel="stylesheet" href="../static/css/foundation.css" />
-    
-    <script src="../static/js/vendor/modernizr.js"></script>
-    <!--<link rel="shortcut icon"  href=""/>-->
-
-    <link rel='stylesheet' href="../fullcalendar-3.0.1/lib/cupertino/jquery-ui.min.css" />
-    <link href="../fullcalendar-3.0.1/fullcalendar.css" rel="stylesheet" />
-    <link href="../fullcalendar-3.0.1/fullcalendar.print.css" rel='stylesheet' media='print' />
-    <script src="../fullcalendar-3.0.1/lib/moment.min.js"></script>
-    <script src="../fullcalendar-3.0.1/lib/jquery.min.js"></script>
-    
-    <link rel="stylesheet" href="../static/css/style.css" />
-
-
-  </head>
-
-
-
-
-  <body>
     <div class = "header-main">
         <br>
         <h1 class = "header-bg">Student sign up:</h1>
@@ -218,12 +186,12 @@
 </footer>
 </div><!-- #footer -->
 
-    <script src="../static/js/vendor/jquery.js"></script>
-    <script src="../static/js/foundation.min.js"></script>
+    <script src="{{ url_for('static', filename='js/vendor/jquery.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/foundation.min.js')}}"></script>
     <script>
       $(document).foundation();
     </script>
-    <script src="../fullcalendar-3.0.1/fullcalendar.min.js"></script>
+    <script src="{{ url_for('static', filename='fullcalendar-3.0.1/fullcalendar.min.js')}}"></script>
      <script>
 
   $(document).ready(function() {
@@ -303,5 +271,4 @@
   });
 
 </script>
-  </body>
-</html>
+{% endblock %}
