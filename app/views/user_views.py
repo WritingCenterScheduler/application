@@ -114,6 +114,8 @@ def set_availability(pid):
     Method:
         1) Generate the UI
         2) POST the updates to /api/user/<id>
+
+    TODO: Found bug.  Admin can see all users.
     """
     user = load_user(pid)
     if user:
