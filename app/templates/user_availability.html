@@ -63,6 +63,7 @@
               var currItem = tds[i];
               currItem.setAttribute('class', 'cell');
               currItem.setAttribute('value', '0');
+              currItem.setAttribute('name', '0');
               currItem.setAttribute('onclick', 'select(this)');
             }
 
@@ -80,41 +81,10 @@
             
             /*Creating th JSON object that would be sent over to the server*/
             //SAMPLE!!!
+            /*
            var toJson = {"_id": {"$oid": "57fd1eb45ef8323a2b8baa65"}, "last_name": "Davis", "first_name": "Brandon", "pid": 720430213, "email": "unknown@unc.edu", "typecode": "100", "availability": {"sun": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "mon": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "sat": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "tue": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "wed": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "fri": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "thu": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, "resolution_minutes": 30}
-
-           //console.log(toJson);
-           //var contain = JSON.stringify(toJson);
-           //console.log(contain);
-           var sunday = [];
-           var mon = [];
-           var tue = [];
-           var wed = [];
-           var thu = [];
-           var fri = [];
-           var sat = [];
-           
-           var count = 0;
-           var tds = document.getElementsByTagName('td');
-           var x = tds[0].getAttribute("value");
-           console.log(x);
-           //THIS IS WHERE IT CRASHES. I get the feeling it is a result of the number of times the DOM is accessed. The idea here is that once the user clicks on a cell, the value attribute changes. Then, once the user presses submit, the JSON file should be created by taking the data from the information entered and by obtaining the value of each td element composed into array for their corresponding days and times. The following is my failed attempt at obtaining those values.
-           /*for(var i = 0; i < timings.length; (i + 6)){
-	            sunday[count] = tds[i].getAttribute("value"); 
-	            mon[count] = tds[i + 1].getAttribute('value');
-	            tue[count] = tds[i+2].getAttribute('value'); 
-	            wed[count] = tds[i+3].getAttribute('value'); 
-	            thu[count] = tds[i+4].getAttribute('value'); 
-	            fri[count] = tds[i+5].getAttribute('value'); 
-	            sat[count] = tds[i+6].getAttribute('value'); 
-	            
-	            count++;
-
-           }
-           console.log(mon);
-           console.log(tue);
-           console.log(wed);
-           console.log(thu);
            */
+          
            var id = 0;
 
            function createJson(){
@@ -134,7 +104,38 @@
            		var email = el.value;
            		console.log("firstname:" + firstName);
 
+		        var sunday = [];
+		        var mon = [];
+		        var tue = [];
+	         	var wed = [];
+	            var thu = [];
+		        var fri = [];
+		        var sat = [];
+		           
+		        var count = 0;
+		        var tds = document.getElementsByTagName('td');
+	            
+
+           		for(var i = 0; i < timings.length * 7; i++ ){
+           	 		if(i%7 === 0){
+           	 			sunday[count] = tds[i].getAttribute('value'); 
+          	 		}else if (i%7 === 1){
+       		 			mon[count] = tds[i].getAttribute('value');
+          		 	}else if(i%7 === 2){
+           		 		tue[count] = tds[i].getAttribute('value'); 
+           		 	}else if(i%7 === 3){
+           		 		wed[count] = tds[i].getAttribute('value'); 
+           		 	}else if(i%7 === 4){
+           		 		thu[count] = tds[i].getAttribute('value'); 
+           		 	}else if(i%7 === 5){
+           		 		fri[count] = tds[i].getAttribute('value'); 
+           		 	}else if(i%7 === 6){
+           		 		sat[count] = tds[i].getAttribute('value'); 
+           		 	}
+		            count++;
+        		   }
            		
+           		//Creates the JSON object
 	           	var toJSON = {
 		            "id": id,
 		            "last_name":lastName,
@@ -142,13 +143,13 @@
 		            "pid":pid,
 		            "email":email,
 		            "availability":{
-		              "sun":[0,1,2],
-		              "mon":[0,1,2],
-		              "tue":[0,1,2],
-		              "wed":[0,1,2],
-		              "thu":[0,1,2],
-		              "fri":[0,1,2],
-		              "sat":[0,1,2],
+		              "sun":sunday,
+		              "mon":mon,
+		              "tue":tue,
+		              "wed":wed,
+		              "thu":thu,
+		              "fri":fri,
+		              "sat":sat,
 		            },
 		            "resolution_minutes": 30
 	           };
