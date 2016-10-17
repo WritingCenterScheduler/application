@@ -52,9 +52,10 @@
                  <div class="large-2 columns"><p></p>
                  </div>
                       <div class="large-4 columns queries-input">
-                        <input name="firstname" type="text" class="form-control" placeholder="Name" data-validation="required">
-                         <input name="email" type="email" class="form-control" placeholder="Email" data-validation="email">
-                         <input name="PID" type="text" class="form-control" placeholder="PID" data-validation="required">
+                        <input id = "firstName" name="firstname" type="text" class="form-control" placeholder="First Name" data-validation="required">
+                        <input id = "lastName" name="lastname" type="text" class="form-control" placeholder="Last Name" data-validation="required">
+                         <input id = "email" name="email" type="email" class="form-control" placeholder="Email" data-validation="email">
+                         <input id = "pid" name="PID" type="text" class="form-control" placeholder="PID" data-validation="required">
                       </div>
                      <div class="large-4 columns queries-textarea">
                         <textarea name="body" class="form-control" placeholder="Spcial notes/consideration" data-validation="required"></textarea>
@@ -146,24 +147,47 @@
            console.log(wed);
            console.log(thu);
            */
-           var toJSON = {
-            "id": 12323424342423,
-            "last_name":"Khan",
-            "first_name":"Moazzam",
-            "pid":"7301399123",
-            "email":"khanmoazzam@hotmail.com",
-            "availability":{
-              "sun":[0,1,2],
-              "mon":[0,1,2],
-              "tue":[0,1,2],
-              "wed":[0,1,2],
-              "thu":[0,1,2],
-              "fri":[0,1,2],
-              "sat":[0,1,2],
-            },
-            "resolution_minutes": 30
-           };
-           console.log(toJSON);
+           var id = 0;
+
+           function createJson(){
+           		//Id-> How should we create these? Auto increment is the current default
+           		id++;
+           		//Obtain the name entered
+           		var el = document.getElementById('firstName');
+           		var firstName = el.value;
+
+           		var el = document.getElementById('lastName');
+           		var lastName = el.value;
+
+           		var el = document.getElementById('pid');
+           		var pid = el.value;
+
+           		var el = document.getElementById('email');
+           		var email = el.value;
+           		console.log("firstname:" + firstName);
+
+           		
+	           	var toJSON = {
+		            "id": id,
+		            "last_name":lastName,
+		            "first_name":firstName,
+		            "pid":pid,
+		            "email":email,
+		            "availability":{
+		              "sun":[0,1,2],
+		              "mon":[0,1,2],
+		              "tue":[0,1,2],
+		              "wed":[0,1,2],
+		              "thu":[0,1,2],
+		              "fri":[0,1,2],
+		              "sat":[0,1,2],
+		            },
+		            "resolution_minutes": 30
+	           };
+	           console.log(toJSON);
+
+           }
+
             </script>
 
           </div>
@@ -173,7 +197,7 @@
             <div id="calendar">
               
             </div>
-            <input type="submit" class="button success queries-success" value="Submit">
+            <input type="submit" onclick = "createJson()" class="button success queries-success" value="Submit">
          </div>
         </div>
         
