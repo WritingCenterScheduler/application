@@ -327,6 +327,10 @@ td{
 td.goodCell{
 	color: rgba(230,230,230,0.7);
 }
+th{
+	text-align: center!important;
+	min-width:100px;	
+}
 
 
 
