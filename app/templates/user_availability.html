@@ -3,7 +3,7 @@
     <div class = "header-main">
         <br>
         <h1 class = "header-bg">Student sign up:</h1>
-        <img class = "unc-logo" src="../images/UNC_CAS_blk_png 2.png">
+        <img class = "unc-logo" src="{{ url_for('static', filename='images/UNC_CAS_blk_png 2.png') }}">
         <br>
     </div>
      
@@ -155,6 +155,8 @@
 	           };
 	           console.log(toJSON);
 
+             // Send the JSON to the server.
+
            }
 
             </script>
@@ -187,6 +189,7 @@
 </footer>
 </div><!-- #footer -->
 
+<!--
     <script src="{{ url_for('static', filename='js/vendor/jquery.js')}}"></script>
     <script src="{{ url_for('static', filename='js/foundation.min.js')}}"></script>
     <script>
@@ -272,4 +275,5 @@
   });
 
 </script>
+-->
 {% endblock %}
