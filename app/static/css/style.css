@@ -300,14 +300,16 @@ hr.ending {
 #calendar {
 		max-width: 900px;
 		margin: 0 auto;
-		background-color: rgba(255,255,255,0.5);
 	}
 
 .cell{
-	background-color:rgba(220,220,220,0.2);
+	background-color: rgba(200,200,200,0.5);
 }
 .activeCell{
-	background-color: #2D2D2D;
+	background-color: #2ca25f;/*Green*/
+}
+.goodCell{
+	background-color: #2D2D2D;/*Blackish*/
 }
 #inputTable{
 	margin-left: auto;
@@ -318,6 +320,12 @@ p.table-info{
 	text-align: center;
 	font-family: olymb;
 
+}
+td{
+	text-align: center!important;
+}
+td.goodCell{
+	color: rgba(230,230,230,0.7);
 }
 
 
