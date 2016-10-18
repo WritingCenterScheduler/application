@@ -15,7 +15,6 @@ div.header-main{
 img.unc-logo{
 
 	max-width:100%;
-	height: 20%;
 	width:22%;
 	float:right;
 	position: relative;
@@ -310,5 +309,16 @@ hr.ending {
 .activeCell{
 	background-color: #2D2D2D;
 }
+#inputTable{
+	margin-left: auto;
+	margin-right: auto;
+}
+p.table-info{
+	color: rgba(230,230,230,0.8);
+	text-align: center;
+	font-family: olymb;
+
+}
+
 
 
