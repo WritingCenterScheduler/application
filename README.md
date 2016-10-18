@@ -43,7 +43,7 @@ db.createUser(
     {
         user: "local",
         pwd: "default",
-        roles: [ "dbAdmin" , "read"]
+        roles: [ "dbAdmin" , "readWrite"]
     }
 )
 

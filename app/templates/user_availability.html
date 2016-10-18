@@ -23,7 +23,7 @@
                         <input id = "firstName" name="firstname" type="text" class="form-control" placeholder="First Name" data-validation="required">
                         <input id = "lastName" name="lastname" type="text" class="form-control" placeholder="Last Name" data-validation="required">
                          <input id = "email" name="email" type="email" class="form-control" placeholder="Email" data-validation="email">
-                         <input id = "pid" name="PID" type="text" class="form-control" placeholder="PID" data-validation="required">
+                         <input id = "pid" name="PID" type="text" class="form-control" placeholder="PID" value="{{ user.pid }}" data-validation="required">
                       </div>
                      <div class="large-4 columns queries-textarea">
                         <textarea name="body" class="form-control" placeholder="Spcial notes/consideration" data-validation="required"></textarea>
@@ -156,7 +156,9 @@
 	           console.log(toJSON);
 
              // Send the JSON to the server.
-
+             update_me(toJSON, function(reply){
+              console.log(reply);
+             })
            }
 
             </script>
@@ -276,4 +278,7 @@
 
 </script>
 -->
+<script>
+  user_availability_init();
+</script>
 {% endblock %}
