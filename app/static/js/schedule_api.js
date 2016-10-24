@@ -58,13 +58,13 @@ function table_from_schedule(table_div, schedule_object, click_callback){
     var newtable = $("<table id='user-schedule'>\
         <tr>\
             <th> Time </th>\
-            <th> Sun </th>\
-            <th> Mon </th>\
-            <th> Tue </th>\
-            <th> Wed </th>\
-            <th> Thu </th>\
-            <th> Fri </th>\
-            <th> Sat </th>\
+            <th> Sunday </th>\
+            <th> Monday </th>\
+            <th> Tuesday </th>\
+            <th> Wednesday </th>\
+            <th> Thursday </th>\
+            <th> Friday </th>\
+            <th> Saturday </th>\
         </tr>\
         </table>");
     table_div.append(newtable);
@@ -78,21 +78,24 @@ function table_from_schedule(table_div, schedule_object, click_callback){
         var hour = Math.floor(i*resolution);
         var minute_decimal = (i*resolution) - hour;
         var min = Math.floor(minute_decimal*60);
+        if(min==0) {
+            min = "00"
+        }
         var newrow = $("<tr> \
-           <td> " + hour + ":"+ min+"</td>\
-           <td id='sun"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td id='time'> " + hour + ":"+ min+"</td>\
+           <td class = 'unavailable' id='sun"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["sun"][i]+"</td> \
-           <td id='mon"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = 'unavailable' id='mon"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["mon"][i]+"</td> \
-           <td id='tue"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = 'unavailable' id='tue"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["tue"][i]+"</td> \
-           <td id='wed"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = 'unavailable' id='wed"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["wed"][i]+"</td> \
-           <td id='thu"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = 'unavailable' id='thu"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["thu"][i]+"</td> \
-           <td id='fri"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = 'unavailable' id='fri"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["fri"][i]+"</td> \
-           <td id='sat"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = 'unavailable' id='sat"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["sat"][i]+"</td> \
         </tr>");
         newtable.append(newrow);

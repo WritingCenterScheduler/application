@@ -1,3 +1,28 @@
-table td, table th{
+table {
+    width: 100%;
+}
+table td{
     margin-left: 10px;
+    border: 1px solid black;
+    text-align: center;
+
+}
+table th {
+    background-color: #f5f5f5;
+    border: 1px solid black;
+    border: collapse;
+}
+#time {
+    background-color: #f5f5f5;
+}
+
+.unavailable {
+    background-color: #ff0000;
+}
+
+.available {
+    background-color: #ffff00;
+}
+.good {
+    background-color: #009933;
 }

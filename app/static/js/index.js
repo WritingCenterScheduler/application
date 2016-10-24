@@ -20,14 +20,17 @@ var user_availability_init = function(){
         
         if (current == 0){
             cell.innerText = 1;
+            cell.className = 'available';
             me['availability'][day][position] = 1;
         }
         else if (current == 1){
             cell.innerText = 2;
+            cell.className = 'good';
             me['availability'][day][position] = 2;
         }
         else if (current == 2){
             cell.innerText = 0;
+            cell.className= 'unavailable';
             me['availability'][day][position] = 0;
         }
         // TODO: Update the backend.
