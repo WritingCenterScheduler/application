@@ -83,19 +83,19 @@ function table_from_schedule(table_div, schedule_object, click_callback){
         }
         var newrow = $("<tr> \
            <td id='time'> " + hour + ":"+ min+"</td>\
-           <td class = 'unavailable' id='sun"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = table-"+schedule_object.availability["sun"][i]+" id='sun"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["sun"][i]+"</td> \
-           <td class = 'unavailable' id='mon"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = table-"+schedule_object.availability["mon"][i]+" id='mon"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["mon"][i]+"</td> \
-           <td class = 'unavailable' id='tue"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = table-"+schedule_object.availability["tue"][i]+" id='tue"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["tue"][i]+"</td> \
-           <td class = 'unavailable' id='wed"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = table-"+schedule_object.availability["wed"][i]+" id='wed"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["wed"][i]+"</td> \
-           <td class = 'unavailable' id='thu"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = table-"+schedule_object.availability["thu"][i]+" id='thu"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["thu"][i]+"</td> \
-           <td class = 'unavailable' id='fri"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = table-"+schedule_object.availability["fri"][i]+" id='fri"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["fri"][i]+"</td> \
-           <td class = 'unavailable' id='sat"+i+"' onclick='tfs_click_callback(this)'>"+
+           <td class = table-"+schedule_object.availability["sat"][i]+" id='sat"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_object.availability["sat"][i]+"</td> \
         </tr>");
         newtable.append(newrow);

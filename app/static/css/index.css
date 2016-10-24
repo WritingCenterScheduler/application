@@ -16,13 +16,12 @@ table th {
     background-color: #f5f5f5;
 }
 
-.unavailable {
+.table-0 {
     background-color: #ff0000;
 }
-
-.available {
+.table-1 {
     background-color: #ffff00;
 }
-.good {
+.table-2 {
     background-color: #009933;
 }
