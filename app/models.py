@@ -1,4 +1,5 @@
 from mongoengine import *
+import numpy as np
 from . import config
 
 # Setup the mongo connection
@@ -85,6 +86,14 @@ class User(Document):
         """
         keys = payload.keys()
         return all(hasattr(self, key) for key in keys)
+
+    def to_np_arr(self):
+        """
+        Turns the object into a NP arr for scheduling
+        """
+        for i in range(config.TIMESLOTS_PER_DAY):
+
+        pass
 
     @property
     def is_admin(self):
