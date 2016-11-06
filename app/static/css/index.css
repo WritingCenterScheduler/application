@@ -25,3 +25,27 @@ table th {
 .table-2 {
     background-color: #009933;
 }
+nav {
+	    background-color: #333;
+	    margin: 0;
+	    overflow: hidden;
+}
+nav ul{
+	    margin: 0;
+	    padding: 0;
+	    background-color: #333;
+}
+nav ul li {
+	    display: inline-block;
+	    list-style-type: none;
+	    background-color: #333;
+}
+
+nav > ul > li > a {
+	    color: #aaa;
+	    display: block;
+        line-height: 2em;
+	    padding: 0.5em 0.5em;
+	    text-decoration: none;
+}
+

@@ -123,3 +123,21 @@ def set_availability(pid):
             user=user)
     else: 
         return responses.invalid(request.url, "User does not exist")
+
+@schedule_app.route("/user/<pid>/help")
+@login_required
+def set_help(pid):
+    """
+    View for a user to set their own availability
+    Method:
+        1) Generate the UI
+        2) POST the updates to /api/user/<id>
+
+    TODO: Found bug.  Admin can see all users.
+    """
+    user = load_user(pid)
+    if user:
+        return render_template("help.html",
+            user=user)
+    else:
+        return responses.invalid(request.url, "User does not exist")
