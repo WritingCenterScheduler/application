@@ -1,4 +1,5 @@
 from mongoengine import *
+import numpy as np
 from . import config
 
 # Setup the mongo connection
@@ -9,10 +10,10 @@ connect(config.DB_NAME,
     port=config.DB_PORT)
 
 class Location(Document):
-    name = StringField(requred=True)
+    name = StringField(required=True)
     code = IntField(unique=True)
-    open_at = StringField(requred=True)
-    close_at = StringField(requred=True)
+    open_at = StringField(required=True)
+    close_at = StringField(required=True)
     requirements = DictField()
     resolution_minutes = IntField()
 
@@ -36,11 +37,11 @@ class Schedule(Document):
     over all locations.
     """
     # TODO
-    name = StringField(requred=True)
+    name = StringField(required=True)
 
 class User(Document):
-    last_name = StringField(requred=True)
-    first_name = StringField(requred=True)
+    last_name = StringField(required=True)
+    first_name = StringField(required=True)
     pid = IntField(unique=True)
     email = EmailField()
     typecode = StringField()
@@ -85,6 +86,13 @@ class User(Document):
         """
         keys = payload.keys()
         return all(hasattr(self, key) for key in keys)
+
+    def to_np_arr(self):
+        """
+        Turns the object into a NP arr for scheduling
+        """
+        for i in range(config.TIMESLOTS_PER_DAY):   
+            pass
 
     @property
     def is_admin(self):

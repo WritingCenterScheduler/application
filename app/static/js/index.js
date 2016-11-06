@@ -20,14 +20,17 @@ var user_availability_init = function(){
         
         if (current == 0){
             cell.innerText = 1;
+            cell.className = 'table-1';
             me['availability'][day][position] = 1;
         }
         else if (current == 1){
             cell.innerText = 2;
+            cell.className = 'table-2';
             me['availability'][day][position] = 2;
         }
         else if (current == 2){
             cell.innerText = 0;
+            cell.className= 'table-0';
             me['availability'][day][position] = 0;
         }
         // TODO: Update the backend.
@@ -45,5 +48,7 @@ var user_availability_init = function(){
             table_div = $("#availability-table");
             table_from_schedule(table_div, obj, on_schedule_click);
         }
+
     });
 }
+
