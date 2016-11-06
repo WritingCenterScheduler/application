@@ -48,5 +48,7 @@ var user_availability_init = function(){
             table_div = $("#availability-table");
             table_from_schedule(table_div, obj, on_schedule_click);
         }
+
     });
 }
+
