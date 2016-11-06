@@ -1,4 +1,5 @@
 from mongoengine import *
+import numpy as np
 from . import config
 
 # Setup the mongo connection
@@ -68,6 +69,31 @@ class User(Document):
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
         self.availability = config.DEFAULT_AVAILABILITY
 
+    def update(self, payload):
+        """
+        Updates the user based on the provided payload
+        """
+        if self.is_payload_safe(payload):
+            for key in payload.keys():
+                setattr(self, key, payload[key])
+            self.save()
+            return True
+        return False
+
+    def is_payload_safe(self, payload):
+        """
+        Makes sure the payload is safe
+        """
+        keys = payload.keys()
+        return all(hasattr(self, key) for key in keys)
+
+    def to_np_arr(self):
+        """
+        Turns the object into a NP arr for scheduling
+        """
+        for i in range(config.TIMESLOTS_PER_DAY):
+
+        pass
 
     @property
     def is_admin(self):

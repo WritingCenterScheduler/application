@@ -17,6 +17,14 @@ def user_created(uri, pid):
     r["pid"] = pid
     return Response(json.dumps(r),  mimetype='application/json')
 
+def user_updated(uri, pid):
+    r = {}
+    r["status"] = "success"
+    r["type"] = "user updated"
+    r["uri"] = uri
+    r["pid"] = pid
+    return Response(json.dumps(r),  mimetype='application/json')
+
 def illegal(reason):
     r = {}
     r["status"] = "fail"

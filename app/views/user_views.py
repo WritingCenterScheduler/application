@@ -22,11 +22,28 @@ def me():
     GET - get myself
     PUT - update myself
     """
+    ## GET
     if request.method == "GET":
         return Response(current_user.to_json(), mimetype='application/json')
+    ## PUT
     elif request.method == "PUT":
         # Allow the user to update itself
-        return responses.not_implemented(request.url)
+        payload = None
+        
+        try:
+            payload = json.loads(request.data.decode("utf-8"))
+        except Exception as e:
+            return responses.invalid(request.url, e)
+
+        if payload:
+            success = current_user.update(payload);
+            if success:
+                return responses.user_updated(request.url, current_user.pid)
+            else:
+                return responses.invalid(request.url, "Could not update user")
+        else:
+            return responses.invalid(request.url, "No data")
+    
     else:
         return responses.bad_method(request.url, request.method)
 
@@ -97,10 +114,30 @@ def set_availability(pid):
     Method:
         1) Generate the UI
         2) POST the updates to /api/user/<id>
+
+    TODO: Found bug.  Admin can see all users.
     """
     user = load_user(pid)
     if user:
         return render_template("user_availability.html",
             user=user)
     else: 
+        return responses.invalid(request.url, "User does not exist")
+
+@schedule_app.route("/user/<pid>/help")
+@login_required
+def set_help(pid):
+    """
+    View for a user to set their own availability
+    Method:
+        1) Generate the UI
+        2) POST the updates to /api/user/<id>
+
+    TODO: Found bug.  Admin can see all users.
+    """
+    user = load_user(pid)
+    if user:
+        return render_template("help.html",
+            user=user)
+    else:
         return responses.invalid(request.url, "User does not exist")

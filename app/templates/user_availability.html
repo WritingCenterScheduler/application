@@ -1,4 +1,23 @@
 {% extends "header.html" %}
 {% block body %}
-    <div id="availability-table"></div>
+    <nav>
+	        <ul>
+	            <li><a href="settings">Schedule Availability</a></li>
+                <li><a href="myschedule">My Schedule</a></li>
+	            <li><a href="help">Help</a></li>
+
+	        </ul>
+	</nav>
+
+     <div id="availability-table">
+
+     </div>
+    <script type="text/javascript">
+                    // Issue: This sometimes loads and runs before the source script is available.
+                    // TODO: Fix...
+                    window.onload = user_availability_init;
+     </script>
+
+
+
 {% endblock %}
