@@ -42,10 +42,14 @@
         </p>
         <p>
             The data on this page is saved automatically as you make changes. There is no need to submit the changes
-            in any way. Simply alter the table so that it matches your availability and the changes that you have
-            made will be automatically saved. 
+            in any way. Simply alter the table by clicking on a cell. The time slots will rotate between red, yellow
+            and green each time they are clicked. Change the table so that it matches your availability and the
+            changes that you have made will be
+            automatically saved.
         </p>
-        <img src='pics/setHours.png' alt='Set Availbility Image' width='550' height='400'>
+        <img src="{{ url_for('static', filename='assets/Schedule_Avail.PNG') }}" alt='Set Availbility Image' width='550'
+             height='400' style="display: block;
+    margin: 0 auto;">
         <br>
         <a href=''>Return to top</a>
         <br>
@@ -55,7 +59,8 @@
 	<p>
 		This page is used to view the hours which have been assigned to you by your administrator.
 	</p>
-	<img src='pics/viewHours.png' alt='View Schedule Image' width='550' height='400'>
+	<img src="{{ url_for('static', filename='assets/TOBEREPLACED.PNG') }}" alt='View Schedule Image' width='550'
+         height='400'>
 	<br>
 	<a href=''>Return to top</a>
 	<br>
