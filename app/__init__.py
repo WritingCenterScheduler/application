@@ -85,7 +85,7 @@ def login():
     if user:
         # The user exists and was in the database.
         login_user(user)
-        nxt = flask.request.args.get('next')
+        nxt = request.args.get('next')
         return redirect(nxt or flask.url_for('index'))
     else:
         # The user did not exist or was not in the database.
