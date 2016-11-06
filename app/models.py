@@ -9,6 +9,27 @@ connect(config.DB_NAME,
     host=config.DB_HOST,
     port=config.DB_PORT)
 
+def global_to_np_arr(json_avail):
+    """
+    Turns the object into a NP arr for scheduling
+    """
+    # height = timeslots_per_day
+    # width = 7 days per week
+    avail = np.zeros(shape=(config.TIMESLOTS_PER_DAY, 7))
+
+    for i in range(config.TIMESLOTS_PER_DAY):   
+        newrow = [
+            json_avail["sun"][i],
+            json_avail["mon"][i],
+            json_avail["tue"][i],
+            json_avail["wed"][i],
+            json_avail["thu"][i],
+            json_avail["fri"][i],
+            json_avail["sat"][i],
+        ]
+        avail[i] = newrow
+    return avail
+
 class Location(Document):
     name = StringField(required=True)
     code = IntField(unique=True)
@@ -30,6 +51,9 @@ class Location(Document):
         self.close_at = close_at
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
         self.requirements = config.DEFAULT_LOCATION_REQUIREMENTS
+
+    def to_np_arr(self):
+        return global_to_np_arr(self.requirements)
 
 class Schedule(Document):
     """
@@ -88,11 +112,7 @@ class User(Document):
         return all(hasattr(self, key) for key in keys)
 
     def to_np_arr(self):
-        """
-        Turns the object into a NP arr for scheduling
-        """
-        for i in range(config.TIMESLOTS_PER_DAY):   
-            pass
+        return global_to_np_arr(self.availability)
 
     @property
     def is_admin(self):
