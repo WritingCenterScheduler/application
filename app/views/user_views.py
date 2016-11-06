@@ -1,4 +1,5 @@
 import json
+import numpy as np
 # import flask
 from flask import jsonify, Response, request, render_template
 from flask_login import current_user, login_required
@@ -141,3 +142,9 @@ def set_help(pid):
             user=user)
     else:
         return responses.invalid(request.url, "User does not exist")
+
+@schedule_app.route("/myarr")
+@login_required
+def my_arr():
+    arr = current_user.to_np_arr()
+    return np.array_str(arr)
