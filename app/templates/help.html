@@ -1,12 +1,74 @@
 {% extends "header.html" %}
 {% block body %}
 
-    <div id="availability-table">
+      <nav>
+	        <ul>
+	            <li><a href="settings">Schedule Availability</a></li>
+                <li><a href="myschedule">My Schedule</a></li>
+	            <li><a href="help">Help</a></li>
+
+	        </ul>
+	</nav>
+    <div >
+          <div>
+              <h1>
+                  Hello, Employee!
+              </h1>
+          </div>
+        <strong>Welcome to the help page! Under this you can get help on how to use each of the
+            pages provided to you!</strong>
+        <br>
+        <br>
+            <a href='#ScheduleAvailability'>Scheduling Your Availability</a>
+        <br>
+            <a href='#ViewYourSchedule'>Viewing your Scheduled Hours</a>
+        <br>
+        <br>
+            <h2 id='ScheduleAvailability'>Scheduling Your Availability</h2>
+        <p>
+            This page is used to provide your administrator with the hours that you are available to work every week
+            depending on your schedule. You have three options for each of the available time slots: Red, Yellow and
+            Green. Green means that it is a preferred time for you to work and that, if possible, these are the
+            times that you would want to work. The scheduling algorithm will attempt to place you in these times as
+            often as possible. Yellow means that you can work at that time if needed. You may be scheduled for these
+            times if you are needed at these times but the scheduling algorithm will attempt to place you in as many
+            green slots as it can before resorting to placing you in yellow slots. However, it is fully possible
+            that you may be placed in slots marked yellow if you are needed at those slots. Red means that you are
+            unavailable to work at that times slot. You will not be placed into any work slots that are marked red.
+            While the scheduling algorithm attempt to give everyone their optimal schedule, it is impossible for
+            everyone to get their top choices at every timeslot. The schedule that you are submitting is a request
+            and there are no guarantees that you will get assigned shifts that match all of your preferred slots.
+
+        </p>
+        <p>
+            The data on this page is saved automatically as you make changes. There is no need to submit the changes
+            in any way. Simply alter the table by clicking on a cell. The time slots will rotate between red, yellow
+            and green each time they are clicked. Change the table so that it matches your availability and the
+            changes that you have made will be
+            automatically saved.
+        </p>
+        <img src="{{ url_for('static', filename='assets/Schedule_Avail.PNG') }}" alt='Set Availbility Image' width='550'
+             height='400' style="display: block;
+    margin: 0 auto;">
+        <br>
+        <a href=''>Return to top</a>
+        <br>
+        <br>
+        <br>
+	<h2 id='ViewYourSchedule'>View Assigned Hours</h2>
+	<p>
+		This page is used to view the hours which have been assigned to you by your administrator.
+	</p>
+	<img src="{{ url_for('static', filename='assets/TOBEREPLACED.PNG') }}" alt='View Schedule Image' width='550'
+         height='400'>
+	<br>
+	<a href=''>Return to top</a>
+	<br>
+	<br>
+	<br>
+        </div>
+        <!-- /#page-wrapper -->
+
     </div>
-    <script type="text/javascript">
-        // Issue: This sometimes loads and runs before the source script is available.
-        // TODO: Fix...
-        window.onload = user_availability_init;
-    </script>
 
 {% endblock %}

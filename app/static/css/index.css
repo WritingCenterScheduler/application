@@ -28,11 +28,21 @@ table th {
 #availability-table .table-0 {
     background-color: #ff0000;
 }
+
 #availability-table .table-1 {
     background-color: #ffff00;
 }
+.text-table-0 {
+    color: #ff0000;
+}
+.text-table-1 {
+   color: #f4e842;
+}
 #availability-table .table-2 {
     background-color: #009933;
+}
+.text-table-2 {
+    color: #009933;
 }
 nav {
 	    background-color: #333;
@@ -56,5 +66,9 @@ nav > ul > li > a {
         line-height: 2em;
 	    padding: 0.5em 0.5em;
 	    text-decoration: none;
+}
+
+img {
+
 }
 

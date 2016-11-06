@@ -1,6 +1,33 @@
 {% extends "header.html" %}
 {% block body %}
-    <div id="availability-table"></div>
+    <nav>
+	        <ul>
+	            <li><a href="settings">Schedule Availability</a></li>
+                <li><a href="myschedule">My Schedule</a></li>
+	            <li><a href="help">Help</a></li>
+
+	        </ul>
+	</nav>
+
+    <p>Set your availability below:
+        <ul>
+            <li><p><span class = 'text-table-0'>Red (0)</span> is used to represent time slots during which you
+    absolutely
+    cannot work.</p></li>
+            <li><p><span class = 'text-table-1'>Yellow (1)</span> is used to represent time slots during which you could
+                work but are not preferred. </p></li>
+            <li><p><span class = 'text-table-2'>Green (2)</span> is used to represent time slots during which you would
+                prefer to work if possible.</p></li>
+        </ul>
+    </p>
+
+    <p><strong>NOTE:</strong> Setting a time slot to Green does not guarantee that you are scheduled for that time
+        slot. The availability you provide is a request and will be met as often as possible but cannot be guaranteed.
+    </p>
+
+     <div id="availability-table">
+
+     </div>
     <script type="text/javascript">
                     // Issue: This sometimes loads and runs before the source script is available.
                     // TODO: Fix...
