@@ -21,15 +21,43 @@
         slot. The availability you provide is a request and will be met as often as possible but cannot be guaranteed.
     </p>
 
-     <div id="availability-table">
+     <div class="tabs">
 
-     </div>
-    <script type="text/javascript">
+       <div class="tab">
+           <input type="radio" id="tab-1" name="tab-group-1" checked onclick=user_availability_init>
+           <label for="tab-1">Location One</label>
+
+           <div class="content">
+               <div id="availability-table">
+               </div>
+               <script type="text/javascript">
                     // Issue: This sometimes loads and runs before the source script is available.
                     // TODO: Fix...
                     window.onload = user_availability_init;
-     </script>
+               </script>
+           </div>
+       </div>
 
+       <div class="tab">
+           <input type="radio" id="tab-2" name="tab-group-1" onclick="alert('hello!');">
+           <label for="tab-2">Location Two</label>
+
+           <div class="content">
+               <div id="availability-table">
+               </div>
+           </div>
+       </div>
+
+        <div class="tab">
+           <input type="radio" id="tab-3" name="tab-group-1" onclick="user_availability_init">
+           <label for="tab-3">Location Three</label>
+
+           <div class="content">
+
+           </div>
+       </div>
+
+    </div>
 
 
 {% endblock %}
