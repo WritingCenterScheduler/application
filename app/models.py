@@ -91,9 +91,8 @@ class User(Document):
         """
         Turns the object into a NP arr for scheduling
         """
-        for i in range(config.TIMESLOTS_PER_DAY):
-
-        pass
+        for i in range(config.TIMESLOTS_PER_DAY):   
+            pass
 
     @property
     def is_admin(self):
