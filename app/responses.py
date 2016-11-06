@@ -17,6 +17,22 @@ def user_created(uri, pid):
     r["pid"] = pid
     return Response(json.dumps(r),  mimetype='application/json')
 
+def loc_created(uri, creator, code):
+    r = {}
+    r["status"] = "success"
+    r["type"] = "location created"
+    r["uri"] = uri
+    r["creator"] = creator
+    return Response(json.dumps(r),  mimetype='application/json')
+
+def loc_updated(uri, code):
+    r = {}
+    r["status"] = "success"
+    r["type"] = "location updated"
+    r["uri"] = uri
+    r["code"] = code
+    return Response(json.dumps(r),  mimetype='application/json')
+
 def user_updated(uri, pid):
     r = {}
     r["status"] = "success"

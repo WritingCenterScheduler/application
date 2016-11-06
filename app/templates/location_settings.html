@@ -1,0 +1,21 @@
+{% extends "header.html" %}
+{% block body %}
+    <br>
+    <div id="new_loc_form">
+        <form id="new_loc">
+            Code: <input type="text" name="code">
+            Open at: <input type="text" name="open_at">
+            Close at: <input type="text" name="close_at">
+            Name: <input type="text" name="name">
+            Type code: <input type="text" name="type_code">
+            <button type="button" onclick="make_new_location()">SUBMIT</button>
+        </form>
+    </div> 
+    <br>
+    <div id="location-table"></div>
+    <script type="text/javascript">
+                    // Issue: This sometimes loads and runs before the source script is available.
+                    // TODO: Fix...
+                    window.onload = location_settings_init;
+     </script>
+{% endblock %}

@@ -16,13 +16,22 @@ table th {
     background-color: #f5f5f5;
 }
 
-.table-0 {
+#location-table .table-0 {
+    background-color: #ffffff;
+}
+#location-table .table-1 {
+    background-color:  #97D6FF;
+}
+#location-table .table-2 {
+    background-color: #1998EB;
+}
+#availability-table .table-0 {
     background-color: #ff0000;
 }
-.table-1 {
+#availability-table .table-1 {
     background-color: #ffff00;
 }
-.table-2 {
+#availability-table .table-2 {
     background-color: #009933;
 }
 nav {

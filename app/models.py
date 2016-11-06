@@ -37,12 +37,14 @@ class Location(Document):
     close_at = StringField(required=True)
     requirements = DictField()
     resolution_minutes = IntField()
+    type_code = IntField()
 
     def init(self, 
             name="Unknown Location",
             open_at=config.DEFAULT_OPEN,
             close_at=config.DEFAULT_CLOSE,
-            code=-1 # -1 should never happen
+            code=-1, # -1 should never happen
+            type_code=0 # 0 means anybody
         ):
 
         self.name = name
@@ -50,10 +52,25 @@ class Location(Document):
         self.open_at = open_at
         self.close_at = close_at
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
-        self.requirements = config.DEFAULT_LOCATION_REQUIREMENTS
+        self.requirements = config.DEFAULT_AVAILABILITY
+        self.type_code = type_code
 
     def to_np_arr(self):
         return global_to_np_arr(self.requirements)
+
+    def update(self, payload):
+        """
+        Updates the user based on the provided payload
+        """
+        payload.pop("_id", None)
+        keys = payload.keys()
+        if all(hasattr(self, key) for key in keys):
+            for key in payload.keys():
+                setattr(self, key, payload[key])
+            self.save()
+            return True
+        return False
+
 
 class Schedule(Document):
     """
@@ -78,7 +95,7 @@ class User(Document):
             pid=-1, # -1 should never happen
             email="unknown@unc.edu",
             onyen="unknown",
-            typecode="000"
+            typecode="010"
         ):
 
         self.last_name = last_name

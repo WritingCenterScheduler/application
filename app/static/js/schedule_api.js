@@ -8,9 +8,9 @@ var TFS_CLICK_CALLBACK_FN;
 var BEGIN_TABLE=16;
 var END_TABLE=34;
 
-function make_availability_payload(payload_json){
+function make_schedule_payload(sched_string, payload_json){
     return {
-        "availability": payload_json.availability
+        sched_string: payload_json.availability
     }
 }
 
@@ -25,15 +25,37 @@ function fetch_me(callback){
     xhttp.send();
 }
 
-function update_me(payload_json, callback){
+function fetch_loc(code, callback){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             callback(JSON.parse(this.responseText));
         }
     };
-    xhttp.open("PUT", "/api/user/me", true);
+    xhttp.open("GET", "/api/location/"+code, true);
+    xhttp.send();
+}
+
+function update_loc(code, payload_json, callback){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("PUT", "/api/location/"+code, true);
     xhttp.send(JSON.stringify(payload_json)); 
+}
+
+function make_loc(payload_json, callback){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("POST", "/api/locations", true);
+    xhttp.send(JSON.stringify(payload_json));  
 }
 
 /*
@@ -48,13 +70,12 @@ function update_me(user_object, callback){
         }
     };
     xhttp.open("PUT", "/api/user/me", true);
-    xhttp.send(JSON.stringify(make_availability_payload(user_object) ));   
+    xhttp.send(JSON.stringify(make_schedule_payload("availability", user_object) ));   
 }
 
-function table_from_schedule(table_div, schedule_object, click_callback){
+function table_from_schedule(table_div, schedule_meta, schedule_data, click_callback){
     TFS_CLICK_CALLBACK_FN = click_callback;
-    var karr = Object.keys(schedule_object);
-    var slots = MINUTESPERDAY / schedule_object.resolution_minutes;
+    var slots = MINUTESPERDAY / schedule_meta.resolution_minutes;
     var newtable = $("<table id='user-schedule'>\
         <tr>\
             <th> Time </th>\
@@ -68,7 +89,7 @@ function table_from_schedule(table_div, schedule_object, click_callback){
         </tr>\
         </table>");
     table_div.append(newtable);
-    var resolution = schedule_object.resolution_minutes / 60;
+    var resolution = schedule_meta.resolution_minutes / 60;
     for(var i = 0; i < slots; i++){
 
         if (i < BEGIN_TABLE || i > END_TABLE){
@@ -83,20 +104,20 @@ function table_from_schedule(table_div, schedule_object, click_callback){
         }
         var newrow = $("<tr> \
            <td id='time'> " + hour + ":"+ min+"</td>\
-           <td class = table-"+schedule_object.availability["sun"][i]+" id='sun"+i+"' onclick='tfs_click_callback(this)'>"+
-            schedule_object.availability["sun"][i]+"</td> \
-           <td class = table-"+schedule_object.availability["mon"][i]+" id='mon"+i+"' onclick='tfs_click_callback(this)'>"+
-            schedule_object.availability["mon"][i]+"</td> \
-           <td class = table-"+schedule_object.availability["tue"][i]+" id='tue"+i+"' onclick='tfs_click_callback(this)'>"+
-            schedule_object.availability["tue"][i]+"</td> \
-           <td class = table-"+schedule_object.availability["wed"][i]+" id='wed"+i+"' onclick='tfs_click_callback(this)'>"+
-            schedule_object.availability["wed"][i]+"</td> \
-           <td class = table-"+schedule_object.availability["thu"][i]+" id='thu"+i+"' onclick='tfs_click_callback(this)'>"+
-            schedule_object.availability["thu"][i]+"</td> \
-           <td class = table-"+schedule_object.availability["fri"][i]+" id='fri"+i+"' onclick='tfs_click_callback(this)'>"+
-            schedule_object.availability["fri"][i]+"</td> \
-           <td class = table-"+schedule_object.availability["sat"][i]+" id='sat"+i+"' onclick='tfs_click_callback(this)'>"+
-            schedule_object.availability["sat"][i]+"</td> \
+           <td class = table-"+schedule_data["sun"][i]+" id='sun"+i+"' onclick='tfs_click_callback(this)'>"+
+            schedule_data["sun"][i]+"</td> \
+           <td class = table-"+schedule_data["mon"][i]+" id='mon"+i+"' onclick='tfs_click_callback(this)'>"+
+            schedule_data["mon"][i]+"</td> \
+           <td class = table-"+schedule_data["tue"][i]+" id='tue"+i+"' onclick='tfs_click_callback(this)'>"+
+            schedule_data["tue"][i]+"</td> \
+           <td class = table-"+schedule_data["wed"][i]+" id='wed"+i+"' onclick='tfs_click_callback(this)'>"+
+            schedule_data["wed"][i]+"</td> \
+           <td class = table-"+schedule_data["thu"][i]+" id='thu"+i+"' onclick='tfs_click_callback(this)'>"+
+            schedule_data["thu"][i]+"</td> \
+           <td class = table-"+schedule_data["fri"][i]+" id='fri"+i+"' onclick='tfs_click_callback(this)'>"+
+            schedule_data["fri"][i]+"</td> \
+           <td class = table-"+schedule_data["sat"][i]+" id='sat"+i+"' onclick='tfs_click_callback(this)'>"+
+            schedule_data["sat"][i]+"</td> \
         </tr>");
         newtable.append(newrow);
     }
