@@ -125,6 +125,7 @@ class User(Document):
         """
         Makes sure the payload is safe
         """
+        payload.pop("_id", None)
         keys = payload.keys()
         return all(hasattr(self, key) for key in keys)
 
