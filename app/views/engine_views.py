@@ -53,15 +53,18 @@ def engine_run():
 
         sm.add_location(l)
 
-    width = 7
+    width = 7 # Days per week
     height = config.TIMESLOTS_PER_DAY
-    sm.locations[0].initialize_dimensions(width, height, 2)
 
-    for loc in sm.locations:
-        loc.calculate_need()
+    for l in sm.locations:
+        l.initialize_dimensions(width, height, 2)
+        l.calculate_need()
 
-    for loc in sm.locations:
-        loc.schedule_greatest_need()
-        loc.schedule_greatest_need()
 
-    return np.array_str(sm.locations[0].schedule)
+    return np.array_str(sm.locations[0].need)
+
+    # for l in sm.locations:
+    #     l.schedule_greatest_need()
+    #     l.schedule_greatest_need()
+
+    # return np.array_str(sm.locations[0].schedule)
