@@ -91,7 +91,7 @@ class Location:
         self.possible_candidates.sort(key=lambda x: x.is_returner())
 
     def initialize_dimensions(self, width, height, depth):
-        self.schedule = np.zeros((depth, height, width))
+        self.schedule = np.zeros((width, height, depth))
 
     def search_PID(self, PID):
         for p in self.possible_candidates:

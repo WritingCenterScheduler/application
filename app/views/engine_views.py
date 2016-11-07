@@ -9,7 +9,11 @@ from app import schedule_app, load_user
 from mongoengine import MultipleObjectsReturned, DoesNotExist, NotUniqueError
 # import local libraries
 from .. import models, responses, decorators, config
-from app.engine import models as engine_models
+
+from app.engine.scheduleManager import ScheduleManager
+from app.engine.user import User
+from app.engine.employee import Employee
+from app.engine.location import Location
 
 @schedule_app.route("/engine/run", methods=["GET"])
 @login_required
@@ -26,45 +30,50 @@ def engine_run():
     
     for user in all_users:
 
-        candidate = engine_models.Employee(user.to_np_arr(), 
-            typecode=user.typecode, 
+        candidate = Employee(user.to_np_arr(), 
+            typecode="010", 
             pid=user.pid)
         schedulable_users.append(candidate)
 
     # get all locations that require scheduling
-    sm = engine_models.ScheduleManager()
+    sm = ScheduleManager()
 
     # iterate over the locations
     all_locations = models.Location.objects()
 
-
     for loc in all_locations:
-        l = engine_models.Location()
-        l.timeslots = [
-            {
-                "type": "1",
-                "scalar_weight": 2,
-                "requirements": loc.to_np_arr()
-            }
-        ]
-
-        for candidate in schedulable_users:
-            l.add_possible_candidate(candidate)
-
+        l = Location(
+            typecode=1,
+            scalarWeight=2,
+            requirements=loc.to_np_arr())
         sm.add_location(l)
 
-    width = 7 # Days per week
-    height = config.TIMESLOTS_PER_DAY
+    for candidate in schedulable_users:
+        sm.add_candidate(candidate)
 
-    for l in sm.locations:
-        l.initialize_dimensions(width, height, 2)
-        l.calculate_need()
+    # width = 7 # Days per week
+    # height = config.TIMESLOTS_PER_DAY
+
+    # for l in sm.locations:
+    #     l.initialize_dimensions(width, height, 2)
+    #     l.calculate_need()
 
 
-    return np.array_str(sm.locations[0].need)
+    # # return np.array_str(sm.locations[0].need)
 
     # for l in sm.locations:
     #     l.schedule_greatest_need()
     #     l.schedule_greatest_need()
 
-    # return np.array_str(sm.locations[0].schedule)
+
+    # for c in sm.candidates:
+    #     print(c.pre_availability)
+    #     print(c.schedule)
+
+    sm.run_schedule()
+    
+    for l in sm.locations:
+        print(l.requirements)
+        # print(l.schedule)
+
+    return np.array_str(sm.locations[0].schedule.astype(int))
