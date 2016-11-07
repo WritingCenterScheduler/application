@@ -9,9 +9,9 @@ var BEGIN_TABLE=16;
 var END_TABLE=34;
 
 function make_schedule_payload(sched_string, payload_json){
-    return {
-        sched_string: payload_json.availability
-    }
+    var rtrn = {};
+    rtrn[sched_string] = payload_json.availability;
+    return rtrn;
 }
 
 function fetch_me(callback){

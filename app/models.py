@@ -114,6 +114,7 @@ class User(Document):
         """
         Updates the user based on the provided payload
         """
+        # print(payload)
         if self.is_payload_safe(payload):
             for key in payload.keys():
                 setattr(self, key, payload[key])
