@@ -141,8 +141,8 @@ class ScheduleManager:
                                 c = random.choice(available_candidates)
                                 l.schedule_employee(c, (i,j))
                                 available_candidates.remove(c)
-        self.calculate_need()
-        self.compute_schedule_optimality()
+        #self.calculate_need()
+        #self.compute_schedule_optimality()
 
     def location_cost(self, l):
         """
