@@ -89,7 +89,8 @@ def location(loc_id):
     loc = load_location(loc_id)
     return render_template("location_settings.html",
             user=current_user,
-            location=loc)
+            location=loc,
+            all_locations=models.Location.objects())
 
 
 @schedule_app.route("/admin/location", methods=['GET'])

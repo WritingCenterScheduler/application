@@ -96,6 +96,12 @@ def login():
 def login_failed():
     return "Login Failed.  Please contact the system manager."
 
+@schedule_app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
 
 @schedule_app.route("/")
 @login_required
@@ -103,7 +109,10 @@ def index():
     """
     Dump the headers
     """
-    return(str(request.headers))
+    if current_user.is_admin:
+        return redirect(url_for("admin"))
+    else:
+        return redirect(url_for("set_availability", pid=current_user.pid))
 
 
 # Import app views

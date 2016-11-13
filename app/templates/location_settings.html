@@ -1,7 +1,17 @@
 {% extends "header.html" %}
 {% block body %}
-    <br>
-    <h2>Create new location</h2>
+    
+    <br><br>
+    <ul class="nav nav-tabs">
+        {% for l in all_locations %}
+            <li class="{{ 'active' if l.code == location.code }}"><a href="{{url_for('location', loc_id=l.code)}}">{{l.name}}</a></li>
+        {% else %}
+            No locations to show
+        {% endfor %}
+    </ul>
+    
+    <h2>Create Location</h2>
+    
     <div id="new_loc_form">
         <form id="new_loc">
             Actual Name: <input type="text" id = "name" name="name">
@@ -10,14 +20,15 @@
                              name = "open_at"></select>
             Close at: <select class="timeSelect"
                              name = "close_at"></select>
-
+            <br>
             Student Type Needed:
             <input type="radio"  name="type_code" value="0" checked> Any Tutor Type
             <input type="radio" name="type_code" value="1"> Returners Only
-
+            <br>
             <button type="button" onclick="make_new_location()">SUBMIT</button>
         </form>
     </div>
+    
     <br>
     <div id="location-table"></div>
     <script type="text/javascript">
