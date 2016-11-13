@@ -73,7 +73,7 @@ var location_settings_init = function() {
 var make_new_location = function(){
     var data = {};
 
-    var Name   = document.getElementById('name').value;
+    var Name = document.getElementById('name').value;
     var Code = document.getElementById('code').value;
     //alert(Code);
     if (Name== ""  && Code=="") {
@@ -85,6 +85,8 @@ var make_new_location = function(){
 
     make_loc( data, function(obj){
         console.log(obj);
+        sleep(100);
+        location.reload();
     });
 }
 
@@ -109,6 +111,14 @@ var update_myself = function(){
     update_me(me, function(response){
         console.log(response);
     });  
+}
+
+var confirm_delete_loc = function(code){
+    if (confirm("Are you sure you want to delete " + code + "?") ){
+        delete_loc(code, function(response){
+            window.location = "/admin/location";
+        });
+    }
 }
 
 var user_availability_init = function(){

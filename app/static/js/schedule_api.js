@@ -8,6 +8,10 @@ var TFS_CLICK_CALLBACK_FN;
 var BEGIN_TABLE=16;
 var END_TABLE=34;
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function make_schedule_payload(sched_string, payload_json){
     var rtrn = {};
     rtrn[sched_string] = payload_json.availability;
@@ -56,6 +60,17 @@ function make_loc(payload_json, callback){
     };
     xhttp.open("POST", "/api/locations", true);
     xhttp.send(JSON.stringify(payload_json));  
+}
+
+function delete_loc(code, callback){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("DELETE", "/api/location/" + code, true);
+    xhttp.send();  
 }
 
 function make_user(payload_json, callback){
