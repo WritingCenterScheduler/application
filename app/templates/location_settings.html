@@ -3,14 +3,20 @@
     <br>
     <div id="new_loc_form">
         <form id="new_loc">
-            Code: <input type="text" name="code">
-            Open at: <input type="text" name="open_at">
-            Close at: <input type="text" name="close_at">
-            Name: <input type="text" name="name">
-            Type code: <input type="text" name="type_code">
+            Actual Name: <input type="text" id = "name" name="name">
+            Code: <input type="text" id = "code" name="code">
+            Open at: <select class="timeSelect"
+                             name = "open_at"></select>
+            Close at: <select class="timeSelect"
+                             name = "close_at"></select>
+
+            Student Type Needed:
+            <input type="radio"  name="type_code" value="0" checked> Any Tutor Type
+            <input type="radio" name="type_code" value="1"> Returners Only
+
             <button type="button" onclick="make_new_location()">SUBMIT</button>
         </form>
-    </div> 
+    </div>
     <br>
     <div id="location-table"></div>
     <script type="text/javascript">

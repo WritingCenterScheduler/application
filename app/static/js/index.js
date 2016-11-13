@@ -35,7 +35,8 @@ var location_settings_init = function() {
             console.log(response);
         });
     }
-    
+
+
     var path = location.pathname.split("/");
     var code = path[path.length -1];
     fetch_loc(code, function(obj){
@@ -45,18 +46,47 @@ var location_settings_init = function() {
         if (obj != null){
             table_div = $("#location-table");
             table_from_schedule(table_div, loc, loc.requirements, on_schedule_click);
+
+                var select = $(".timeSelect");
+                var hours, minutes, ampm;
+                for(var i = 0; i <= 1440; i += 30){
+                    hours = Math.floor(i / 60);
+                    minutes = i % 60;
+                    if (minutes < 10){
+                        minutes = '0' + minutes; // adding leading zero
+                    }
+                    select.append($('<option></option>')
+                        .attr('value', i)
+                        .text(hours + ':' + minutes));
+                }
+
         }
 
     });
+
+
+
+
 }
 
 var make_new_location = function(){
     var data = {};
+
+    var Name   = document.getElementById('name').value;
+    var Code = document.getElementById('code').value;
+    //alert(Code);
+    if (Name== ""  && Code=="") {
+        alert("Fill Out All Feilds Before Submitting");
+        return;
+    }
+
     $("#new_loc").serializeArray().map(function(x){data[x.name] = x.value;});
 
     make_loc( data, function(obj){
         console.log(obj);
     });
+
+
 }
 
 var user_availability_init = function(){
@@ -105,5 +135,5 @@ var user_availability_init = function(){
         }
 
     });
-}
 
+}
