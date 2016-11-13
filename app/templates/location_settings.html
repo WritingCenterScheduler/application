@@ -1,16 +1,7 @@
 {% extends "header.html" %}
 {% block body %}
     
-    <br><br>
-    <ul class="nav nav-tabs">
-        {% for l in all_locations %}
-            <li class="{{ 'active' if l.code == location.code }}"><a href="{{url_for('location', loc_id=l.code)}}">{{l.name}}</a></li>
-        {% else %}
-            No locations to show
-        {% endfor %}
-    </ul>
-    
-    <h2>Create Location</h2>
+    <h3>Create Location</h3>
     
     <div id="new_loc_form">
         <form id="new_loc">
@@ -28,6 +19,14 @@
             <button type="button" onclick="make_new_location()">SUBMIT</button>
         </form>
     </div>
+
+    <ul class="nav nav-tabs">
+        {% for l in all_locations %}
+            <li class="{{ 'active' if l.code == location.code }}"><a href="{{url_for('location', loc_id=l.code)}}">{{l.name}}</a></li>
+        {% else %}
+            No locations to show
+        {% endfor %}
+    </ul>
     
     <br>
     <div id="location-table"></div>
