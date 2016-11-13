@@ -92,7 +92,7 @@ function update_me(user_object, callback){
         }
     };
     xhttp.open("PUT", "/api/user/me", true);
-    xhttp.send(JSON.stringify(make_schedule_payload("availability", user_object) ));   
+    xhttp.send(JSON.stringify(user_object));   
 }
 
 function table_from_schedule(table_div, schedule_meta, schedule_data, click_callback){

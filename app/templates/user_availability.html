@@ -1,7 +1,18 @@
 {% extends "header.html" %}
 {% block body %}
 
+    <h2> Howdy, {{ current_user.first_name + ' ' + current_user.last_name if current_user.first_name else ' '}}</h2>
 
+    <h3>Update your personal info</h3>
+    <div id="update_user_form">
+        <form id="update_user">
+            First Name: <input type="text" name="first_name" value="{{current_user.first_name}}">
+            Last Name: <input type="text" name="last_name" value="{{current_user.last_name}}">
+            Email: <input type="text" name="email" value="{{current_user.email}}">
+            <button type="button" onclick="update_myself()">SUBMIT</button>
+        </form>
+    </div> 
+    
     <p>Set your availability below:
         <ul>
             <li><p><span class = 'text-table-0'>Red (0)</span> is used to represent time slots during which you
@@ -18,9 +29,8 @@
         slot. The availability you provide is a request and will be met as often as possible but cannot be guaranteed.
     </p>
 
-     <div id="availability-table">
-
-     </div>
+    <div id="availability-table"></div>
+    
     <script type="text/javascript">
                     // Issue: This sometimes loads and runs before the source script is available.
                     // TODO: Fix...

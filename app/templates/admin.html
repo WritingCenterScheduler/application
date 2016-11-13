@@ -12,10 +12,11 @@
     <h2>Users</h2>
         <table>
             <tr>
-                <th>Fname</th>
-                <th>Lname</th>
+                <th>First</th>
+                <th>Last</th>
                 <th>PID</th>
                 <th>Email</th>
+                <th>Admin?</th>
                 <th>Delete</th>
             </tr>
             {% for user in all_users %}
@@ -24,6 +25,7 @@
                 <td>{{ user.last_name }}</td>
                 <td>{{ user.pid }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{'yes' if user.is_admin else 'no'}}</td>
                 <td><button onclick="delete_user({{ user.pid }})">Delete</button></td>
             </tr>
             {% else %}

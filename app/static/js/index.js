@@ -3,6 +3,7 @@
     Written by BD, MK, PK, and RC
     Fall 2016, COMP 523
 */
+var me;
 
 var location_settings_init = function() {
     /*
@@ -85,8 +86,6 @@ var make_new_location = function(){
     make_loc( data, function(obj){
         console.log(obj);
     });
-
-
 }
 
 var make_new_user = function(){
@@ -99,6 +98,19 @@ var make_new_user = function(){
     });
 }
 
+var update_myself = function(){
+    var data = {};
+    $("#update_user").serializeArray().map(function(x){data[x.name] = x.value;});
+
+    me.first_name = data['first_name'];
+    me.last_name = data['last_name'];
+    me.email = data['email'];
+
+    update_me(me, function(response){
+        console.log(response);
+    });  
+}
+
 var user_availability_init = function(){
     /*
         This is the entry point for user_availability.html
@@ -106,7 +118,6 @@ var user_availability_init = function(){
         TODO: Click and drag range.
         TODO: Stretch goals.
     */
-    var me;
 
     var on_schedule_click = function(cell){
         day = cell.id.substring(0, 3);
