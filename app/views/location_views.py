@@ -82,7 +82,7 @@ def api_locations():
 # UI Views
 #
 
-@schedule_app.route("/location/<loc_id>", methods=['GET'])
+@schedule_app.route("/admin/location/<loc_id>", methods=['GET'])
 @login_required
 @decorators.requires_admin
 def location(loc_id):
@@ -92,7 +92,7 @@ def location(loc_id):
             location=loc)
 
 
-@schedule_app.route("/location", methods=['GET'])
+@schedule_app.route("/admin/location", methods=['GET'])
 def location_default():
     locations = models.Location.objects()
     try:

@@ -9,6 +9,14 @@ def invalid(uri, reason):
     r["uri"] = uri
     return Response(json.dumps(r),  mimetype='application/json')
 
+def success(uri, stype):
+    r = {
+        "status": "success",
+        "type": stype,
+        "uri": uri,
+    }
+    return Response(json.dumps(r), mimetype='application/json')
+
 def user_created(uri, pid):
     r = {}
     r["status"] = "success"
