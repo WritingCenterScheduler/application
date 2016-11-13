@@ -55,6 +55,16 @@ db.grantRolesToUser(
 )
 ```
 
+Create a user for the application (this is not a mongo user)
+
+```
+db.users.create({
+  "pid": 720430213,
+  "email": "bd@unc.edu",
+  "typecode": "110",
+})
+```
+
 # Development:
 
 To develop:

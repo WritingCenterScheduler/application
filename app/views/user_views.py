@@ -1,7 +1,7 @@
 import json
 import numpy as np
 # import flask
-from flask import jsonify, Response, request, render_template
+from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
 from app import schedule_app, load_user
@@ -66,9 +66,7 @@ def add_user():
     try:
         u.init(
             pid=data['pid'],
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            onyen=data['onyen'],
+            email=data['email'],
             typecode=data['typecode'])
         u.save()
     except KeyError as e:
@@ -89,7 +87,11 @@ def user(pid):
     """
     user = load_user(pid)
     if user:
-        return Response(user.to_json(), mimetype='application/json')
+        if request.method == "DELETE":
+            user.delete()
+            return responses.success(url_for("user", pid=pid), "USER DELETED")
+        else:
+            return Response(user.to_json(), mimetype='application/json')
     else:
         return responses.invalid(request.url, "User does not exist")
 
@@ -148,3 +150,11 @@ def set_help(pid):
 def my_arr():
     arr = current_user.to_np_arr()
     return np.array_str(arr)
+
+
+@schedule_app.route("/admin")
+@login_required
+@decorators.requires_admin
+def admin():
+    return render_template("admin.html", 
+        all_users = models.User.objects())

@@ -59,6 +59,16 @@ var make_new_location = function(){
     });
 }
 
+var make_new_user = function(){
+    var data = {};
+    $("#new_user").serializeArray().map(function(x){data[x.name] = x.value;});
+
+    make_user(data, function(obj){
+        console.log(obj);
+        location.reload();
+    });
+}
+
 var user_availability_init = function(){
     /*
         This is the entry point for user_availability.html

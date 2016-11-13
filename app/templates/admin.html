@@ -1,0 +1,26 @@
+{% extends "header.html" %}
+{% block body %}
+    <h2>Create new user</h2>
+    <div id="new_user_form">
+        <form id="new_user">
+            PID: <input type="text" name="pid">
+            EMAIL: <input type="text" name="email">
+            TYPECODE: <input type="text" name="typecode">
+            <button type="button" onclick="make_new_user()">SUBMIT</button>
+        </form>
+    </div> 
+    <h2>Users</h2>
+        <table>
+            {% for user in all_users %}
+            <tr>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.pid }}</td>
+                <td>{{ user.email }}</td>
+                <td><button onclick="delete_user({{ user.pid }})">Delete</button></td>
+            </tr>
+            {% else %}
+                <p>There are no users</p>
+            {% endfor %}
+        </table>
+{% endblock %}

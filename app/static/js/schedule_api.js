@@ -58,6 +58,28 @@ function make_loc(payload_json, callback){
     xhttp.send(JSON.stringify(payload_json));  
 }
 
+function make_user(payload_json, callback){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("POST", "/api/user", true);
+    xhttp.send(JSON.stringify(payload_json));     
+}
+function delete_user(pid){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            location.reload();
+        }
+    };
+    xhttp.open("DELETE", "/api/user/" + pid, true);
+    xhttp.send();   
+}
+
 /*
 AJAX updates ME on the server
 then calls callback with the status

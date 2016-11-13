@@ -30,6 +30,29 @@ def global_to_np_arr(json_avail):
         avail[i] = newrow
     return avail
 
+def global_np_to_json_dict(np_arr):
+    """
+    Given a 7 wide by N long np array, return a json dict.
+    """
+    rtrn = {
+        "sun":[],
+        "mon":[],
+        "tue":[],
+        "wed":[],
+        "thu":[],
+        "fri":[],
+        "sat":[]
+    }
+    for row in np_arr:
+        rtrn["sun"].append([None if f is 0 else f for f in row[0].tolist()])
+        rtrn["mon"].append([None if f is 0 else f for f in row[1].tolist()])
+        rtrn["tue"].append([None if f is 0 else f for f in row[2].tolist()])
+        rtrn["wed"].append([None if f is 0 else f for f in row[3].tolist()])
+        rtrn["thu"].append([None if f is 0 else f for f in row[4].tolist()])
+        rtrn["fri"].append([None if f is 0 else f for f in row[5].tolist()])
+        rtrn["sat"].append([None if f is 0 else f for f in row[6].tolist()])
+    return rtrn
+
 class Location(Document):
     name = StringField(required=True)
     code = IntField(unique=True)
@@ -78,7 +101,9 @@ class Schedule(Document):
     over all locations.
     """
     # TODO
-    name = StringField(required=True)
+    sid = StringField(required=True, unique=True)
+    data = ListField()
+    created_on = DateTimeField()
 
 class User(Document):
     last_name = StringField(required=True)
@@ -94,7 +119,6 @@ class User(Document):
             last_name="Heel",
             pid=-1, # -1 should never happen
             email="unknown@unc.edu",
-            onyen="unknown",
             typecode="010"
         ):
 
@@ -102,7 +126,6 @@ class User(Document):
         self.first_name = first_name
         self.pid = pid
         self.email = email
-        self.onyen = onyen
         self.typecode = typecode # An N digit number.
             # (0/1)XXXX... determines not admin/admin
             # X(0/1)XXX... determines new/returning

@@ -9,9 +9,13 @@
     <body>
         <nav>
             <ul>
-                <li><a href="settings">Schedule Availability</a></li>
-                <li><a href="myschedule">My Schedule</a></li>
+                <!-- Brandon added these -->
+                {% if current_user.is_admin %}
+                <li><a href="/admin/location">Manage Locations</a></li>
+                {% endif %}
                 <li><a href="help">Help</a></li>
+                <li><a href="{{url_for('set_availability', pid=current_user.pid)}}">My Schedule</a></li>
+
             </ul>
         </nav>
         {% block body %} 
