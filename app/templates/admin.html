@@ -32,7 +32,12 @@
                 <p>There are no users</p>
             {% endfor %}
         </table>
-    <h2>Schedules</h2>
+    <h2>
+        Schedules 
+        <button style="font-size: 15px;" onclick="run_schedule();">Run Scheduler</button> 
+        <i style="font-size: 18px; display: none;" class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+    </h2>
+
         <table>
             <tr> 
                 <th>SID</th>
@@ -43,7 +48,7 @@
             <tr>
                 <td>{{ s.sid }}</td>
                 <td>{{ s.created_on }}</td>
-                <td><button onclick="delete_schedule({{ s.sid }})">Delete</button></td>
+                <td><button onclick="delete_schedule('{{ s.sid }}')">Delete</button></td>
             </tr>
             {% else %}
                 <p>There are no schedules</p>

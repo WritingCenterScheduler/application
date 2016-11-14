@@ -95,6 +95,38 @@ function delete_user(pid){
     xhttp.send();   
 }
 
+function run_schedule(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        
+        if (this.readyState == 4 && this.status == 200) {
+            // callback(JSON.parse(this.responseText));
+            // cause a reload
+            location.reload();
+            $(".fa.fa-refresh").hide();
+        }
+    };
+    xhttp.open("GET", "/admin/runschedule", true);
+    xhttp.send();
+
+    // hide the spinner
+    $(".fa.fa-refresh").show();
+}
+
+function delete_schedule(code){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            location.reload();
+        }
+    };
+    if (confirm("Delete schedule? " + code)){
+        xhttp.open("DELETE", "/api/schedule/" + code, true);
+        xhttp.send();  
+    }
+}
+
 /*
 AJAX updates ME on the server
 then calls callback with the status
