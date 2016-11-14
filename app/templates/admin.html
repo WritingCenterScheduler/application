@@ -2,11 +2,15 @@
 {% block body %}
     <h2>Create new user</h2>
     <div id="new_user_form">
+    <p>Please enter the following information to create a new user. Please also note that typecode of 1 is for an administrative user while a typecode of 2 is for an employee without administrative rights.</p>
         <form id="new_user">
-            PID: <input type="text" name="pid">
-            EMAIL: <input type="text" name="email">
-            TYPECODE: <input type="text" name="typecode">
-            <button type="button" onclick="make_new_user()">SUBMIT</button>
+            <input class = "admin-input" type="text" placeholder = "PID" name="pid">
+            <br>
+            <input  class = "admin-input" placeholder = "Email" type="text" name="email">
+            <br>
+            <input  class = "admin-input" type="text" placeholder = "Typecode" name="typecode">
+            <br>
+            <button type="button" class="btn btn-success" onclick="make_new_user()">SUBMIT</button>
         </form>
     </div> 
     <h2>Users</h2>
@@ -16,10 +20,12 @@
                 <th>Last</th>
                 <th>PID</th>
                 <th>Email</th>
-                <th>Admin?</th>
+                <th>Admin?</th> 
                 <th>Delete</th>
             </tr>
+            <p>Below is a list of all users:</p>
             {% for user in all_users %}
+
             <tr>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
@@ -44,6 +50,7 @@
                 <th>Created On</th>
                 <th>Delete</th>
             </tr>
+            <p>Below is a list of all schedules in the system:</p>
             {% for s in all_schedules %}
             <tr>
                 <td><a href="{{ url_for('schedule', code=s.sid) }}">{{ s.sid }}</a></td>
@@ -51,7 +58,8 @@
                 <td><button onclick="delete_schedule('{{ s.sid }}')">Delete</button></td>
             </tr>
             {% else %}
-                <p>There are no schedules</p>
+                <p>There are no schedules at this point in time.</p>
             {% endfor %}
         </table>
+
 {% endblock %}

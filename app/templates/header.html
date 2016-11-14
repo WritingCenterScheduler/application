@@ -1,7 +1,7 @@
 <html>
     <head>
-        <title>WritingCenterScheduler</title>
-
+        <title>Writing Center Scheduler</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- CDN Loads.  Pull these into the main project later -->
         <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -12,22 +12,38 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
     </head>
     <body>
-        <nav>
-            <ul>
+        <div class = "row header-container">
+            <h1 class = "header-heading">The Learning and Writing Center <br>Scheduler</h1>
+            <img class = "header-image" src = "{{ url_for('static', filename='images/UNC_CAS_blk_png 2.png') }}">
+        </div>
+        <nav class = "">
+
+            <ul class = "nav nav-pills nav-justified">
                 <!-- Brandon added these -->
                 {% if current_user.is_admin %}
                 <li><a href="/admin">Admin</a></li>
                 <li><a href="/admin/location">Manage Locations</a></li>
                 
                 {% endif %}
-                <li><a href="{{url_for('help')}}">Help</a></li>
+                
                 <li><a href="{{url_for('set_availability', pid=current_user.pid)}}">My Schedule</a></li>
+
+                <li><a href="{{url_for('help')}}">Help</a></li>
+
                 <li><a href="{{url_for('logout')}}">Log out</a>
+
             </ul>
         </nav>
         <div class="container">
         {% block body %} 
         {% endblock %}
         </div>
+        <br><br><br><br>
+        <footer>
+            <div class = "footer">
+                <h3 class = "footer-text">Created by COMP523</h3>
+                 <!--<img class = "footer-image" src = "{{ url_for('static', filename='images/GitHub-Mark.png') }}">-->
+            </div>
+        </footer>
     </body>
 </html>
