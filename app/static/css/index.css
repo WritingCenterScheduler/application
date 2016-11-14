@@ -1,5 +1,6 @@
-p {
-    font-size: 1.2em;
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 table {
@@ -28,28 +29,28 @@ table th {
     background-color:  #97D6FF;
 }
 #location-table .table-2 {
-    background-color: #1998EB;
+    background-color: #00695C;
 }
 #availability-table .table-0 {
-    background-color: #ff0000;
+    background-color: #B71C1C;
 }
 
 #availability-table .table-1 {
-    background-color: #ffff00;
+    background-color: #FBC02D;
 }
 .text-table-0 {
-    color: #ff0000;
+    color: #B71C1C;
 }
 .text-table-1 {
-   color: #f4e842;
+   color: #FBC02D;
 }
 #availability-table .table-2 {
-    background-color: #009933;
+    background-color: #00695C;
 }
 .text-table-2 {
-    color: #009933;
+    color: #00695C;
 }
-nav {
+/*nav {
 	    background-color: #333;
 	    margin: 0;
 	    overflow: hidden;
@@ -73,7 +74,114 @@ nav > ul > li > a {
 	    text-decoration: none;
 }
 
-img {
+*/
+/*Overall design*/
 
+body{
+	background-color:#EEE;
+}
+
+p {
+    font-size: 1.2em;
+    color:#999999;
+}
+/*Header*/
+img.header-image{
+	max-width:100%;
+	width:20%;
+	float:right;
+	position: relative;
+	top: -3.5em;
+	right: 3em;
+}
+@media screen and (max-width: 770px) {
+	img.header-image{
+		display:none;
+	}
+}
+h1.header-heading{
+	position: relative;
+	top: 1.2em;
+	font-size: 2em;
+	left:2em;
+	font-family: Avenir, Times;
+
+	text-transform: uppercase;
+}
+
+div.header-container{
+	background-color: rgba(123,175,212,1);
+	position:relative;
+	
+
+}
+.nav > li {
+	background-color: #333;
+}
+.nav > li :hover {
+	background-color: #333!important;
+	color: rgba(123,175,212,1)!important;
+	transition-duration: 500ms;
+    transition-timing-function: ease-out;
+    transition-delay: 0.05s;
+}
+.nav > li > a {
+	color:#9E948A;;
+}
+div.nav-center{
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+
+}
+
+/*Admin*/
+input.admin-input{
+
+}
+th{
+	background-color: rgba(123,175,212,1)!important;
+}
+tr{
+	background-color: #BBB!important;
+}
+button.btn-success{
+	background-color: #333;
+	border:pink;
+}
+button.btn-success:hover{
+	background-color: rgba(123,175,212,1)!important;
+	border:pink;
+	transition-duration: 500ms;
+    transition-timing-function: ease-out;
+    transition-delay: 0.05s;
+}
+/*Help*/
+
+li > a, a{
+	color: #999;
+}
+li > a:hover, a:hover{
+	color: rgba(123,175,212,1)!important;
+	transition-duration: 500ms;
+    transition-timing-function: ease-out;
+    transition-delay: 0.05s;
+    text-decoration: none;
+}
+
+/*Footer*/
+.footer{
+	color:#9E948A;
+	background-color: #333;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	position:absolute;
+	width:100%!important;
+	left:0em;
+
+}
+
+h3.footer-text{
+	text-align: center;
 }
 

@@ -5,10 +5,14 @@
     
     <div id="new_loc_form">
         <form id="new_loc">
-            Actual Name: <input type="text" id = "name" name="name">
-            Code: <input type="text" id = "code" name="code">
+            <p>Please enter the following details to create a new location:</p>
+            <input type="text" placeholder = "Name of location" id = "name" name="name">
+            <br>
+            <input type="text" placeholder = "Code" id = "code" name="code">
+            <br>
             Open at: <select class="timeSelect"
                              name = "open_at"></select>
+                             <br>
             Close at: <select class="timeSelect"
                              name = "close_at"></select>
             <br>
@@ -16,7 +20,7 @@
             <input type="radio"  name="type_code" value="0" checked> Any Tutor Type
             <input type="radio" name="type_code" value="1"> Returners Only
             <br>
-            <button type="button" onclick="make_new_location()">SUBMIT</button>
+            <button type="button" class="btn btn-success" onclick="make_new_location()">SUBMIT</button>
         </form>
     </div>
 

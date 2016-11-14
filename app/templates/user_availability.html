@@ -3,13 +3,17 @@
 
     <h2> Howdy, {{ current_user.first_name + ' ' + current_user.last_name if current_user.first_name else ' '}}</h2>
 
-    <h3>Update your personal info</h3>
+    <h3>Update your personal particulars</h3>
+    <p>Please make any changes to your particulars and press enter to reflect those changes.</p>
     <div id="update_user_form">
         <form id="update_user">
-            First Name: <input type="text" name="first_name" value="{{current_user.first_name}}">
-            Last Name: <input type="text" name="last_name" value="{{current_user.last_name}}">
-            Email: <input type="text" name="email" value="{{current_user.email}}">
-            <button type="button" onclick="update_myself()">SUBMIT</button>
+            <input type="text" placeholder = "First Name" name="first_name" value="{{current_user.first_name}}">
+            <br>
+            <input type="text" name="last_name" placeholder = "Last Name" value="{{current_user.last_name}}">
+            <br>
+            <input type="text" name="email" placeholder = "Email" value="{{current_user.email}}">
+            <br>
+            <button type="button" class="btn btn-success" onclick="update_myself()">Enter</button>
         </form>
     </div> 
     
@@ -25,8 +29,14 @@
         </ul>
     </p>
 
-    <p><strong>NOTE:</strong> Setting a time slot to Green does not guarantee that you are scheduled for that time
-        slot. The availability you provide is a request and will be met as often as possible but cannot be guaranteed.
+    <p><strong>NOTE:</strong> 
+    <ol>
+    <li>
+        Setting a time slot to Green does not guarantee that you are scheduled for that timeslot. The availability you provide is a request and will be met as often as possible but cannot be guaranteed. 
+    </li>
+    <li>
+        Please ensure that you choose each and every slot below. Clicking on any of the colored boxes automatically reflects the change in the database so no further submission is required.
+    </li>
     </p>
 
     <div id="availability-table"></div>
