@@ -12,6 +12,7 @@ from flask import url_for
 from flask_login import LoginManager
 from flask_login import login_required
 from flask_login import login_user
+from flask_login import logout_user
 from flask_login import current_user
 
 # import Mongo Exceptions
@@ -61,6 +62,12 @@ def user_from_sso(headers):
     else:
         return None
 
+def get_shib_cookie(cookies):
+    for c in cookies:
+        if c.startswith("_shib"):
+            return c
+    return None
+
 
 def load_location(code):
     try:
@@ -100,7 +107,13 @@ def login_failed():
 @login_required
 def logout():
     logout_user()
-    return redirect("/")
+    cookie_name = get_shib_cookie(request.cookies)
+    resp = redirect("/")
+
+    if cookie_name:
+        resp.set_cookie(cookie_name, expires=0)
+    
+    return resp
 
 
 @schedule_app.route("/")

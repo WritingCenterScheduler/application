@@ -13,7 +13,7 @@ from .. import models, responses, decorators
 # API Views
 #
 
-@schedule_app.route("/api/location/<path:code>", methods=['GET', 'PUT'])
+@schedule_app.route("/api/location/<path:code>", methods=['GET', 'PUT', 'DELETE'])
 @login_required
 @decorators.requires_admin
 def api_location(code):
@@ -39,6 +39,11 @@ def api_location(code):
                     return responses.invalid(request.url, "Could not update location")
             else:
                 return responses.invalid(request.url, "No data")
+        
+        elif request.method == 'DELETE':
+            loc.delete()
+            return responses.success(request.url, "Location DELETED")
+        
         else:
             return Response(loc.to_json(), mimetype='application/json')
     else:

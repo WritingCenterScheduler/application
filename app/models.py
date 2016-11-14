@@ -28,6 +28,7 @@ def global_to_np_arr(json_avail):
             json_avail["sat"][i],
         ]
         avail[i] = newrow
+
     return avail
 
 def global_np_to_json_dict(np_arr):

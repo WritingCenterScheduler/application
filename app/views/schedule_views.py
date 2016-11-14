@@ -28,19 +28,18 @@ def view_schedules():
     all_schedules = models.Schedule.objects()
     return Response(all_schedules.to_json(), mimetype='application/json')
 
-@schedule_app.route("/api/schedule/<code>", methods=["GET", "DELETE"])
+@schedule_app.route("/api/schedule/<path:code>", methods=["GET", "DELETE"])
 @login_required
 @decorators.requires_admin
 def schedule(code):
     """
     Modifies the schedule referred to by SID
     """
-    s = models.Schedule.objects.get(code=code)
+    s = models.Schedule.objects().get(sid=code)
     if s:
-
         if request.method == "DELETE":
             s.delete()
-            return responses.success(url_for("schedule", code=code), "Schedule DELETED")
+            return responses.success(request.url, "Schedule DELETED")
 
         elif request.method == "GET":
             return Response(s.to_json(), mimetype='application/json')
@@ -67,10 +66,13 @@ def engine_run():
     
     for user in all_users:
 
-        candidate = Employee(user.to_np_arr(), 
-            typecode="010", 
-            pid=user.pid)
-        schedulable_users.append(candidate)
+        np_arr = user.to_np_arr()
+
+        if np_arr is not None:
+            candidate = Employee(np_arr, 
+                typecode="010", 
+                pid=user.pid)
+            schedulable_users.append(candidate)
 
     # get all locations that require scheduling
     sm = ScheduleManager()
