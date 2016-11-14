@@ -68,7 +68,7 @@ def engine_run():
 
         np_arr = user.to_np_arr()
 
-        if type(np_arr) is np.array:
+        if np_arr is not None:
             candidate = Employee(np_arr, 
                 typecode="010", 
                 pid=user.pid)

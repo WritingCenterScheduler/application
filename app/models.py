@@ -17,20 +17,18 @@ def global_to_np_arr(json_avail):
     # width = 7 days per week
     avail = np.zeros(shape=(config.TIMESLOTS_PER_DAY, 7))
 
-    try:
-        for i in range(config.TIMESLOTS_PER_DAY):   
-            newrow = [
-                json_avail["sun"][i],
-                json_avail["mon"][i],
-                json_avail["tue"][i],
-                json_avail["wed"][i],
-                json_avail["thu"][i],
-                json_avail["fri"][i],
-                json_avail["sat"][i],
-            ]
-            avail[i] = newrow
-    except KeyError as e:
-        return None
+    for i in range(config.TIMESLOTS_PER_DAY):   
+        newrow = [
+            json_avail["sun"][i],
+            json_avail["mon"][i],
+            json_avail["tue"][i],
+            json_avail["wed"][i],
+            json_avail["thu"][i],
+            json_avail["fri"][i],
+            json_avail["sat"][i],
+        ]
+        avail[i] = newrow
+
     return avail
 
 def global_np_to_json_dict(np_arr):
