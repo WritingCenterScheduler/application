@@ -29,7 +29,7 @@ table th {
     background-color:  #97D6FF;
 }
 #location-table .table-2 {
-    background-color: #00695C;
+    background-color: #1565C0;
 }
 #availability-table .table-0 {
     background-color: #B71C1C;
@@ -168,6 +168,22 @@ li > a:hover, a:hover{
     transition-delay: 0.05s;
     text-decoration: none;
 }
+/*Location*/
+ul > li > a{
+
+}
+.nav-tabs>li.active>a, 
+.nav-tabs>li.active>a:focus,
+ .nav-tabs>li.active>a:hover {
+    color: #999;
+    background-color: #333; 
+    border-color: #333;   
+}
+.nav-tabs>li>a:hover {
+	border-radius: 0px;
+	border-color: #333;
+}
+
 
 /*Footer*/
 .footer{
