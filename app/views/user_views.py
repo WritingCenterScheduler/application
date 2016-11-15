@@ -152,12 +152,16 @@ def set_availability(pid):
     else: 
         return responses.invalid(request.url, "User does not exist")
 
-@schedule_app.route("/myarr")
+@schedule_app.route("/user/<pid>/schedule")
 @login_required
-def my_arr():
-    arr = current_user.to_np_arr()
-    return np.array_str(arr)
-
+def user_schedule(pid):
+    user = load_user(pid)
+    if user:
+        return render_template("user_schedule.html",
+            user=user)
+    else:
+        return responses.invalid(request.url, "User does not exist")
+    pass
 
 @schedule_app.route("/admin")
 @login_required

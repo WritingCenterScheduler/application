@@ -35,22 +35,25 @@ def schedule(code):
     """
     Modifies the schedule referred to by SID
     """
-    s = models.Schedule.objects().get(sid=code)
+    try:
+        s = models.Schedule.objects().get(sid=code)
     
-    if s:
-        if request.method == "DELETE":
-            s.delete()
-            return responses.success(request.url, "Schedule DELETED")
+        if s:
+            if request.method == "DELETE":
+                s.delete()
+                return responses.success(request.url, "Schedule DELETED")
 
-        elif request.method == "GET":
-            return Response(s.to_json(), mimetype='application/json')
+            elif request.method == "GET":
+                return Response(s.to_json(), mimetype='application/json')
+
+            else:
+                return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
 
         else:
-            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
-
-    else:
-        return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
-
+            return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
+    
+    except DoesNotExist:
+        return responses.invalid(request.url, "Schedule does not exist")
 
 @schedule_app.route("/admin/runschedule", methods=["GET"])
 @login_required
@@ -110,3 +113,14 @@ def engine_run():
     new_schedule.save()
 
     return jsonify(loc_return_list)
+
+@schedule_app.route("/api/schedule/active", methods=["GET"])
+@login_required
+def active_schedule():
+    # Returns the active schedule
+    active_id = models.GlobalConfig.get().active_schedule
+    try:
+        s = models.Schedule.objects().get(sid=active_id)
+        return Response(s.to_json())
+    except DoesNotExist:
+        return responses.invalid(request.url, "No active schedule")

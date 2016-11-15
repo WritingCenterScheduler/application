@@ -58,6 +58,17 @@ def global_np_to_json_dict(np_arr):
 class GlobalConfig(Document):
     active_schedule = StringField(required=True)
 
+    @staticmethod
+    def get():  
+        gc = GlobalConfig.objects().first()
+        
+        if gc == None:
+            gc = GlobalConfig()
+            gc.active_schedule = Schedule.objects().first().sid
+            gc.save()
+        
+        return gc
+
 
 class Location(Document):
     name = StringField(required=True)

@@ -8,6 +8,13 @@
 var me;
 
 /*
+    This is the entry point for user_schedule.html
+*/
+var user_schedule_init = function(){
+    // TODO...  implement
+}
+
+/*
     This is the entry point for location_settings.html
 */
 var location_settings_init = function() {
