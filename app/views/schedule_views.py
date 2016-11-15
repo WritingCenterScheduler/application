@@ -36,6 +36,7 @@ def schedule(code):
     Modifies the schedule referred to by SID
     """
     s = models.Schedule.objects().get(sid=code)
+    
     if s:
         if request.method == "DELETE":
             s.delete()
