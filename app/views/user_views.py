@@ -1,12 +1,13 @@
 import json
 import numpy as np
+import csv
 # import flask
 from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
 from app import schedule_app, load_user
 # import Mongo Exceptions
-from mongoengine import MultipleObjectsReturned, DoesNotExist, NotUniqueError
+from mongoengine import MultipleObjectsReturned, DoesNotExist, NotUniqueError, ValidationError
 # import local libraries
 from .. import models, responses, decorators
 
@@ -86,9 +87,42 @@ def user(pid):
     else:
         return responses.invalid(request.url, "User does not exist")
 
-@schedule_app.route("/api/users", methods=["GET"])
+
+@schedule_app.route("/api/user/bulkcreate", methods=["POST"])
 @login_required
 @decorators.requires_admin
+def csv_create():
+    csv_data = request.data.decode("utf-8")
+    
+    reader = csv.reader(csv_data.split('\n'), 
+        skipinitialspace=True, 
+        delimiter=',', 
+        quotechar='"')
+
+    for row in reader:
+        try:
+            # first, last, pid, email, is_returner
+
+            u = models.User()
+            typecode = "0" + row[4] + "0"
+            u.init(
+                first_name=row[0],
+                last_name=row[1],
+                pid=row[2],
+                email=row[3],
+                typecode=typecode)
+            u.save()
+            
+        except ValidationError:
+            return responses.invalid(request.url, "Data failed to validate")
+        except NotUniqueError:
+            return responses.invalid(request.url, "Duplicates detected")
+        except:
+            return responses.invalid(request.url, "Bad CSV Payload")
+        
+    return responses.success(request.url, "BULK CREATE DONE")
+
+
 def users():
     """
     GET - get all users in the system

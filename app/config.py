@@ -30,3 +30,7 @@ DEFAULT_AVAILABILITY = {
     "fri": [0 for i in range(TIMESLOTS_PER_DAY)],
     "sat": [0 for i in range(TIMESLOTS_PER_DAY)],
 }
+
+# For the scheduler
+MAX_WORKERS_PER_SLOT = 2
+MAX_WORKER_RUN = 4 # hours

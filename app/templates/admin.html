@@ -1,26 +1,69 @@
 {% extends "header.html" %}
 {% block body %}
-    <h2>Create new user</h2>
-    
-    <div id="new_user_form">
-        <p>Please enter the following information to create a new user. Please also note an administrative user
-        will have extra administrative rights while  an employee will only be able to see their information.
-        .</p>
-        <form id="new_user">
-            <input class = "admin-input" type="text" placeholder = "PID" name="pid">
-            <br>
-            <input  class = "admin-input" placeholder = "Email" type="text" name="email">
-            <br>
-            Select User Type:
-            <input  class = "admin-input" type="radio" placeholder = "Admin" name="typecode" value ="1" checked>
-            Administrator
-            <input  class = "admin-input" type="radio" placeholder = "Employee" name="typecode" value ="2">
-            Employee
-            <br>
-            <button type="button" class="btn btn-success" onclick="make_new_user()">SUBMIT</button>
-        </form>
-    </div> 
 
+    <div class="row">
+        <div class="col-md-6">
+            
+            <h2>Create new user</h2>
+            <div id="new_user_form">
+                <p>Please enter the following information to create a new user. Please also note an administrative user
+                will have extra administrative rights while  an employee will only be able to see their information.</p>
+                <form id="new_user">
+                    <table class="formtable">
+                        <tr>
+                            <td>User PID: </td>
+                            <td>
+                                <input class = "admin-input" type="text" placeholder = "PID" name="pid">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td>
+                                <input  class = "admin-input" placeholder = "Email" type="text" name="email">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Select User Type:</td>
+                            <td>
+                                <label>
+                                    <input  class = "admin-input" type="radio" placeholder = "Returning Employee" name="typecode" value ="010" checked>
+                                    Returning Employee
+                                </label>
+                                <br>
+                                <label>
+                                    <input  class = "admin-input" type="radio" placeholder = "New Employee" name="typecode" value ="000" checked>
+                                    New Employee
+                                </label>
+                                <br>
+                                <label>
+                                    <input  class = "admin-input" type="radio" placeholder = "Admin" name="typecode" value ="100">
+                                    Administrator
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="button" class="btn btn-success" onclick="make_new_user()">CREATE</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div> 
+        </div>
+
+
+        <div class="col-md-6">
+            <h2>Bulk user creation</h2>
+            <p>Paste a CSV.  Please note that the fields shown as quoted must be quoted to work correctly.</p>
+            <form id="csv-form">  
+                <textarea style="width:100%; height:200px;" id="csv-raw" name="csv-raw" form="csv-form" placeholder='"first", "last", "pid", "email", is_returner'></textarea>
+                <br><br>
+                <button type="button" class="btn btn-success" onclick="csv_create_users()">CREATE</button>
+            </form>
+        </div>
+
+    </div>
 
     <h2>Users</h2>
         <table>

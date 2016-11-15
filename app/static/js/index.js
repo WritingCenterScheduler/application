@@ -162,8 +162,19 @@ var update_myself = function(){
     me.email = data['email'];
 
     update_me(me, function(response){
-        console.log(response);
+        if (response['status'] == 'success'){
+            $(".fa-check").show();
+            $(".fa-check").text(" Success");
+        } else {
+            $(".fa-check").show();
+            $(".fa-check").text(" Failed")
+        }
     });  
+}
+
+var csv_create_users = function(){
+    var data = $("#csv-raw").val();
+    bulk_create_users(data);
 }
 
 var confirm_delete_loc = function(code){
