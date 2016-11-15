@@ -57,10 +57,17 @@
             <h2>Bulk user creation</h2>
             <p>Paste a CSV.  Please note that the fields shown as quoted must be quoted to work correctly.</p>
             <form id="csv-form">  
-                <textarea style="width:100%; height:200px;" id="csv-raw" name="csv-raw" form="csv-form" placeholder='"first", "last", "pid", "email", is_returner'></textarea>
+                <textarea style="width:100%; height:120px;" id="csv-raw" name="csv-raw" form="csv-form" placeholder='"first", "last", "pid", "email", is_returner'></textarea>
                 <br><br>
                 <button type="button" class="btn btn-success" onclick="csv_create_users()">CREATE</button>
             </form>
+            
+            <p>
+                <i class='fa fa-trash'></i> Delete user<br>
+                <i class='fa fa-toggle-on'></i> Toggle user scheduling<br>
+                <i class='fa fa-user-plus'></i> Toggle new/returner<br>
+            </p>
+        
         </div>
 
     </div>
@@ -89,8 +96,12 @@
                     <i class="fa fa-trash" aria-hidden="true"></i>
                     </button>
 
-                    <button onclick="toggle_active_user({{user.pid}}, '{{user.typecode}}');">
+                    <button onclick="toggle_bit({{user.pid}}, 2, '{{user.typecode}}');">
                         <i class="fa {{'fa-toggle-on' if user.typecode[2] == '1' else 'fa-toggle-off'}}" aria-hidden="true"></i>
+                    </button>
+
+                    <button onclick="toggle_bit({{user.pid}}, 1, '{{user.typecode}}');">
+                        <i class="fa {{'fa-user-plus' if user.is_returner else 'fa-user'}}" aria-hidden="true"></i>
                     </button>
                 </td>
             </tr>
@@ -115,7 +126,7 @@
             <tr>
                 <td><a href="{{ url_for('schedule', code=s.sid) }}">{{ s.sid }}</a></td>
                 <td>{{ s.created_on }}</td>
-                <td><button onclick="delete_schedule('{{ s.sid }}')">Delete</button></td>
+                <td><button onclick="delete_schedule('{{ s.sid }}')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
             </tr>
             {% else %}
                 <p>There are no schedules at this point in time.</p>

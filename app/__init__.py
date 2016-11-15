@@ -56,8 +56,10 @@ def user_from_sso(headers):
         # update the user every time they log in with SSO
         # TODO: ask ITS for more information about the user
         user = load_user(pid)
-        user.email = email
-        user.save()
+
+        if user:
+            user.email = email
+            user.save()
         return user
     else:
         return None

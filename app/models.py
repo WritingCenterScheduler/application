@@ -187,5 +187,9 @@ class User(Document):
         return True
 
     @property
+    def can_schedule(self):
+        return self.typecode[2] == "1"
+
+    @property
     def is_anonymous(self):
         return False

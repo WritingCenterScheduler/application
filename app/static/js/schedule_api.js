@@ -139,7 +139,7 @@ function delete_user(pid){
     }
 }
 
-function toggle_active_user(PID, typecode){
+function toggle_bit(PID, bit, typecode){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -149,9 +149,8 @@ function toggle_active_user(PID, typecode){
     };
     xhttp.open("PUT", "/api/user/" + PID , true);
 
-    // Third character in the typecode indicates active.
-    var newcode = typecode.charAt(2) == '1' ? '0' : '1';
-    typecode = typecode.replaceAt(2, newcode);
+    var newcode = typecode.charAt(bit) == '1' ? '0' : '1';
+    typecode = typecode.replaceAt(bit, newcode);
 
     xhttp.send(JSON.stringify({
         "typecode": typecode
