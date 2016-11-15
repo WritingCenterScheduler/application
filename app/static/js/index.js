@@ -172,6 +172,11 @@ var update_myself = function(){
     });  
 }
 
+var csv_create_users = function(){
+    var data = $("#csv-raw").val();
+    bulk_create_users(data);
+}
+
 var confirm_delete_loc = function(code){
     if (confirm("Are you sure you want to delete " + code + "?") ){
         delete_loc(code, function(response){

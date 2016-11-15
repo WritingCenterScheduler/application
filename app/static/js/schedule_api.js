@@ -158,6 +158,18 @@ function toggle_active_user(PID, typecode){
     }));   
 }
 
+function bulk_create_users(payload){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            location.reload();
+        }
+    };
+    xhttp.open("POST", "/api/user/bulkcreate", true);
+    xhttp.send(payload);   
+}
+
 /*
     SCHEDULE
 */
