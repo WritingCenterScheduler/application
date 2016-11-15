@@ -127,7 +127,7 @@ def users():
     """
     GET - get all users in the system
     """
-    users = models.User.objects()
+    users = models.User.objects().order_by("typecode", "last_name")
     return Response(users.to_json(), mimetype='application/json')
 
 #
