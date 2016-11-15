@@ -1,8 +1,9 @@
 {% extends "header.html" %}
 {% block body %}
     <h2>Create new user</h2>
+    
     <div id="new_user_form">
-    <p>Please enter the following information to create a new user. Please also note an administrative user
+        <p>Please enter the following information to create a new user. Please also note an administrative user
         will have extra administrative rights while  an employee will only be able to see their information.
         .</p>
         <form id="new_user">
@@ -19,6 +20,8 @@
             <button type="button" class="btn btn-success" onclick="make_new_user()">SUBMIT</button>
         </form>
     </div> 
+
+
     <h2>Users</h2>
         <table>
             <tr>
@@ -35,7 +38,7 @@
             <tr class="{{'enabled' if user.typecode[2] == '1'}}">
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
-                <td>{{ user.pid }}</td>
+                <td><a href="{{ url_for('set_availability', pid=user.pid) }}">{{ user.pid }}</a></td>
                 <td>{{ user.email }}</td>
                 <td>{{'yes' if user.is_admin else 'no'}}</td>
                 <td>

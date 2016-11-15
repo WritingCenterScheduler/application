@@ -2,25 +2,47 @@
 {% block body %}
     
     <h3>Create Location</h3>
-    
+
     <div id="new_loc_form">
         <form id="new_loc">
+            <table class="formtable">
             <p>Please enter the following details to create a new location:</p>
-            <input type="text" placeholder = "Name of location" id = "name" name="name">
-            <br>
-            <input type="text" placeholder = "Code" id = "code" name="code">
-            <br>
-            Open at: <select class="timeSelect"
-                             name = "open_at"></select>
-                             <br>
-            Close at: <select class="timeSelect"
-                             name = "close_at"></select>
-            <br>
-            Student Type Needed:
-            <input type="radio"  name="type_code" value="0" checked> Any Tutor Type
-            <input type="radio" name="type_code" value="1"> Returners Only
-            <br>
-            <button type="button" class="btn btn-success" onclick="make_new_location()">SUBMIT</button>
+                <tr>
+                    <td>Location Name:</td>
+                    <td><input type="text" placeholder = "Name of location" id = "name" name="name"></td>
+                </tr>
+                <tr>   
+                    <td>Location Code:</td>
+                    <td><input type="text" placeholder = "Code" id = "code" name="code"></td>
+                </tr>
+                <tr>
+                    <td>Open / Close Times</td>
+                    <td>
+                        Open at: <select class="timeSelect" name = "open_at"></select>
+                        Close at: <select class="timeSelect" name = "close_at"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Employee Type</td>
+                    <td>
+                        <label>
+                            <input id="for_any" type="radio"  name="type_code" value="0" checked>
+                            <i>Any Employee Type</i>
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="type_code" value="1">
+                            <i>Returners Only</i>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="button" class="btn btn-success" onclick="make_new_location()">SUBMIT</button>
+                    </td>
+                </tr>
+            </table>
         </form>
     </div>
 

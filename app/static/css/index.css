@@ -21,6 +21,16 @@ table th {
     border: collapse;
     text-align: center;
 }
+
+table.formtable {
+    width: auto;
+}
+
+table.formtable td {
+    text-align: left;
+    padding: 5px 15px;
+}
+
 #time {
     background-color: #f5f5f5;
 }
@@ -153,8 +163,8 @@ div.nav-center{
 }
 
 /*Admin*/
-input.admin-input{
-
+input {
+    padding: 5px;
 }
 th{
 	background-color: rgba(123,175,212,1)!important;
@@ -174,10 +184,10 @@ button.btn-success:hover{
     transition-delay: 0.05s;
 }
 /*Help*/
-
-li > a, a{
-	color: #999;
+li > a {
+    color: blue;
 }
+
 li > a:hover, a:hover{
 	color: rgba(123,175,212,1)!important;
 	transition-duration: 500ms;
@@ -186,12 +196,9 @@ li > a:hover, a:hover{
     text-decoration: none;
 }
 /*Location*/
-ul > li > a{
-
-}
 .nav-tabs>li.active>a, 
 .nav-tabs>li.active>a:focus,
- .nav-tabs>li.active>a:hover {
+.nav-tabs>li.active>a:hover {
     color: #999;
     background-color: #333; 
     border-color: #333;   

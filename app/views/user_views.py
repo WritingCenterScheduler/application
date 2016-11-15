@@ -130,6 +130,7 @@ def my_arr():
 @decorators.requires_admin
 def admin():
     return render_template("admin.html", 
+        user=current_user,
         all_users = models.User.objects(),
         all_schedules = models.Schedule.objects())
 
