@@ -162,7 +162,13 @@ var update_myself = function(){
     me.email = data['email'];
 
     update_me(me, function(response){
-        console.log(response);
+        if (response['status'] == 'success'){
+            $(".fa-check").show();
+            $(".fa-check").text(" Success");
+        } else {
+            $(".fa-check").show();
+            $(".fa-check").text(" Failed")
+        }
     });  
 }
 

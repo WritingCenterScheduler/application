@@ -7,41 +7,69 @@
         <h2> Howdy, {{ user.first_name + ' ' + user.last_name if user.first_name else '' }}</h2>
     {% endif %}
 
-    <h3>Update your personal particulars</h3>
-    <p>Please make any changes to your particulars and press enter to reflect those changes.</p>
-    <div id="update_user_form">
-        <form id="update_user">
-            <input type="text" placeholder = "First Name" name="first_name" value="{{user.first_name}}">
-            <br>
-            <input type="text" name="last_name" placeholder = "Last Name" value="{{user.last_name}}">
-            <br>
-            <input type="text" name="email" placeholder = "Email" value="{{user.email}}">
-            <br>
-            <button type="button" class="btn btn-success" onclick="update_myself()">Enter</button>
-        </form>
-    </div> 
-    
-    <p>Set your availability below:
-        <ul>
-            <li><p><span class = 'text-table-0'>Red (0)</span> is used to represent time slots during which you
-    absolutely
-    cannot work.</p></li>
-            <li><p><span class = 'text-table-1'>Yellow (1)</span> is used to represent time slots during which you could
-                work but are not preferred. </p></li>
-            <li><p><span class = 'text-table-2'>Green (2)</span> is used to represent time slots during which you would
-                prefer to work if possible.</p></li>
-        </ul>
-    </p>
+    <div class="row">
 
-    <p><strong>NOTE:</strong> 
-    <ol>
-    <li>
-        Setting a time slot to Green does not guarantee that you are scheduled for that timeslot. The availability you provide is a request and will be met as often as possible but cannot be guaranteed. 
-    </li>
-    <li>
-        Please ensure that you choose each and every slot below. Clicking on any of the colored boxes automatically reflects the change in the database so no further submission is required.
-    </li>
-    </p>
+        <div class='col-md-7'>
+            <p>Set your availability below:
+            <ul>
+                <li><p><span class = 'text-table-0'>Red (0)</span> is used to represent time slots during which you absolutely cannot work.</p></li>
+                <li><p><span class = 'text-table-1'>Yellow (1)</span> is used to represent time slots during which you could
+                    work but are not preferred. </p></li>
+                <li><p><span class = 'text-table-2'>Green (2)</span> is used to represent time slots during which you would
+                    prefer to work if possible.</p></li>
+            </ul>
+            </p>
+
+            <p><strong>NOTE:</strong> 
+            <ol>
+            <li>
+                Setting a time slot to Green does not guarantee that you are scheduled for that timeslot. The availability you provide is a request and will be met as often as possible but cannot be guaranteed. 
+            </li>
+            <li>
+                Please ensure that you choose each and every slot below. Clicking on any of the colored boxes automatically reflects the change in the database so no further submission is required.
+            </li>
+            </p>
+        </div>
+
+        <div class="col-md-5">
+            <p>Update your personal information: </p>
+            <div id="update_user_form">
+                <form id="update_user">
+
+                    <table class="formtable">
+                        <tr>
+                            <td>First Name</td>
+                            <td>
+                                <input type="text" placeholder = "First Name" name="first_name" value="{{user.first_name}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Last Name</td>
+                            <td>
+                                <input type="text" name="last_name" placeholder = "Last Name" value="{{user.last_name}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>
+                                <input type="text" name="email" placeholder = "Email" value="{{user.email}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Save your changes:
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-success" onclick="update_myself()">Submit</button>
+                                <i class="fa fa-check" aria-hidden="true" style="display:none;"></i>
+                            </td>
+                        </tr>
+
+                    </table>
+                </form>
+            </div> 
+        </div>
+    </div>
 
     <div id="availability-table"></div>
     

@@ -133,8 +133,10 @@ function delete_user(pid){
             location.reload();
         }
     };
-    xhttp.open("DELETE", "/api/user/" + pid, true);
-    xhttp.send();   
+    if (confirm("Delete user " + pid + " ?")){
+        xhttp.open("DELETE", "/api/user/" + pid, true);
+        xhttp.send();    
+    }
 }
 
 function toggle_active_user(PID, typecode){
