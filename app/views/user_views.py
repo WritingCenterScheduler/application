@@ -14,40 +14,6 @@ from .. import models, responses, decorators
 # API views
 #
 
-@schedule_app.route("/api/user/me", methods=["GET", "PUT"])
-@login_required
-def me():
-    """
-    Allow any user to get or update itselfs
-    ---
-    GET - get myself
-    PUT - update myself
-    """
-    ## GET
-    if request.method == "GET":
-        return Response(current_user.to_json(), mimetype='application/json')
-    ## PUT
-    elif request.method == "PUT":
-        # Allow the user to update itself
-        payload = None
-        
-        try:
-            payload = json.loads(request.data.decode("utf-8"))
-        except Exception as e:
-            return responses.invalid(request.url, e)
-
-        if payload:
-            success = current_user.update(payload);
-            if success:
-                return responses.user_updated(request.url, current_user.pid)
-            else:
-                return responses.invalid(request.url, "Could not update user")
-        else:
-            return responses.invalid(request.url, "No data")
-    
-    else:
-        return responses.bad_method(request.url, request.method)
-
 @schedule_app.route("/api/user", methods=["POST"])
 @login_required
 @decorators.requires_admin
@@ -78,7 +44,6 @@ def add_user():
 
 @schedule_app.route("/api/user/<path:pid>", methods=["GET", "PUT", "DELETE"])
 @login_required
-@decorators.requires_admin
 def user(pid):
     """
     GET - gets the user with pid
@@ -86,12 +51,38 @@ def user(pid):
     DELETE - removes the user with pid
     """
     user = load_user(pid)
+    
     if user:
-        if request.method == "DELETE":
+        
+        if request.method == "DELETE" and current_user.is_admin:
             user.delete()
             return responses.success(url_for("user", pid=pid), "USER DELETED")
-        else:
+
+        elif request.method == "PUT" \
+            and ( current_user.is_admin or current_user.pid == pid ):
+            
+            # Allow user updates
+            payload = None
+            
+            try:
+                payload = json.loads(request.data.decode("utf-8"))
+            except Exception as e:
+                return responses.invalid(request.url, e)
+
+            if payload:
+                success = user.update(payload);
+                if success:
+                    return responses.user_updated(request.url, user.pid)
+                else:
+                    return responses.invalid(request.url, "Could not update user")
+            else:
+                return responses.invalid(request.url, "No data")
+    
+        elif request.method == "GET":
             return Response(user.to_json(), mimetype='application/json')
+
+        else:
+            responses.invalid(request.url, "Method not supported")
     else:
         return responses.invalid(request.url, "User does not exist")
 

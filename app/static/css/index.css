@@ -6,6 +6,9 @@ html, body {
 table {
     width: 100%;
 }
+table tr.enabled {
+    background-color: #5CB471!important;
+}
 table td{
     margin-left: 10px;
     border: 1px solid black;
@@ -122,6 +125,20 @@ div.header-container{
 	background-color: #333!important;
 	color: rgba(123,175,212,1)!important;
 	transition-duration: 500ms;
+    transition-timing-function: ease-out;
+    transition-delay: 0.05s;
+}
+.nav.nav-tabs li {
+    background-color: #EEE!important;
+}
+.nav.nav-tabs li > a {
+    border: 1px solid #ddd
+}
+.nav.nav-tabs li :hover {
+    background-color: #FFF!important;
+}
+.nav.nav-tabs li.active {
+    color: #333!important;
     transition-timing-function: ease-out;
     transition-delay: 0.05s;
 }

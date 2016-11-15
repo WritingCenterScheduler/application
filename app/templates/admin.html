@@ -20,19 +20,27 @@
                 <th>Last</th>
                 <th>PID</th>
                 <th>Email</th>
-                <th>Admin?</th> 
-                <th>Delete</th>
+                <th>Admin?</th>
+                <th>Action</th>
             </tr>
             <p>Below is a list of all users:</p>
             {% for user in all_users %}
 
-            <tr>
+            <tr class="{{'enabled' if user.typecode[2] == '1'}}">
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 <td>{{ user.pid }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{'yes' if user.is_admin else 'no'}}</td>
-                <td><button onclick="delete_user({{ user.pid }})">Delete</button></td>
+                <td>
+                    <button onclick="delete_user({{ user.pid }})">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+
+                    <button onclick="toggle_active_user({{user.pid}}, '{{user.typecode}}');">
+                        <i class="fa {{'fa-toggle-on' if user.typecode[2] == '1' else 'fa-toggle-off'}}" aria-hidden="true"></i>
+                    </button>
+                </td>
             </tr>
             {% else %}
                 <p>There are no users</p>

@@ -54,6 +54,11 @@ def global_np_to_json_dict(np_arr):
         rtrn["sat"].append([None if f is 0 else f for f in row[6].tolist()])
     return rtrn
 
+
+class GlobalConfig(Document):
+    active_schedule = StringField(required=True)
+
+
 class Location(Document):
     name = StringField(required=True)
     code = IntField(unique=True)
@@ -120,7 +125,7 @@ class User(Document):
             last_name="Heel",
             pid=-1, # -1 should never happen
             email="unknown@unc.edu",
-            typecode="010"
+            typecode="011"
         ):
 
         self.last_name = last_name
@@ -130,7 +135,7 @@ class User(Document):
         self.typecode = typecode # An N digit number.
             # (0/1)XXXX... determines not admin/admin
             # X(0/1)XXX... determines new/returning
-            # XX(0/1)XX... determines something else...?
+            # XX(0/1)XX... determines active/inactive
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
         self.availability = config.DEFAULT_AVAILABILITY
 

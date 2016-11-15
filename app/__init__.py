@@ -108,7 +108,8 @@ def login_failed():
 def logout():
     logout_user()
     cookie_name = get_shib_cookie(request.cookies)
-    resp = redirect("/")
+    
+    resp = redirect(config.SSO_LOGOUT_URL)
 
     if cookie_name:
         resp.set_cookie(cookie_name, expires=0)
