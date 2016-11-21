@@ -241,14 +241,18 @@ function table_from_schedule(table_div, schedule_meta, schedule_data, click_call
     //     }
     // }
 
-    if (first_event_index == slots-1)
+    if (schedule_meta.open_at != null){
+        first_event_index = parseInt(schedule_meta.open_at);
+        last_event_index = parseInt(schedule_meta.close_at);        
+    } else {
         first_event_index=BEGIN_TABLE;
-    if (last_event_index == 0)
-        last_event_index=END_TABLE;
+        last_event_index=END_TABLE;   
+    }    
+
     
     for(var i = 0; i < slots; i++){
 
-        if (i < first_event_index - 2 || i > last_event_index + 2){
+        if (i < first_event_index || i > last_event_index ){
             // do nothing
             continue;
         }

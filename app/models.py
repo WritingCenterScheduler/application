@@ -103,9 +103,14 @@ class Location(Document):
         """
         Updates the user based on the provided payload
         """
-        # if len(self.open_at.split(':')) > 1:
-        #     self.open_at = self.open_at.split(':')[0]
-        #     self.close_at = self.close_at.split(':')[0]
+        if len(self.open_at.split(':')) > 1:
+            self.open_at = self.open_at.split(':')[0]
+            # print(self.open_at)
+            self.close_at = self.close_at.split(':')[0]
+            # print(self.close_at)
+            self.save()
+
+        # print(self.open_at)
         
         payload.pop("_id", None)
         keys = payload.keys()
@@ -120,12 +125,15 @@ class Location(Document):
     def sanitize_location_payload(self, payload):
         keys = payload.keys()
         length = 24 * (60 // self.resolution_minutes) # hours * slots per hour
+        print(length)
         for slot in range(length):
             for key in keys:
                 if slot < int(self.open_at):
                     payload[key][slot] = 0
-                if slot > int(self.close_at):
+                if slot > int(self.close_at) and payload[key][slot] != 0:
+                    print(slot)
                     payload[key][slot] = 0
+                    print("BOOP")
         return payload
 
 

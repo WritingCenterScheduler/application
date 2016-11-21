@@ -52,15 +52,55 @@
         </div>
         <div class="col-md-6">
             <h3>{{ location.name }}</h3>
+            <p>Update {{ location.name }}</p>
+
+            <div id="existing_loc_form">
+                <form id="existing_loc">
+                    <table class="formtable">
+                        <tr>
+                            <td>Location Name:</td>
+                            <td><input type="text" value="{{location.name}}" id = "name" name="name"></td>
+                        </tr>
+                        <tr>
+                                                
+                            <td>Open / Close Times</td>
+                            <td>
+                                Open at: <select class="timeSelect" name = "open_at">
+                                    <option value="{{location.open_at}}" selected>Unchanged</option>
+                                </select>
+                                Close at: <select class="timeSelect" name = "close_at">
+                                    <option value="{{location.close_at}}" selected>Unchanged</option>
+                                </select>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td>Employee Type</td>
+                            <td>
+                                <label>
+                                    <input id="for_any" type="radio"  name="type_code" value="0" {{ 'checked' if location.type_code == 0 }}>
+                                    <i>Any Employee Type</i>
+                                </label>
+                                <br>
+                                <label>
+                                    <input type="radio" name="type_code" value="1" {{ 'checked' if location.type_code == 1 }}>
+                                    <i>Returners Only</i>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="button" class="btn btn-success" onclick="meta_update_location()">SUBMIT</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
             Opens at {{ location.open_at }}
             <br>
             Closes at {{ location.close_at }}
             <br><br>
-            TODO: Enable/Disable
-            <br>
-            TODO: Reset open at / close at
-            <br>
-            TODO: Change returning / any type
         </div>
     </div>
 

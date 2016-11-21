@@ -6,6 +6,7 @@
 
 // GLOBAL VARIABLES
 var me;
+var loc;
 
 /*
     This is the entry point for user_schedule.html
@@ -19,7 +20,6 @@ var user_schedule_init = function(){
 */
 var location_settings_init = function() {
 
-    var loc;
     var table_div = $("#location-table");
 
     var on_schedule_click = function(cell){
@@ -146,6 +146,25 @@ var make_new_location = function(){
     $("#new_loc").serializeArray().map(function(x){data[x.name] = x.value;});
 
     make_loc( data, function(obj){
+        console.log(obj);
+        sleep(100);
+        location.reload();
+    });
+}
+
+var meta_update_location = function(){
+    var data = {};
+
+    $("#existing_loc").serializeArray().map(function(x){data[x.name] = x.value;});
+
+    loc.open_at = data.open_at;
+    loc.close_at = data.close_at;
+    loc.name = data.name
+    loc.type_code = data.type_code;
+
+    console.log(data);
+
+    update_loc( loc.code, loc, function(obj){
         console.log(obj);
         sleep(100);
         location.reload();
