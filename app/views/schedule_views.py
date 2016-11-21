@@ -18,6 +18,10 @@ from app.engine.user import User
 from app.engine.employee import Employee
 from app.engine.location import Location
 
+#
+# API Views
+#
+
 @schedule_app.route("/api/schedules", methods=["GET", "DELETE"])
 @login_required
 @decorators.requires_admin
@@ -27,6 +31,19 @@ def view_schedules():
     """
     all_schedules = models.Schedule.objects()
     return Response(all_schedules.to_json(), mimetype='application/json')
+
+
+@schedule_app.route("/api/schedule/active", methods=["GET"])
+@login_required
+def active_schedule():
+    # Returns the active schedule
+    active_id = models.GlobalConfig.get().active_schedule
+    try:
+        s = models.Schedule.objects().get(sid=active_id)
+        return Response(s.to_json())
+    except DoesNotExist:
+        return responses.invalid(request.url, "No active schedule")
+
 
 @schedule_app.route("/api/schedule/<path:code>", methods=["GET", "DELETE"])
 @login_required
@@ -113,14 +130,3 @@ def engine_run():
     new_schedule.save()
 
     return jsonify(loc_return_list)
-
-@schedule_app.route("/api/schedule/active", methods=["GET"])
-@login_required
-def active_schedule():
-    # Returns the active schedule
-    active_id = models.GlobalConfig.get().active_schedule
-    try:
-        s = models.Schedule.objects().get(sid=active_id)
-        return Response(s.to_json())
-    except DoesNotExist:
-        return responses.invalid(request.url, "No active schedule")

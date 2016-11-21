@@ -20,6 +20,7 @@ var user_schedule_init = function(){
 var location_settings_init = function() {
 
     var loc;
+    var table_div = $("#location-table");
 
     var on_schedule_click = function(cell){
         day = cell.id.substring(0, 3); // first three chars denotes the day
@@ -44,6 +45,7 @@ var location_settings_init = function() {
         // TODO: Update the backend.
         update_loc(loc.code, loc, function(response){
             console.log(response);
+            try_expand_table(table_div, position);
         });
     }
 
@@ -56,7 +58,6 @@ var location_settings_init = function() {
         loc=obj;
         
         if (obj != null){
-            table_div = $("#location-table");
             table_from_schedule(table_div, loc, loc.requirements, on_schedule_click);
 
             var select = $(".timeSelect");
@@ -68,7 +69,7 @@ var location_settings_init = function() {
                     minutes = '0' + minutes; // adding leading zero
                 }
                 select.append($('<option></option>')
-                    .attr('value', i)
+                    .attr('value', i / 30)
                     .text(hours + ':' + minutes));
             }
         }
@@ -83,6 +84,7 @@ var location_settings_init = function() {
 var user_availability_init = function(){
 
     var PID = $("#mypid").text();
+    var table_div = $("#availability-table");
 
     var on_schedule_click = function(cell){
         day = cell.id.substring(0, 3);
@@ -107,6 +109,7 @@ var user_availability_init = function(){
         // TODO: Update the backend.
         update_me(me, function(response){
             console.log(response);
+            try_expand_table(table_div, position);
         });
         // console.log(me);
     }
@@ -116,7 +119,6 @@ var user_availability_init = function(){
         me=obj;
         
         if (obj != null){
-            table_div = $("#availability-table");
             table_from_schedule(table_div, obj, obj.availability, on_schedule_click);
         }
 
@@ -189,5 +191,26 @@ var confirm_delete_loc = function(code){
         delete_loc(code, function(response){
             window.location = "/admin/location";
         });
+    }
+}
+
+/*
+
+Other Utilities
+
+*/
+
+var try_expand_table = function(table, position){
+    var first = table.children("table:first").children("tr:first");
+    var last = table.children("td:last");
+    console.log(first);
+}
+
+var row_col_update = function(obj, table_div, cell){
+    var rowcol = cell.id.substring(0, 3); // first three chars denotes the day
+    var pos = cell.id.substring(3);
+
+    if (rowcol == "row"){
+        current = query_cell(obj, 'sun', pos);
     }
 }

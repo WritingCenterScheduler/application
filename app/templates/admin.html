@@ -27,12 +27,12 @@
                             <td>
                                 <label>
                                     <input  class = "admin-input" type="radio" placeholder = "Returning Employee" name="typecode" value ="010" checked>
-                                    Returning Employee
+                                    Returning Employee <i class='fa fa-user-plus'></i>
                                 </label>
                                 <br>
                                 <label>
                                     <input  class = "admin-input" type="radio" placeholder = "New Employee" name="typecode" value ="000" checked>
-                                    New Employee
+                                    New Employee <i class='fa fa-user'></i>
                                 </label>
                                 <br>
                                 <label>
@@ -63,11 +63,10 @@
             </form>
             
             <p>
-                <i class='fa fa-trash'></i> Delete user<br>
-                <i class='fa fa-toggle-on'></i> Toggle user scheduling<br>
-                <i class='fa fa-user-plus'></i> Toggle new/returner<br>
+                Delete user <i class='fa fa-trash'></i><br>
+                Toggle user enabled for scheduling <i class='fa fa-toggle-on'></i> <br>
+                Toggle new user <i class='fa fa-user'></i> vs. returner <i class='fa fa-user-plus'></i><br>
             </p>
-        
         </div>
 
     </div>
@@ -88,7 +87,11 @@
             <tr class="{{'enabled' if user.typecode[2] == '1'}}">
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
-                <td><a href="{{ url_for('set_availability', pid=user.pid) }}">{{ user.pid }}</a></td>
+                <td>
+                    <a href="{{ url_for('set_availability', pid=user.pid) }}">    {{ user.pid }}
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </a>
+                </td>
                 <td>{{ user.email }}</td>
                 <td>{{'yes' if user.is_admin else 'no'}}</td>
                 <td>
@@ -123,10 +126,19 @@
             </tr>
             <p>Below is a list of all schedules in the system:</p>
             {% for s in all_schedules %}
-            <tr>
-                <td><a href="{{ url_for('schedule', code=s.sid) }}">{{ s.sid }}</a></td>
+            <tr class="{{'enabled' if s.sid == active_schedule else ''}}">
+                <td>
+                    <a href="{{ url_for('schedule', code=s.sid) }}">
+                        {{ s.sid }}
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </a>
+                </td>
                 <td>{{ s.created_on }}</td>
-                <td><button onclick="delete_schedule('{{ s.sid }}')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
+                <td>
+                    <button onclick="delete_schedule('{{ s.sid }}')">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </td>
             </tr>
             {% else %}
                 <p>There are no schedules at this point in time.</p>

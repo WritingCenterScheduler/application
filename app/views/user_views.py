@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 import numpy as np
 import csv
 # import flask
@@ -52,6 +53,8 @@ def user(pid):
     DELETE - removes the user with pid
     """
     user = load_user(pid)
+    print(current_user.pid)
+    print(current_user.pid == pid)
     
     if user:
         
@@ -60,7 +63,7 @@ def user(pid):
             return responses.success(url_for("user", pid=pid), "USER DELETED")
 
         elif request.method == "PUT" \
-            and ( current_user.is_admin or current_user.pid == pid ):
+            and ( current_user.is_admin or current_user.pid == int(pid) ):
             
             # Allow user updates
             payload = None
@@ -69,6 +72,13 @@ def user(pid):
                 payload = json.loads(request.data.decode("utf-8"))
             except Exception as e:
                 return responses.invalid(request.url, e)
+
+            if not current_user.is_admin:
+                keys = deepcopy(list(payload.keys()))
+                for key in keys:
+                    if key not in user.updatable_fields:
+                        payload.pop(key)
+
 
             if payload:
                 success = user.update(payload);
@@ -170,7 +180,8 @@ def admin():
     return render_template("admin.html", 
         user=current_user,
         all_users = models.User.objects(),
-        all_schedules = models.Schedule.objects())
+        all_schedules = models.Schedule.objects(),
+        active_schedule = models.GlobalConfig.get().active_schedule)
 
 @schedule_app.route("/user/help")
 @login_required

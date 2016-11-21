@@ -13,6 +13,40 @@ from .. import models, responses, decorators
 # API Views
 #
 
+@schedule_app.route("/api/locations", methods=['GET', 'POST'])
+@login_required
+@decorators.requires_admin
+def api_locations():
+    """
+    GET - Return a JSON list of all locations in the system
+    POST - Create a new location 
+    """
+    if request.method == "POST":
+        # user is trying to create a new location...
+        try:
+            print(request.data)
+            data = json.loads(request.data.decode("utf-8"))
+        except Exception as e:
+            return responses.invalid(request.url, e)
+        
+        l = models.Location()
+
+        try:
+            l.init(**data)
+            l.save()
+        except KeyError as e:
+            return responses.invalid(request.url, e)
+        except NotUniqueError as e:
+            return responses.invalid(request.url, "Location already exists")
+
+        return responses.loc_created(request.url, current_user.pid, l.code)
+    
+    else:
+        # ELSE GET
+        locs = models.Location.objects()
+        return Response(locs.to_json(), mimetype='application/json')
+
+
 @schedule_app.route("/api/location/<path:code>", methods=['GET', 'PUT', 'DELETE'])
 @login_required
 @decorators.requires_admin
@@ -49,40 +83,6 @@ def api_location(code):
     else:
         return responses.invalid(request.url, "Location does not exist")
 
-
-@schedule_app.route("/api/locations", methods=['GET', 'POST'])
-@login_required
-@decorators.requires_admin
-def api_locations():
-    """
-    GET - Return a JSON list of all locations in the system
-    POST - Create a new location 
-    """
-    if request.method == "POST":
-        # user is trying to create a new location...
-        try:
-            print(request.data)
-            data = json.loads(request.data.decode("utf-8"))
-        except Exception as e:
-            return responses.invalid(request.url, e)
-        
-        l = models.Location()
-
-        try:
-            l.init(**data)
-            l.save()
-        except KeyError as e:
-            return responses.invalid(request.url, e)
-        except NotUniqueError as e:
-            return responses.invalid(request.url, "Location already exists")
-
-        return responses.loc_created(request.url, current_user.pid, l.code)
-    
-    else:
-        # ELSE GET
-        locs = models.Location.objects()
-        return Response(locs.to_json(), mimetype='application/json')
-
 #
 # UI Views
 #
@@ -100,6 +100,9 @@ def location(loc_id):
 
 @schedule_app.route("/admin/location", methods=['GET'])
 def location_default():
+    """
+    An alias for the default or first location to show
+    """
     locations = models.Location.objects()
     try:
         return redirect(url_for("location", loc_id=locations[0].code))
