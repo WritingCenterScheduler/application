@@ -260,6 +260,12 @@ margin-top: 0;
 padding-top: 1em;
 }
 
+#external-events h6 {
+padding: 3px;
+border: 1px solid #ccc;
+background: #D3D3D3;
+}
+
 #external-events .fc-event {
 margin: 10px 0;
 cursor: pointer;

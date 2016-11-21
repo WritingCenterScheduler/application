@@ -57,7 +57,8 @@ def schedule(code):
         elif request.method == "GET":
             return render_template("schedule_display.html",
                 user=current_user,
-                users = models.User.objects())
+                users = models.User.objects(),
+                locations = models.Location.objects())
 
         else:
             return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")

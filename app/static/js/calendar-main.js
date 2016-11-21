@@ -1,10 +1,21 @@
 $(document).ready(function(){
 
+    var source = { url: window.location.href + '/data'};
+
+    $.ajax({
+        url : window.location.href + '/data',
+        success : function(result){
+            console.log(result);
+            source = result;
+        }
+    });
+
     /* Initialize external droppable external-events
     ------------------------------*/
     $('#external-events .fc-event').each(function() {
       // store data so the calendar knows to render an event upon drop
       $(this).data('event', {
+        location: (document.getElementById("location_selector").value != 'all') ? document.getElementById("location_selector").value : document.getElementById("location_selector").options[1].value,
         title: $.trim($(this).text()), // use the element's text as the event title
         duration: '00:30:00',
         stick: true // maintain when user navigates (see docs on the renderEvent method)
@@ -34,18 +45,16 @@ $(document).ready(function(){
         editable: true,
         droppable: true,
         eventLimit: true,
-        events: {
-            url: window.location.href + '/data',
-        },
+        events: source,
         // Mouseover event to see the pid of the scheduled employee,
         // Can be changed to display location name/code, employee name, etc.
-        eventMouseover: function(event, jsEvent, view) {
+        eventMouseover: function(calEvent, jsEvent, view) {
             if (view.name !== 'agendaDay') {
-                $(jsEvent.target).attr('title', event.pid);
+                $(jsEvent.target).attr('title', calEvent.pid);
             }
         },
         // Deletes an event
-        eventDestroy: function(event, element, view)
+        eventDestroy: function(calEvent, element, view)
         {
             // alert("removing stuff");
         },
@@ -61,6 +70,35 @@ $(document).ready(function(){
               {
                   $('#calendar').fullCalendar('removeEvents', calEvent._id);
               }
+        },
+        // Renders events and filters based upon location
+        eventRender: function eventRender(calEvent, element, view ) {
+            //console.log(['all', calEvent.location][($('#location_selector').val()) >= 0 ? 1 : 0])
+            return ['all', calEvent.location].indexOf($('#location_selector').val()) >= 0
         }
     });
+
+    /* Initialize the location filter selector
+    ------------------------------*/
+    $('#location_selector').on('change',function(){
+        filterEvents($('#location_selector').val())
+        $('#calendar').fullCalendar('rerenderEvents');
+    })
+
+    function filterEvents(filter){
+        // $('#calendar').fullCalendar('removeEventSource', newSource);
+        var newSource = [];
+        console.log(source);
+        for (var i = 0, len = source.length; i < len; i++) {
+            console.log(source)
+            if (source[i])['location'] == filter
+            {
+                newSource.push(source[i]);
+            }
+        }
+        $('#calendar').fullCalendar('removeEventSources');
+        $('#calendar').fullCalendar('refetchEvents');
+        $('#calendar').fullCalendar('addEventSource', newSource);
+        $('#calendar').fullCalendar('refetchEvents');
+    }
 });
