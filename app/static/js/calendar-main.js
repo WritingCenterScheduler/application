@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    alert(window.location.href + '/data')
     $('#calendar').fullCalendar({
         header: {
             right: 'month,agendaWeek,agendaDay'

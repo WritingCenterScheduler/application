@@ -125,7 +125,7 @@ h1.header-heading{
 div.header-container{
 	background-color: rgba(123,175,212,1);
 	position:relative;
-	
+
 
 }
 .nav > li {
@@ -196,12 +196,12 @@ li > a:hover, a:hover{
     text-decoration: none;
 }
 /*Location*/
-.nav-tabs>li.active>a, 
+.nav-tabs>li.active>a,
 .nav-tabs>li.active>a:focus,
 .nav-tabs>li.active>a:hover {
     color: #999;
-    background-color: #333; 
-    border-color: #333;   
+    background-color: #333;
+    border-color: #333;
 }
 .nav-tabs>li>a:hover {
 	border-radius: 0px;
@@ -225,3 +225,7 @@ h3.footer-text{
 	text-align: center;
 }
 
+.calendar{
+  font:none !important;
+  background-color:none !important;
+}
