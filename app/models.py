@@ -103,9 +103,9 @@ class Location(Document):
         """
         Updates the user based on the provided payload
         """
-        if len(self.open_at.split(':')) > 1:
-            self.open_at = self.open_at.split(':')[0]
-            self.close_at = self.close_at.split(':')[0]
+        # if len(self.open_at.split(':')) > 1:
+        #     self.open_at = self.open_at.split(':')[0]
+        #     self.close_at = self.close_at.split(':')[0]
         
         payload.pop("_id", None)
         keys = payload.keys()
