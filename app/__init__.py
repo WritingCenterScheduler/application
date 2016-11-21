@@ -22,9 +22,15 @@ from mongoengine import MultipleObjectsReturned, DoesNotExist
 from . import config
 from . import models
 
+# import moment
+from flask_moment import Moment
+
 login_manager = LoginManager()
+moment = Moment()
 schedule_app = Flask(__name__)
 login_manager.init_app(schedule_app)
+moment.init_app(schedule_app)
+
 
 # configure the app
 schedule_app.config["SECRET_KEY"] = config.SECRET_KEY
@@ -100,7 +106,7 @@ def load_location(code):
 
 @schedule_app.route("/login", methods=['GET'])
 def login():
-    
+
     user = None
 
     if config.LOCAL:
@@ -108,7 +114,7 @@ def login():
         user = load_user(config.ADMIN_PID)
     else:
         user = user_from_sso(request.headers)
-    
+
     if user:
         # The user exists and was in the database.
         login_user(user)
@@ -128,12 +134,12 @@ def login_failed():
 def logout():
     logout_user()
     cookie_name = get_shib_cookie(request.cookies)
-    
+
     resp = redirect(config.SSO_LOGOUT_URL)
 
     if cookie_name:
         resp.set_cookie(cookie_name, expires=0)
-    
+
     return resp
 
 

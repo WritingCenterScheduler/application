@@ -1,0 +1,23 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+table {
+    width: 100%;
+}
+table tr.enabled {
+    background-color: #5CB471!important;
+}
+table td{
+    margin-left: 10px;
+    border: 1px solid black;
+    text-align: center;
+
+}
+table th {
+    background-color: #f5f5f5;
+    border: 1px solid black;
+    border: collapse;
+    text-align: center;
+}
