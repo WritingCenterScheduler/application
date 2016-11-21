@@ -16,20 +16,20 @@ def global_to_np_arr(json_avail):
     # height = timeslots_per_day
     # width = 7 days per week
     avail = np.zeros(shape=(config.TIMESLOTS_PER_DAY, 7))
-
-    for i in range(config.TIMESLOTS_PER_DAY):   
-        newrow = [
-            json_avail["sun"][i],
-            json_avail["mon"][i],
-            json_avail["tue"][i],
-            json_avail["wed"][i],
-            json_avail["thu"][i],
-            json_avail["fri"][i],
-            json_avail["sat"][i],
-        ]
-        avail[i] = newrow
-
-    return avail
+    if json_avail:
+        for i in range(config.TIMESLOTS_PER_DAY):
+            newrow = [
+                json_avail["sun"][i],
+                json_avail["mon"][i],
+                json_avail["tue"][i],
+                json_avail["wed"][i],
+                json_avail["thu"][i],
+                json_avail["fri"][i],
+                json_avail["sat"][i],
+            ]
+            avail[i] = newrow
+        return avail
+    return None
 
 def global_np_to_json_dict(np_arr):
     """
@@ -68,7 +68,7 @@ class Location(Document):
     resolution_minutes = IntField()
     type_code = IntField()
 
-    def init(self, 
+    def init(self,
             name="Unknown Location",
             open_at=config.DEFAULT_OPEN,
             close_at=config.DEFAULT_CLOSE,

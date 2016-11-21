@@ -1,9 +1,5 @@
-import json
+import json, string, random, datetime, pprint
 import numpy as np
-import string
-import random
-import datetime
-# import flask
 from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
@@ -35,15 +31,15 @@ def schedule(code):
     """
     Modifies the schedule referred to by SID
     """
-    s = models.Schedule.objects().get(sid=code)
-    
+    s = models.Schedule.objects().get(sid=str(code))
+
     if s:
         if request.method == "DELETE":
             s.delete()
             return responses.success(request.url, "Schedule DELETED")
 
         elif request.method == "GET":
-            return Response(s.to_json(), mimetype='application/json')
+            return render_template("schedule_display.html", user=current_user)
 
         else:
             return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
@@ -51,6 +47,47 @@ def schedule(code):
     else:
         return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
 
+def index2time(i):
+    """
+    Helper function for converting matrix index to readable military (24-hour) time.
+    """
+    if ((i * 30) % 60) == 0:
+        return (str(int((i*30)/60)) + ":" + str((i * 30) % 60) + "0")
+    return (str(int((i*30)/60)) + ":" + str((i * 30) % 60))
+
+@schedule_app.route("/api/schedule/<path:code>/data", methods=["GET"])
+@login_required
+@decorators.requires_admin
+def schedule_data(code):
+    """
+    Modifies the schedule referred to by SID
+    """
+    s = models.Schedule.objects().get(sid=code)
+    if s:
+        events = []
+        if request.method == "GET":
+            d = json.loads(s.to_json())
+            #print (d['data'])
+            for day, timeslots in d["data"][0]["schedule"].items():
+                for i in range(len(timeslots)):
+                    for pid in timeslots[i]:
+                        if pid != None:
+                            events.append(
+                                {
+                                    'title': pid,
+                                    'start': index2time(i),
+                                    'end': index2time(i+1),
+                                    'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
+                                    'textColor' : '#000000'
+                                }
+                            )
+
+            return Response(json.dumps(events), mimetype='application/json')
+
+        else:
+            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
+    else:
+        return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
 
 @schedule_app.route("/admin/runschedule", methods=["GET"])
 @login_required
@@ -61,17 +98,17 @@ def engine_run():
     """
 
     all_users = models.User.objects()
-    
+
     # Get all schedulable users in a list
     schedulable_users = []
-    
+
     for user in all_users:
 
         np_arr = user.to_np_arr()
 
         if np_arr is not None:
-            candidate = Employee(np_arr, 
-                typecode="010", 
+            candidate = Employee(np_arr,
+                typecode="010",
                 pid=user.pid)
             schedulable_users.append(candidate)
 
@@ -95,7 +132,7 @@ def engine_run():
     sm.run_schedule()
 
     loc_return_list = []
-    
+
     for s in sm.locations:
         loc_return_list.append({
             "schedule": models.global_np_to_json_dict(s.schedule.astype(int)),
