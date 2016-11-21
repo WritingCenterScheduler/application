@@ -4,8 +4,8 @@
 
 var MINUTESPERDAY = 60 * 24;
 var TFS_CLICK_CALLBACK_FN;
-var BEGIN_TABLE=16;
-var END_TABLE=34;
+var BEGIN_TABLE=16;//16;
+var END_TABLE=34;//34;
 
 /*
     UTILS
@@ -213,20 +213,42 @@ function table_from_schedule(table_div, schedule_meta, schedule_data, click_call
     var newtable = $("<table id='user-schedule'>\
         <tr>\
             <th> Time </th>\
-            <th> Sunday </th>\
-            <th> Monday </th>\
-            <th> Tuesday </th>\
-            <th> Wednesday </th>\
-            <th> Thursday </th>\
-            <th> Friday </th>\
-            <th> Saturday </th>\
+            <th id='colsun' onclick='tfs_click_callback(this)' > Sunday </th>\
+            <th id='colmon' onclick='tfs_click_callback(this)'> Monday </th>\
+            <th id='coltue' onclick='tfs_click_callback(this)'> Tuesday </th>\
+            <th id='colwed' onclick='tfs_click_callback(this)'> Wednesday </th>\
+            <th id='colthu' onclick='tfs_click_callback(this)'> Thursday </th>\
+            <th id='colfri' onclick='tfs_click_callback(this)'> Friday </th>\
+            <th id='colsat' onclick='tfs_click_callback(this)'> Saturday </th>\
         </tr>\
         </table>");
     table_div.append(newtable);
     var resolution = schedule_meta.resolution_minutes / 60;
+    
+    var first_event_index = slots-1;
+    var last_event_index = 0;
+    var day_keys = Object.keys(schedule_data);
+    
+    // Determine where the events begin...
+    // for(var i = 0; i < slots; i++){
+    //     for (var k = 0; k < day_keys.length; k++){
+    //         if (schedule_data[day_keys[k]][i] != 0 && i < first_event_index){
+    //             first_event_index = i;
+    //         }
+    //         if (schedule_data[day_keys[k]][i] != 0 && i > last_event_index){
+    //             last_event_index = i;
+    //         }
+    //     }
+    // }
+
+    if (first_event_index == slots-1)
+        first_event_index=BEGIN_TABLE;
+    if (last_event_index == 0)
+        last_event_index=END_TABLE;
+    
     for(var i = 0; i < slots; i++){
 
-        if (i < BEGIN_TABLE || i > END_TABLE){
+        if (i < first_event_index - 2 || i > last_event_index + 2){
             // do nothing
             continue;
         }
@@ -237,7 +259,7 @@ function table_from_schedule(table_div, schedule_meta, schedule_data, click_call
             min = "00"
         }
         var newrow = $("<tr> \
-           <td id='time'> " + hour + ":"+ min+"</td>\
+           <td id='col"+i+"' class='time' onclick='tfs_click_callback(this)'> " + hour + ":"+ min+"</td>\
            <td class = table-"+schedule_data["sun"][i]+" id='sun"+i+"' onclick='tfs_click_callback(this)'>"+
             schedule_data["sun"][i]+"</td> \
            <td class = table-"+schedule_data["mon"][i]+" id='mon"+i+"' onclick='tfs_click_callback(this)'>"+

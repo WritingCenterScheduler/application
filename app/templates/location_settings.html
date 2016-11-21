@@ -1,49 +1,67 @@
 {% extends "header.html" %}
 {% block body %}
     
-    <h3>Create Location</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Create Location</h3>
 
-    <div id="new_loc_form">
-        <form id="new_loc">
-            <table class="formtable">
-            <p>Please enter the following details to create a new location:</p>
-                <tr>
-                    <td>Location Name:</td>
-                    <td><input type="text" placeholder = "Name of location" id = "name" name="name"></td>
-                </tr>
-                <tr>   
-                    <td>Location Code:</td>
-                    <td><input type="text" placeholder = "Code" id = "code" name="code"></td>
-                </tr>
-                <tr>
-                    <td>Open / Close Times</td>
-                    <td>
-                        Open at: <select class="timeSelect" name = "open_at"></select>
-                        Close at: <select class="timeSelect" name = "close_at"></select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Employee Type</td>
-                    <td>
-                        <label>
-                            <input id="for_any" type="radio"  name="type_code" value="0" checked>
-                            <i>Any Employee Type</i>
-                        </label>
-                        <br>
-                        <label>
-                            <input type="radio" name="type_code" value="1">
-                            <i>Returners Only</i>
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <button type="button" class="btn btn-success" onclick="make_new_location()">SUBMIT</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
+            <div id="new_loc_form">
+                <form id="new_loc">
+                    <table class="formtable">
+                    <p>Please enter the following details to create a new location:</p>
+                        <tr>
+                            <td>Location Name:</td>
+                            <td><input type="text" placeholder = "Name of location" id = "name" name="name"></td>
+                        </tr>
+                        <tr>   
+                            <td>Location Code:</td>
+                            <td><input type="text" placeholder = "Code" id = "code" name="code"></td>
+                        </tr>
+                        <tr>
+                                                
+                            <td>Open / Close Times</td>
+                            <td>
+                                Open at: <select class="timeSelect" name = "open_at"></select>
+                                Close at: <select class="timeSelect" name = "close_at"></select>
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td>Employee Type</td>
+                            <td>
+                                <label>
+                                    <input id="for_any" type="radio"  name="type_code" value="0" checked>
+                                    <i>Any Employee Type</i>
+                                </label>
+                                <br>
+                                <label>
+                                    <input type="radio" name="type_code" value="1">
+                                    <i>Returners Only</i>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button type="button" class="btn btn-success" onclick="make_new_location()">SUBMIT</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>{{ location.name }}</h3>
+            Opens at {{ location.open_at }}
+            <br>
+            Closes at {{ location.close_at }}
+            <br><br>
+            TODO: Enable/Disable
+            <br>
+            TODO: Reset open at / close at
+            <br>
+            TODO: Change returning / any type
+        </div>
     </div>
 
     <ul class="nav nav-tabs">
@@ -56,8 +74,10 @@
     
     <br>
     <div id="location-table"></div>
+    
     <br>
     <button class="btn btn-success" onclick="confirm_delete_loc({{location.code}})">DELETE</button>
+    
     <script type="text/javascript">
                     // Issue: This sometimes loads and runs before the source script is available.
                     // TODO: Fix...

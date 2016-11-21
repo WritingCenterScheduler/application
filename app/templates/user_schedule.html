@@ -1,0 +1,9 @@
+{% extends "header.html" %}
+{% block body %}
+    <div id="schedule-table"></div>
+    
+    <script type="text/javascript">
+        // Issue: This sometimes loads and runs before the source script is available.
+        window.onload = user_schedule_init;
+     </script>
+{% endblock %}

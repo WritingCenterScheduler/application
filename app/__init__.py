@@ -32,6 +32,24 @@ schedule_app.config["DEBUG"] = config.LOCAL
 login_manager.login_view = "login"
 
 
+def sanity_checks():
+    # Check to make sure there is at least one administrative user.
+    users = models.User.objects()
+    admins = any([user.is_admin for user in users])
+    if not admins:
+        new_admin = models.User()
+        new_admin.init(
+            first_name="Admin",
+            last_name="Heel",
+            pid=config.ADMIN_PID, # -1 should never happen
+            email="scheduler_admin@unc.edu",
+            typecode="100"
+        )
+        new_admin.save()
+        print(" * Added admin user with PID " + str(config.ADMIN_PID))
+    print(" * Sanity checks complete")
+
+
 @login_manager.user_loader
 def load_user(pid):
     try:
@@ -135,3 +153,4 @@ def index():
 from .views import user_views
 from .views import location_views
 from .views import schedule_views
+from .views import config_views

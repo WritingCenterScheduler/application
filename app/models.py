@@ -58,6 +58,17 @@ def global_np_to_json_dict(np_arr):
 class GlobalConfig(Document):
     active_schedule = StringField(required=True)
 
+    @staticmethod
+    def get():  
+        gc = GlobalConfig.objects().first()
+        
+        if gc == None:
+            gc = GlobalConfig()
+            gc.active_schedule = Schedule.objects().first().sid
+            gc.save()
+        
+        return gc
+
 
 class Location(Document):
     name = StringField(required=True)
@@ -66,6 +77,7 @@ class Location(Document):
     close_at = StringField(required=True)
     requirements = DictField()
     resolution_minutes = IntField()
+    enabled = BooleanField()
     type_code = IntField()
 
     def init(self, 
@@ -91,14 +103,30 @@ class Location(Document):
         """
         Updates the user based on the provided payload
         """
+        if len(self.open_at.split(':')) > 1:
+            self.open_at = self.open_at.split(':')[0]
+            self.close_at = self.close_at.split(':')[0]
+        
         payload.pop("_id", None)
         keys = payload.keys()
+        payload['requirements'] = self.sanitize_location_payload(payload['requirements'])
         if all(hasattr(self, key) for key in keys):
             for key in payload.keys():
                 setattr(self, key, payload[key])
             self.save()
             return True
         return False
+
+    def sanitize_location_payload(self, payload):
+        keys = payload.keys()
+        length = 24 * (60 // self.resolution_minutes) # hours * slots per hour
+        for slot in range(length):
+            for key in keys:
+                if slot < int(self.open_at):
+                    payload[key][slot] = 0
+                if slot > int(self.close_at):
+                    payload[key][slot] = 0
+        return payload
 
 
 class Schedule(Document):
@@ -119,6 +147,8 @@ class User(Document):
     typecode = StringField()
     availability = DictField()
     resolution_minutes = IntField()
+
+    updatable_fields = ["last_name", "first_name", "email", "availability"]
 
     def init(self,
             first_name="Tar",
