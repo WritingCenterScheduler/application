@@ -3,7 +3,7 @@ import numpy as np
 from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
-from app import schedule_app, load_user
+from app import schedule_app, load_user, load_location
 # import Mongo Exceptions
 from mongoengine import MultipleObjectsReturned, DoesNotExist, NotUniqueError
 # import local libraries
@@ -29,17 +29,18 @@ def view_schedules():
 @decorators.requires_admin
 def schedule(code):
     """
-    Modifies the schedule referred to by SID
+    Displays the schedule referred to by SID.
     """
     s = models.Schedule.objects().get(sid=str(code))
-
     if s:
         if request.method == "DELETE":
             s.delete()
             return responses.success(request.url, "Schedule DELETED")
 
         elif request.method == "GET":
-            return render_template("schedule_display.html", user=current_user)
+            return render_template("schedule_display.html",
+                user=current_user,
+                users = models.User.objects())
 
         else:
             return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
@@ -62,25 +63,36 @@ def schedule_data(code):
     """
     Modifies the schedule referred to by SID
     """
+    # TODO: Give users/locations a unique color
+
     s = models.Schedule.objects().get(sid=code)
     if s:
         events = []
+        id_counter = 1
         if request.method == "GET":
-            d = json.loads(s.to_json())
-            #print (d['data'])
-            for day, timeslots in d["data"][0]["schedule"].items():
-                for i in range(len(timeslots)):
-                    for pid in timeslots[i]:
-                        if pid != None:
-                            events.append(
-                                {
-                                    'title': pid,
-                                    'start': index2time(i),
-                                    'end': index2time(i+1),
-                                    'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
-                                    'textColor' : '#000000'
-                                }
-                            )
+            schedule_data = json.loads(s.to_json())
+            # print (schedule_data['data'])
+            for d in schedule_data['data']:
+                for day, timeslots in d["schedule"].items():
+                    for i in range(len(timeslots)):
+                        for pid in timeslots[i]:
+                            if pid != None:
+                                u = load_user(pid)
+                                l = load_location(d['code'])
+                                if u and l:
+                                    events.append(
+                                        {
+                                            '_id':id_counter,
+                                            'title': str(u.first_name + " " + u.last_name),
+                                            'pid': pid,
+                                            'location': str(l.name),
+                                            'start': index2time(i),
+                                            'end': index2time(i+1),
+                                            'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
+                                            'textColor' : '#000000'
+                                        }
+                                    )
+                                    id_counter += 1
 
             return Response(json.dumps(events), mimetype='application/json')
 

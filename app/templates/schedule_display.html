@@ -1,16 +1,22 @@
 {% extends "header.html" %}
 
-{% block style %}
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/schedule.css') }}">
-{% endblock %}
 {% block body %}
-    <h1>{{active_page}}</h1>
-    <div id='calendar'></div>
+    <br>
+    <div>
+        <div id='external-events'>
+            <h4>Employees</h4>
+            {% for u in users %}
+            <div class='fc-event'>{{u.first_name + " " + u.last_name}}</div>
+            {% endfor %}
+        </div>
+        <div id='calendar'></div>
+      </div>
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/fullcalendar.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/calendar-main.js') }}"></script>

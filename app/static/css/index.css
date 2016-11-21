@@ -1,6 +1,7 @@
 html, body {
     max-width: 100%;
     overflow-x: hidden;
+    font:Trebuchet;
 }
 
 table {
@@ -225,7 +226,56 @@ h3.footer-text{
 	text-align: center;
 }
 
-.calendar{
-  font:none !important;
-  background-color:none !important;
+.fc-widget-content{
+  background-color: white !important;
+}
+
+.fc-content{
+  font-weight: bold;
+  color: black;
+}
+.fc-day-header>a{
+  color: black !important;
+}
+
+#wrap {
+width: auto;
+margin: 0 auto;
+overflow: auto;
+display: inline-flex;
+}
+
+#external-events {
+float: left;
+width: 20%;
+padding: 10px;
+border: 1px solid #ccc;
+background: #eee;
+text-align: left;
+}
+
+#external-events h4 {
+font-size: 16px;
+margin-top: 0;
+padding-top: 1em;
+}
+
+#external-events .fc-event {
+margin: 10px 0;
+cursor: pointer;
+}
+
+#external-events p {
+margin: 1.5em 0;
+font-size: 11px;
+color: #666;
+}
+
+#external-events p input {
+margin: 0;
+vertical-align: middle;
+}
+#calendar {
+float: right;
+width: 80%;
 }

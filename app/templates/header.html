@@ -13,10 +13,7 @@
         <script src="{{ url_for('static', filename='js/index.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/fullcalendar.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/fullcalendar.print.css') }}" media='print'>
-        {% set active_page = "index" %}
-        {% block style %}
-            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
-        {% endblock %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
 
     </head>
     <body>
