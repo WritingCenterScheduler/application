@@ -1,8 +1,19 @@
+/**
+ * @author Ryan Court
+ * @summary Javascript for rendering schedule using fullCalendar & jQueryUI
+ * @see https://fullcalendar.io/
+ *     For calendar rendering and action hooks
+ * @see http://jqueryui.com/
+ *     For droppable page elements
+ * @since 1.0.1
+ */
 $(document).ready(function(){
 
+    /* Initialize data source for calendar events
+    ------------------------------*/
     var source = { url: window.location.href + '/data'};
-
-    $.ajax({
+    initExternalEvents();
+    $.ajax({ //Fetch event information using ajax call to data page
         url : window.location.href + '/data',
         success : function(result){
             console.log(result);
@@ -10,23 +21,26 @@ $(document).ready(function(){
         }
     });
 
-    /* Initialize external droppable external-events
+    /* Initialize droppable external-events
     ------------------------------*/
-    $('#external-events .fc-event').each(function() {
-      // store data so the calendar knows to render an event upon drop
-      $(this).data('event', {
-        location: (document.getElementById("location_selector").value != 'all') ? document.getElementById("location_selector").value : document.getElementById("location_selector").options[1].value,
-        title: $.trim($(this).text()), // use the element's text as the event title
-        duration: '00:30:00',
-        stick: true // maintain when user navigates (see docs on the renderEvent method)
-      });
-      // make the event draggable using jQuery UI
-      $(this).draggable({
-        zIndex: 999,
-        revert: true,      // will cause the event to go back to its
-        revertDuration: 0  //  original position after the drag
-      });
-    });
+    function initExternalEvents(){
+        $('#external-events .fc-event').each(function() {
+          // store data so the calendar knows to render an event upon drop
+          // alert(document.getElementById("location_selector").value)
+          $(this).data('event', {
+            location: String(document.getElementById("location_selector").value),
+            title: $.trim($(this).text()), // use the element's text as the event title
+            duration: '00:30:00',
+            stick: true // maintain when user navigates (see docs on the renderEvent method)
+          });
+          // make the event draggable using jQuery UI
+          $(this).draggable({
+            zIndex: 999,
+            revert: true,      // will cause the event to go back to its
+            revertDuration: 0  //  original position after the drag
+          });
+        });
+    }
 
     /* Initialize the calendar
     ------------------------------*/
@@ -81,8 +95,13 @@ $(document).ready(function(){
     /* Initialize the location filter selector
     ------------------------------*/
     $('#location_selector').on('change',function(){
-        filterEvents($('#location_selector').val())
+        filterEvents($('#location_selector').val());
+        initExternalEvents();
         $('#calendar').fullCalendar('rerenderEvents');
+    })
+
+    $('#external-events .fc-event').on('click',function(){
+        alert($(this).val());
     })
 
     function filterEvents(filter){
