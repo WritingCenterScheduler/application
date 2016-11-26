@@ -40,6 +40,21 @@ def active_schedule():
     except DoesNotExist:
         return responses.invalid(request.url, "No active schedule")
 
+@schedule_app.route("/api/schedule/<path:code>/activate", methods=["GET"])
+@login_required
+@decorators.requires_admin
+def toggle_active_schedule(code):
+    """
+    Toggles the current active schedule.
+    """
+    if request.method == "GET":
+        gc = models.GlobalConfig.objects().get()
+        gc.active_schedule = code
+        gc.save()
+        print(models.GlobalConfig.get().active_schedule)
+        return responses.success(request.url, "SUCCESS. Active schedule is now: " + code)
+    else:
+        return responses.invalid(request.url, "METHOD not supported.")
 
 @schedule_app.route("/api/schedule/<path:code>", methods=["GET", "DELETE"])
 @login_required
@@ -48,9 +63,16 @@ def schedule(code):
     """
     Displays the schedule referred to by SID.
     """
-    s = models.Schedule.objects().get(sid=str(code))
+    try:
+        s = models.Schedule.objects().get(sid=str(code))
+    except:
+        return responses.invalid(url_for("schedule", code=code), "Schedule NOT FOUND.")
     if s:
         if request.method == "DELETE":
+            if active_schedule == str(s.sid):
+                gc = models.GlobalConfig.objects().get()
+                gc.active_schedule = "None"
+                gc.save()
             s.delete()
             return responses.success(request.url, "Schedule DELETED")
 
@@ -58,7 +80,8 @@ def schedule(code):
             return render_template("schedule_display.html",
                 user=current_user,
                 users = models.User.objects(),
-                locations = models.Location.objects())
+                locations = models.Location.objects(),
+                active_schedule = models.GlobalConfig.get().active_schedule)
 
         else:
             return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")

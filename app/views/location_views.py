@@ -19,7 +19,7 @@ from .. import models, responses, decorators
 def api_locations():
     """
     GET - Return a JSON list of all locations in the system
-    POST - Create a new location 
+    POST - Create a new location
     """
     if request.method == "POST":
         # user is trying to create a new location...
@@ -28,7 +28,7 @@ def api_locations():
             data = json.loads(request.data.decode("utf-8"))
         except Exception as e:
             return responses.invalid(request.url, e)
-        
+
         l = models.Location()
 
         try:
@@ -40,7 +40,7 @@ def api_locations():
             return responses.invalid(request.url, "Location already exists")
 
         return responses.loc_created(request.url, current_user.pid, l.code)
-    
+
     else:
         # ELSE GET
         locs = models.Location.objects()
@@ -59,7 +59,7 @@ def api_location(code):
     if loc:
         if request.method == "PUT":
             payload = None
-            
+
             try:
                 payload = json.loads(request.data.decode("utf-8"))
             except Exception as e:
@@ -73,11 +73,11 @@ def api_location(code):
                     return responses.invalid(request.url, "Could not update location")
             else:
                 return responses.invalid(request.url, "No data")
-        
+
         elif request.method == 'DELETE':
             loc.delete()
             return responses.success(request.url, "Location DELETED")
-        
+
         else:
             return Response(loc.to_json(), mimetype='application/json')
     else:
@@ -95,7 +95,8 @@ def location(loc_id):
     return render_template("location_settings.html",
             user=current_user,
             location=loc,
-            all_locations=models.Location.objects())
+            all_locations=models.Location.objects(),
+            active_schedule = models.GlobalConfig.get().active_schedule)
 
 
 @schedule_app.route("/admin/location", methods=['GET'])

@@ -28,7 +28,7 @@ def add_user():
         data = json.loads(request.data.decode("utf-8"))
     except Exception as e:
         return responses.invalid(request.url, e)
-    
+
     u = models.User()
 
     try:
@@ -55,19 +55,19 @@ def user(pid):
     user = load_user(pid)
     print(current_user.pid)
     print(current_user.pid == pid)
-    
+
     if user:
-        
+
         if request.method == "DELETE" and current_user.is_admin:
             user.delete()
             return responses.success(url_for("user", pid=pid), "USER DELETED")
 
         elif request.method == "PUT" \
             and ( current_user.is_admin or current_user.pid == int(pid) ):
-            
+
             # Allow user updates
             payload = None
-            
+
             try:
                 payload = json.loads(request.data.decode("utf-8"))
             except Exception as e:
@@ -88,7 +88,7 @@ def user(pid):
                     return responses.invalid(request.url, "Could not update user")
             else:
                 return responses.invalid(request.url, "No data")
-    
+
         elif request.method == "GET":
             return Response(user.to_json(), mimetype='application/json')
 
@@ -103,10 +103,10 @@ def user(pid):
 @decorators.requires_admin
 def csv_create():
     csv_data = request.data.decode("utf-8")
-    
-    reader = csv.reader(csv_data.split('\n'), 
-        skipinitialspace=True, 
-        delimiter=',', 
+
+    reader = csv.reader(csv_data.split('\n'),
+        skipinitialspace=True,
+        delimiter=',',
         quotechar='"')
 
     for row in reader:
@@ -122,14 +122,14 @@ def csv_create():
                 email=row[3],
                 typecode=typecode)
             u.save()
-            
+
         except ValidationError:
             return responses.invalid(request.url, "Data failed to validate")
         except NotUniqueError:
             return responses.invalid(request.url, "Duplicates detected")
         except:
             return responses.invalid(request.url, "Bad CSV Payload")
-        
+
     return responses.success(request.url, "BULK CREATE DONE")
 
 
@@ -158,8 +158,9 @@ def set_availability(pid):
     user = load_user(pid)
     if user:
         return render_template("user_availability.html",
-            user=user)
-    else: 
+            user=user,
+            active_schedule = models.GlobalConfig.get().active_schedule)
+    else:
         return responses.invalid(request.url, "User does not exist")
 
 @schedule_app.route("/user/<pid>/schedule")
@@ -168,7 +169,8 @@ def user_schedule(pid):
     user = load_user(pid)
     if user:
         return render_template("user_schedule.html",
-            user=user)
+            user=user,
+            active_schedule = models.GlobalConfig.get().active_schedule)
     else:
         return responses.invalid(request.url, "User does not exist")
     pass
@@ -177,7 +179,7 @@ def user_schedule(pid):
 @login_required
 @decorators.requires_admin
 def admin():
-    return render_template("admin.html", 
+    return render_template("admin.html",
         user=current_user,
         all_users = models.User.objects(),
         all_schedules = models.Schedule.objects(),
@@ -195,4 +197,5 @@ def help():
     TODO: Found bug.  Admin can see all users.
     """
     return render_template("help.html",
-            user=user)
+            user=user,
+            active_schedule = models.GlobalConfig.get().active_schedule)

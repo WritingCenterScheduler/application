@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            
+
             <h2>Create new user</h2>
             <div id="new_user_form">
                 <p>Please enter the following information to create a new user. Please also note an administrative user
@@ -49,19 +49,19 @@
                         </tr>
                     </table>
                 </form>
-            </div> 
+            </div>
         </div>
 
 
         <div class="col-md-6">
             <h2>Bulk user creation</h2>
             <p>Paste a CSV.  Please note that the fields shown as quoted must be quoted to work correctly.</p>
-            <form id="csv-form">  
+            <form id="csv-form">
                 <textarea style="width:100%; height:120px;" id="csv-raw" name="csv-raw" form="csv-form" placeholder='"first", "last", "pid", "email", is_returner'></textarea>
                 <br><br>
                 <button type="button" class="btn btn-success" onclick="csv_create_users()">CREATE</button>
             </form>
-            
+
             <p>
                 Delete user <i class='fa fa-trash'></i><br>
                 Toggle user enabled for scheduling <i class='fa fa-toggle-on'></i> <br>
@@ -113,16 +113,16 @@
             {% endfor %}
         </table>
     <h2>
-        Schedules 
-        <button style="font-size: 15px;" onclick="run_schedule();">Run Scheduler</button> 
+        Schedules
+        <button style="font-size: 15px;" onclick="run_schedule();">Run Scheduler</button>
         <i style="font-size: 18px; display: none;" class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
     </h2>
 
         <table>
-            <tr> 
+            <tr>
                 <th>SID</th>
                 <th>Created On</th>
-                <th>Delete</th>
+                <th>Action</th>
             </tr>
             <p>Below is a list of all schedules in the system:</p>
             {% for s in all_schedules %}
@@ -137,6 +137,10 @@
                 <td>
                     <button onclick="delete_schedule('{{ s.sid }}')">
                         <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+
+                    <button onclick="toggle_active('{{ s.sid }}')">
+                        <i class="fa {{'fa-toggle-on' if s.sid == active_schedule else 'fa-toggle-off'}}" aria-hidden="true"></i>
                     </button>
                 </td>
             </tr>

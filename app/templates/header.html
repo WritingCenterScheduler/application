@@ -29,7 +29,9 @@
                 <!-- Show admins -->
                 <li><a href="/admin">Admin</a></li>
                 <li><a href="/admin/location">Manage Locations</a></li>
-
+                {% if active_schedule != "None" %}
+                <li><a href="{{ url_for('schedule', code=active_schedule) }}">Schedule</a></li>
+                {% endif %}
                 {% else %}
                 <!-- Show regular users -->
                 <li><a href="{{url_for('set_availability', pid=current_user.pid)}}">My Schedule</a></li>
