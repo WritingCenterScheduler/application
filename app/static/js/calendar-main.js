@@ -16,10 +16,20 @@ $(document).ready(function(){
     $.ajax({ //Fetch event information using ajax call to data page
         url : window.location.href + '/data',
         success : function(result){
-            console.log(result);
+            // console.log(result);
             source = result;
         }
     });
+
+    /* Helper function for setting default location for external draggable events.
+    ------------------------------*/
+    function selector_default(v)
+    {
+        if (v == 'all'){
+            return String(document.getElementById("location_selector").options[1].value);
+        }
+        return v;
+    }
 
     /* Initialize droppable external-events
     ------------------------------*/
@@ -28,7 +38,7 @@ $(document).ready(function(){
           // store data so the calendar knows to render an event upon drop
           // alert(document.getElementById("location_selector").value)
           $(this).data('event', {
-            location: String(document.getElementById("location_selector").value),
+            location: selector_default(String(document.getElementById("location_selector").value)),
             title: $.trim($(this).text()), // use the element's text as the event title
             duration: '00:30:00',
             stick: true // maintain when user navigates (see docs on the renderEvent method)
@@ -62,7 +72,8 @@ $(document).ready(function(){
         events: source,
         // Mouseover event to see the pid of the scheduled employee,
         // Can be changed to display location name/code, employee name, etc.
-        eventMouseover: function(calEvent, jsEvent, view) {
+        eventMouseover: function(calEvent, jsEvent, view)
+        {
             if (view.name !== 'agendaDay') {
                 $(jsEvent.target).attr('title', calEvent.pid);
             }
@@ -80,13 +91,23 @@ $(document).ready(function(){
             var end = new Date(calEvent.end);
             end.setHours(end.getHours() + 5);
             var r=confirm("Delete " + calEvent.title + " at " + calEvent.location + ", from " + start.toLocaleTimeString() + " to " + end.toLocaleTimeString() + "?");
-            if (r===true)
-              {
+            if (r===true){
                   $('#calendar').fullCalendar('removeEvents', calEvent._id);
               }
         },
+        drop: function(date, calEvent, ui, resourceId)
+        {
+            //alert("external drop: " + $(this).data('location'));
+            $('#calendar').fullCalendar('addEvents', calEvent._id);
+        },
+        eventDrop: function(calEvent, delta, revertFunc)
+        {
+            //alert("event drop");
+            $('#calendar').fullCalendar('addEvents', calEvent._id);
+        },
         // Renders events and filters based upon location
-        eventRender: function eventRender(calEvent, element, view ) {
+        eventRender: function eventRender(calEvent, element, view )
+        {
             //console.log(['all', calEvent.location][($('#location_selector').val()) >= 0 ? 1 : 0])
             return ['all', calEvent.location].indexOf($('#location_selector').val()) >= 0
         }
@@ -105,19 +126,18 @@ $(document).ready(function(){
     })
 
     function filterEvents(filter){
-        // $('#calendar').fullCalendar('removeEventSource', newSource);
         var newSource = [];
-        console.log(source);
-        for (var i = 0, len = source.length; i < len; i++) {
-            console.log(source)
-            if (source[i])['location'] == filter
+        var events = [];
+        for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
+            events.push($('#calendar').fullCalendar('clientEvents')[i]);
+        }
+        //alert(events)
+        for (var i = 0, len = events.length; i < len; i++) {
+            if (String(events[i].location) == String(filter))
             {
-                newSource.push(source[i]);
+                newSource.push(events[i]);
             }
         }
-        $('#calendar').fullCalendar('removeEventSources');
-        $('#calendar').fullCalendar('refetchEvents');
-        $('#calendar').fullCalendar('addEventSource', newSource);
-        $('#calendar').fullCalendar('refetchEvents');
+        $('#calendar').fullCalendar('refetchEventSources', newSource);
     }
 });
