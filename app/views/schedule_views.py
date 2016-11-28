@@ -56,7 +56,7 @@ def toggle_active_schedule(code):
     else:
         return responses.invalid(request.url, "METHOD not supported.")
 
-@schedule_app.route("/api/schedule/<path:code>", methods=["GET", "DELETE"])
+@schedule_app.route("/api/schedule/<path:code>", methods=["GET","PUT","DELETE"])
 @login_required
 @decorators.requires_admin
 def schedule(code):
@@ -82,6 +82,21 @@ def schedule(code):
                 users = models.User.objects(),
                 locations = models.Location.objects(),
                 active_schedule = models.GlobalConfig.get().active_schedule)
+        elif request.method == "PUT":
+            payload = None
+            try:
+                payload = json.loads(request.data.decode("utf-8"))
+            except Exception as e:
+                return responses.invalid(request.url, e)
+            if payload:
+                # print(payload)
+                success = s.update(payload)
+                if success:
+                    return responses.schedule_updated(request.url, s.sid)
+                else:
+                    return responses.invalid(request.url, "Could not update location")
+            else:
+                return responses.invalid(request.url, "No data")
 
         else:
             return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
