@@ -66,7 +66,8 @@ def api_location(code):
                 return responses.invalid(request.url, e)
 
             if payload:
-                success = loc.update(payload);
+                # print(payload)
+                success = loc.update(payload)
                 if success:
                     return responses.loc_updated(request.url, current_user.pid)
                 else:

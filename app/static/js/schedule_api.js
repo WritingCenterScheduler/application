@@ -218,6 +218,17 @@ function delete_schedule(code){
     }
 }
 
+function update_loc(code, payload_json, callback){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("PUT", "/api/schedule/" + code, true);
+    xhttp.send(JSON.stringify(payload_json));
+}
+
 
 function table_from_schedule(table_div, schedule_meta, schedule_data, click_callback){
     TFS_CLICK_CALLBACK_FN = click_callback;

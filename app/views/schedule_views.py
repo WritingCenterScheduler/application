@@ -140,6 +140,25 @@ def schedule_data(code):
         return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
 
 
+@schedule_app.route("/api/schedule/<path:code>/json", methods=["GET"])
+@login_required
+@decorators.requires_admin
+def schedule_json(code):
+    """
+    Returns the schedule referred to by SID
+    """
+
+    s = models.Schedule.objects().get(sid=code)
+    if s:
+        events = []
+        id_counter = 1
+        if request.method == "GET":
+            return Response(s.to_json(), mimetype='application/json')
+        else:
+            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
+    else:
+        return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
+
 @schedule_app.route("/admin/runschedule", methods=["GET"])
 @login_required
 @decorators.requires_admin
