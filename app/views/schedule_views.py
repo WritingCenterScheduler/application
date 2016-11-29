@@ -51,7 +51,7 @@ def toggle_active_schedule(code):
         gc = models.GlobalConfig.objects().get()
         gc.active_schedule = code
         gc.save()
-        print(models.GlobalConfig.get().active_schedule)
+        # print(models.GlobalConfig.get().active_schedule)
         return responses.success(request.url, "SUCCESS. Active schedule is now: " + code)
     else:
         return responses.invalid(request.url, "METHOD not supported.")
@@ -69,8 +69,9 @@ def schedule(code):
         return responses.invalid(url_for("schedule", code=code), "Schedule NOT FOUND.")
     if s:
         if request.method == "DELETE":
-            if active_schedule == str(s.sid):
-                gc = models.GlobalConfig.objects().get()
+            # print ("Deleting a schedule with SID: " + str(s.sid) + "\nThe Active schedule is: " + str(models.GlobalConfig.get().active_schedule))
+            if str(models.GlobalConfig.get().active_schedule) == str(s.sid):
+                gc = models.GlobalConfig.objects().first()
                 gc.active_schedule = "None"
                 gc.save()
             s.delete()
