@@ -81,7 +81,8 @@ def schedule(code):
                 user=current_user,
                 users = models.User.objects(),
                 locations = models.Location.objects(),
-                active_schedule = models.GlobalConfig.get().active_schedule)
+                active_schedule = models.GlobalConfig.get().active_schedule,
+                schedule_name = s.sid)
         elif request.method == "PUT":
             payload = None
             try:
@@ -139,6 +140,8 @@ def schedule_data(code):
                                             'title': str(u.first_name + " " + u.last_name),
                                             'pid': pid,
                                             'location': str(l.name),
+                                            'lcode': l.code,
+                                            'index': i,
                                             'start': index2time(i),
                                             'end': index2time(i+1),
                                             'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],

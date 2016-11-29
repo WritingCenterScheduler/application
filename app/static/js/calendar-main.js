@@ -12,12 +12,14 @@ $(document).ready(function(){
     /* Initialize data source for calendar events
     ------------------------------*/
     var source = { url: window.location.href + '/data'};
+    var allEvents;
     initExternalEvents();
     $.ajax({ //Fetch event information using ajax call to data page
         url : window.location.href + '/data',
         success : function(result){
             // console.log(result);
             source = result;
+            allEvents = result;
         }
     });
 
@@ -65,6 +67,13 @@ $(document).ready(function(){
             listWeek: { buttonText: 'List Week' }
         },
         defaultView: 'agendaWeek',
+        businessHours: [ // specify an array instead
+            {
+                dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
+                start: '08:00', // 8am
+                end: '18:00' // 6pm
+            }
+        ],
         navLinks: true,
         editable: true,
         droppable: true,
@@ -97,12 +106,12 @@ $(document).ready(function(){
         },
         drop: function(date, calEvent, ui, resourceId)
         {
-            //alert("external drop: " + $(this).data('location'));
+            alert("external drop: " + allEvents.length);
             $('#calendar').fullCalendar('addEvents', calEvent._id);
         },
         eventDrop: function(calEvent, delta, revertFunc)
         {
-            //alert("event drop");
+            alert("event drop: " + allEvents.length);
             $('#calendar').fullCalendar('addEvents', calEvent._id);
         },
         // Renders events and filters based upon location
@@ -118,12 +127,13 @@ $(document).ready(function(){
     $('#location_selector').on('change',function(){
         filterEvents($('#location_selector').val());
         initExternalEvents();
+        alert($('#calendar').fullCalendar('clientEvents').length);
         $('#calendar').fullCalendar('rerenderEvents');
-    })
+    });
 
     $('#external-events .fc-event').on('click',function(){
         alert($(this).val());
-    })
+    });
 
     function filterEvents(filter){
         var newSource = [];
@@ -140,4 +150,44 @@ $(document).ready(function(){
         }
         $('#calendar').fullCalendar('refetchEventSources', newSource);
     }
+
+    var json_sched;
+    function ajaxCallBack(retVal){
+        json_sched = retVal;
+    }
+
+    $('#getJson').on('click', function () {
+        $("location_selector").prop('selectedIndex', 0);
+        $.ajax({ //Fetch event information using ajax call to data page
+            url : window.location.href + '/json',
+            async:false,
+            success : function(result){
+                ajaxCallBack(result);
+            }
+        });
+        var days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+        for (var i = 0, len = days.length; i < len; i++){
+            for (var j = 0, jlen = json_sched["data"].length; j < jlen; j++){
+                for (var k = 0, klen = json_sched["data"][j]["schedule"][days[i]].length; k < klen; k++){
+                    for(var l = 0, llen = json_sched["data"][j]["schedule"][days[i]][k]; l < llen; l++){
+                        json_sched["data"][j]["schedule"][days[i]][k][l] = null;
+                    }
+                }
+            }
+        }
+        console.log(json_sched);
+        var events = [];
+        for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
+            events.push($('#calendar').fullCalendar('clientEvents')[i]);
+        }
+        dows = {"0":"sun","1":"mon","2":"tue","3":"wed","4":"thu","5":"fri","6":"sat"};
+        for (var i = 0, len = events.length; i < len; i++) {
+            for (var j = 0, dlen = json_sched["data"].length; j < dlen; j++){
+                if (String(events[i].lcode) == String(json_sched["data"][j]["code"])){
+                    json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i].index] = events[i].pid;
+                }
+            }
+        }
+        console.log(json_sched);
+    });
 });
