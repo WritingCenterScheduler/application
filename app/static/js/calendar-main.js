@@ -74,6 +74,7 @@ $(document).ready(function(){
                 end: '18:00' // 6pm
             }
         ],
+        displayEventTime: false,
         navLinks: true,
         editable: true,
         droppable: true,

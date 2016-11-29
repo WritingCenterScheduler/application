@@ -309,7 +309,17 @@ h3.footer-text{
     margin: 0;
     vertical-align: middle;
 }
+
 #calendar {
     float: right;
     width: 80%;
+}
+
+.fc-widget-content {
+    position: relative;
+}
+
+div.fc-content {
+    text-align: left;
+    padding-left: 2px;
 }
