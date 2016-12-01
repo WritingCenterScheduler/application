@@ -279,3 +279,20 @@ vertical-align: middle;
 float: right;
 width: 80%;
 }
+
+
+/* Help Page Table of Contents CSS*/
+.TOC li{
+   list-style-type: none;
+   float: inherit;
+   /*background: #ffffff;*/
+   font-size: 1.3em;
+   padding: 1em 2em;
+
+}
+.TOC li:hover{
+
+   background: #ffffff;
+
+
+}
