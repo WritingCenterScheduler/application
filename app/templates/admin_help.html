@@ -23,7 +23,8 @@
         <br>
             <h2 id='ManagingYourUsers'>Managing Your Users</h2>
         <p>
-           Under the Admin tab you can manage the different users of the application. You can create a new user in
+
+            Under the Admin tab you can manage the different users of the application. You can create a new user in
             the create new users in the create new users table. To create a new user must enter the users PID, their
             email, and their status as either a returning employee, new employee or an administrator. You MUST hit
             create in order for the user to be created for the application. Additionally, you may paste a CSV file in
@@ -39,7 +40,8 @@
         <p>
             Under the Schedules table, you can click the run scheduler to run the scheduler on the currently selected
             employees. The current master schedule is highlighted in green and can be toggled on the right column of
-            the table. In addition, you can view any of the generated schedules by looking on the right.
+            the table. In addition, you can view any of the generated schedules by clicking on their names in the
+            left column.
         </p>
         <img src="{{ url_for('static', filename='assets/Admin.PNG') }}" alt='User management page' width='700'
              height='500' style="display: block; margin: 0 auto;">
@@ -48,10 +50,37 @@
         <br>
         <br>
 	<h2 id='ManageLocations'>Manage Locations</h2>
-	<p>
-		This page is used to view the hours which have been assigned to you by your administrator. You may view which
-        hours you are working under this tab.
-	</p>
+        <p>
+            Under the creation tab. You can create a schedule by giving it a name, a unique numeric code, an opening and
+            closing time and specifying whether or not you would like the location to be returning employees only or any
+            employee type. Additionally locations can be edited from the the right table. You can update any of the
+            currently selected locations information and it will be updated upon submission. Note that both for schedule
+            creation and for updating schedules you must submit the data/changes before moving on to another page if you
+            want your changes to be saved.
+        </p>
+        <p>
+            The table view beneath the the data entry tables is used to display and edit information about different
+            locations. A white entry (0) indicates that the location does not need any staff at that time. Light blue (1)
+            is used to represent that one employee is needed for that time slot at the current selected location. Darker
+            blue (2) indicates that two employees are needed at that location during that time slot. The current selected
+            location will be highlighted in grey. You may change the currently selected location by clicking on the tab
+            with the name of the location that you would like to select. The table beneath the tabs will automatically be
+            changed to the current location upon its selection.
+        </p>
+        <p>
+            A location may be deleted by selecting the location that you want to delete from the tabs above the table
+            then clicking the delete button below the table. This will open a prompt that will confirm that you do
+            indeed want to delete the selected location before proceeding to delete the location.
+        </p>
+        <p>
+        <strong>Note:</strong> Unlike the data entry tables above the location table, any changes pertaining to
+            the time slot availability of a location does not need to be submitted but will be updated automatically
+            as changes are made. For example, if you wanted to change the 8:00 timeslot from zero people to one
+            person, this change does not need to be submited but if you wanted to create a new location or update the
+            name of a location then those changes must be submitted before the changes are permentantly recorded.
+        </p>
+
+
 	<img src="{{ url_for('static', filename='assets/locations.PNG') }}" alt='Managing Locations page'  width='700'
              height='500' style="display: block; margin: 0 auto;">
 	<br>
@@ -59,12 +88,47 @@
 	<br>
 	<br>
 	<h2 id='Schedule'>Editing the Master Schedule</h2>
-	<p>
-		This page is used to view the hours which have been assigned to you by your administrator. You may view which
-        hours you are working under this tab.
-	</p>
-	<img src="{{ url_for('static', filename='assets/locations.PNG') }}" alt='View Schedule Image'  width='700'
+
+        <p>
+            Under the Schedule tab, you can edit and view the master schedule that you selected in the Admin tab. A
+            students name placed in a certain time slot represents that the student is currently scheduled to work at
+            that time.
+        </p>
+        <p>
+            <strong>REMOVING A EMPLOYEE:</strong>
+            You may remove a employee from the schedule by double clicking on their name. This will open up a
+            confirmation dialogue where you will confirm your delete. After confirmation the student will be
+            removed from the schedule at that time slot.
+        </p>
+        <p>
+            <strong>ADDING A EMPLOYEE:</strong>
+            On the left hand side of the schedule you can click and drag employees onto the schedule. This is done by
+            dragging one of the employees names onto the schedule during the time slot that you would like to add the
+            student.
+        </p>
+        <p>
+            <strong>MOVING AROUND EMPLOYEES:</strong>
+            Employees can be moved around the schedule by clicking on the employees name on the schedule and dragging and
+            dropping their name from their current time slot to a different one.
+        </p>
+        <p>
+            <strong>FILTERING BY LOCATION:</strong>
+            On the left hand side of the schedule, you will seee a drop down menu. From here you can choose which
+            locations master schedule you would like to display or if you would like to see all of the locations at
+            once. Any changes that you make to an individual locations schedule must be submitted before the changes
+            are saved.
+        </p>
+        <p>
+            <Strong>CHANGING THE AMOUNT OF TIME DISPLAYED:</Strong>
+            You can change the amount of time to be displayed eithe to list the entire week, to display the week as a
+            calender or to display an individual day. This can be toggled by selecting different tabs in the top left
+            corner of the calender.
+        </p>
+
+
+	<img src="{{ url_for('static', filename='assets/schedule.PNG') }}" alt='View Schedule Image'  width='700'
              height='500' style="display: block; margin: 0 auto;">
+
 	<br>
 	<a href=''>Return to top</a>
 	<br>
