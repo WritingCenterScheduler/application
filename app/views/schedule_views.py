@@ -40,24 +40,65 @@ def active_schedule():
     except DoesNotExist:
         return responses.invalid(request.url, "No active schedule")
 
+@schedule_app.route("/api/schedule/<path:code>/activate", methods=["GET"])
+@login_required
+@decorators.requires_admin
+def toggle_active_schedule(code):
+    """
+    Toggles the current active schedule.
+    """
+    if request.method == "GET":
+        gc = models.GlobalConfig.objects().get()
+        gc.active_schedule = code
+        gc.save()
+        # print(models.GlobalConfig.get().active_schedule)
+        return responses.success(request.url, "SUCCESS. Active schedule is now: " + code)
+    else:
+        return responses.invalid(request.url, "METHOD not supported.")
 
-@schedule_app.route("/api/schedule/<path:code>", methods=["GET", "DELETE"])
+@schedule_app.route("/api/schedule/<path:code>", methods=["GET","PUT","DELETE"])
 @login_required
 @decorators.requires_admin
 def schedule(code):
     """
     Displays the schedule referred to by SID.
     """
-    s = models.Schedule.objects().get(sid=str(code))
+    try:
+        s = models.Schedule.objects().get(sid=str(code))
+    except:
+        return responses.invalid(url_for("schedule", code=code), "Schedule NOT FOUND.")
     if s:
         if request.method == "DELETE":
+            # print ("Deleting a schedule with SID: " + str(s.sid) + "\nThe Active schedule is: " + str(models.GlobalConfig.get().active_schedule))
+            if str(models.GlobalConfig.get().active_schedule) == str(s.sid):
+                gc = models.GlobalConfig.objects().first()
+                gc.active_schedule = "None"
+                gc.save()
             s.delete()
             return responses.success(request.url, "Schedule DELETED")
 
         elif request.method == "GET":
             return render_template("schedule_display.html",
                 user=current_user,
-                users = models.User.objects())
+                users = models.User.objects(),
+                locations = models.Location.objects(),
+                active_schedule = models.GlobalConfig.get().active_schedule,
+                schedule_name = s.sid)
+        elif request.method == "PUT":
+            payload = None
+            try:
+                payload = json.loads(request.data.decode("utf-8"))
+            except Exception as e:
+                return responses.invalid(request.url, e)
+            if payload:
+                # print(payload)
+                success = s.update(payload)
+                if success:
+                    return responses.schedule_updated(request.url, s.sid)
+                else:
+                    return responses.invalid(request.url, "Could not update location")
+            else:
+                return responses.invalid(request.url, "No data")
 
         else:
             return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
@@ -100,6 +141,8 @@ def schedule_data(code):
                                             'title': str(u.first_name + " " + u.last_name),
                                             'pid': pid,
                                             'location': str(l.name),
+                                            'lcode': l.code,
+                                            'index': i,
                                             'start': index2time(i),
                                             'end': index2time(i+1),
                                             'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
@@ -115,6 +158,25 @@ def schedule_data(code):
     else:
         return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
 
+
+@schedule_app.route("/api/schedule/<path:code>/json", methods=["GET"])
+@login_required
+@decorators.requires_admin
+def schedule_json(code):
+    """
+    Returns the schedule referred to by SID
+    """
+
+    s = models.Schedule.objects().get(sid=code)
+    if s:
+        events = []
+        id_counter = 1
+        if request.method == "GET":
+            return Response(s.to_json(), mimetype='application/json')
+        else:
+            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
+    else:
+        return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
 
 @schedule_app.route("/admin/runschedule", methods=["GET"])
 @login_required

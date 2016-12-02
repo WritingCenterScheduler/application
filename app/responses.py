@@ -49,6 +49,14 @@ def user_updated(uri, pid):
     r["pid"] = pid
     return Response(json.dumps(r),  mimetype='application/json')
 
+def schedule_updated(uri, code):
+    r = {}
+    r["status"] = "success"
+    r["type"] = "schedule updated"
+    r["uri"] = uri
+    r["code"] = code
+    return Response(json.dumps(r),  mimetype='application/json')
+
 def illegal(reason):
     r = {}
     r["status"] = "fail"
