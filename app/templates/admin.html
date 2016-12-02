@@ -106,6 +106,10 @@
                     <button onclick="toggle_bit({{user.pid}}, 1, '{{user.typecode}}');">
                         <i class="fa {{'fa-user-plus' if user.is_returner else 'fa-user'}}" aria-hidden="true"></i>
                     </button>
+
+                    <button onclick="randomize_user_color({{user.pid}});">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
+                    </button>
                 </td>
             </tr>
             {% else %}

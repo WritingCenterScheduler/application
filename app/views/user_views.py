@@ -185,6 +185,18 @@ def admin():
         all_schedules = models.Schedule.objects(),
         active_schedule = models.GlobalConfig.get().active_schedule)
 
+@schedule_app.route("/api/user/<path:pid>/colorize", methods=["POST"])
+@login_required
+@decorators.requires_admin
+def colorize(pid):
+    user = load_user(pid)
+    if user:
+        user.randomizeColor()
+        return responses.user_updated(request.url, user.pid)
+    else:
+        return responses.invalid(request.url, "User does not exist")
+
+
 @schedule_app.route("/user/help")
 @login_required
 def help():

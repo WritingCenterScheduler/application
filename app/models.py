@@ -1,6 +1,7 @@
 from mongoengine import *
 import numpy as np
 from . import config
+import random
 
 # Setup the mongo connection
 connect(config.DB_NAME,
@@ -54,6 +55,42 @@ def global_np_to_json_dict(np_arr):
         rtrn["sat"].append([None if f is 0 else f for f in row[6].tolist()])
     return rtrn
 
+def randomColor(saturation, value):
+    """
+    Generates a random color in HSV by randomly selecting a Hue and combining it
+    with the saturation and value arguments.
+    A value from [0.0,1.0] is added to the golden ratio conjugate, and then
+    this sum modulo 1 becomes the hue for the HSV tuple.
+    The golden ratio congujate is necessary for even distribution of repeated
+    random color generation, so generated colors are easily distinguishable .
+    """
+    phi = 0.618033988749895
+    hue  = (random.random() + phi) % 1
+    return HSVtoRGB(hue, saturation, value)
+
+def HSVtoRGB(hue, sat, val):
+    """
+    Function for converting HSV color value to RGB hex string.
+    """
+    h_i = int(hue*6.0)
+    f = (hue * 6.0) - h_i
+    p = val * (1 - sat)
+    q = val * (1 - (f * sat))
+    t = val * (1 - ((1 - f) * sat))
+    if h_i == 0:
+        r, g, b = val, t, p
+    elif h_i == 1:
+        r, g, b = q, val, p
+    elif h_i == 2:
+        r, g, b = p, val, t
+    elif h_i == 3:
+        r, g, b = p, q, val
+    elif h_i == 4:
+        r, g, b = t, p, val
+    else:
+        r, g, b = val, p, q
+    rgb = [r, g, b]
+    return "#%s" % "".join([hex(int(c*256))[2:] for c in rgb])
 
 class GlobalConfig(Document):
     active_schedule = StringField(required=True)
@@ -159,6 +196,7 @@ class User(Document):
     typecode = StringField()
     availability = DictField()
     resolution_minutes = IntField()
+    color = StringField()
 
     updatable_fields = ["last_name", "first_name", "email", "availability"]
 
@@ -180,6 +218,7 @@ class User(Document):
             # XX(0/1)XX... determines active/inactive
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
         self.availability = config.DEFAULT_AVAILABILITY
+        self.color = randomColor(0.5, 0.95)
 
     def update(self, payload):
         """
@@ -204,6 +243,10 @@ class User(Document):
 
     def to_np_arr(self):
         return global_to_np_arr(self.availability)
+
+    def randomizeColor(self):
+        self.color = randomColor(0.5, 0.95)
+        self.save()
 
     @property
     def is_admin(self):
