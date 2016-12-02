@@ -24,7 +24,7 @@ def add_user():
     POST - Create a new user with details specified in the post data body
     """
     try:
-        print(request.data)
+        # print(request.data)
         data = json.loads(request.data.decode("utf-8"))
     except Exception as e:
         return responses.invalid(request.url, e)
@@ -53,8 +53,8 @@ def user(pid):
     DELETE - removes the user with pid
     """
     user = load_user(pid)
-    print(current_user.pid)
-    print(current_user.pid == pid)
+    # print(current_user.pid)
+    # print(str(current_user.pid) == str(pid))
 
     if user:
 

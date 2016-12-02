@@ -59,14 +59,18 @@ class GlobalConfig(Document):
     active_schedule = StringField(required=True)
 
     @staticmethod
-    def get():  
+    def get():
         gc = GlobalConfig.objects().first()
-        
+
         if gc == None:
             gc = GlobalConfig()
-            gc.active_schedule = Schedule.objects().first().sid
+            try:
+                gc.active_schedule = Schedule.objects().first().sid
+            except AttributeError:
+                print ("Caught the exception")
+                gc.active_schedule = "None"
             gc.save()
-        
+
         return gc
 
 
@@ -111,7 +115,7 @@ class Location(Document):
             self.save()
 
         # print(self.open_at)
-        
+
         payload.pop("_id", None)
         keys = payload.keys()
         payload['requirements'] = self.sanitize_location_payload(payload['requirements'])
