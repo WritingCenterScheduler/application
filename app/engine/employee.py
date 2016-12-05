@@ -9,6 +9,7 @@ class Employee(User):
         super(Employee, self).__init__(**kwargs)
         self.schedule = np.zeros(self.availability.shape)
         self.total_availability = self.calculate_total_availability()
+        self.scheduled_hours = 0.0
 
     def calculate_total_availability(self):
         """
@@ -54,3 +55,4 @@ class Employee(User):
             self.schedule[x][y] = 1
             self.total_availability -= self.availability[x][y]
             self.availability[x][y] = 0
+            self.scheduled_hours += 0.5
