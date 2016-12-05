@@ -323,3 +323,20 @@ div.fc-content {
     text-align: left;
     padding-left: 2px;
 }
+
+
+/* Help Page Table of Contents CSS*/
+.TOC li{
+   list-style-type: none;
+   float: inherit;
+   /*background: #ffffff;*/
+   font-size: 1.3em;
+   padding: 1em 2em;
+
+}
+.TOC li:hover{
+
+   background: #ffffff;
+
+
+}

@@ -196,6 +196,24 @@ def help():
 
     TODO: Found bug.  Admin can see all users.
     """
-    return render_template("help.html",
+
+    return render_template("user_help.html",
             user=user,
             active_schedule = models.GlobalConfig.get().active_schedule)
+#<<<<<<< HEAD
+#    return render_template("user_help.html",
+#            user=user)
+@schedule_app.route("/admin/help")
+@login_required
+def adminhelp():
+    """
+    View for a user to set their own availability
+    Method:
+        1) Generate the UI
+        2) POST the updates to /api/user/<id>
+
+    TODO: Found bug.  Admin can see all users.
+    """
+    return render_template("admin_help.html",
+            user=user)
+#=======
