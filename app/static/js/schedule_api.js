@@ -1,4 +1,4 @@
-/* 
+/*
     Backend api.
 */
 
@@ -47,7 +47,7 @@ function update_me(user_object, callback){
     }
 
     var xhttp = new XMLHttpRequest();
-    
+
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             callback(JSON.parse(this.responseText));
@@ -55,7 +55,7 @@ function update_me(user_object, callback){
     };
 
     xhttp.open("PUT", "/api/user/" + user_object.pid, true);
-    xhttp.send(JSON.stringify(user_object));   
+    xhttp.send(JSON.stringify(user_object));
 }
 
 /*
@@ -82,7 +82,7 @@ function update_loc(code, payload_json, callback){
         }
     };
     xhttp.open("PUT", "/api/location/" + code, true);
-    xhttp.send(JSON.stringify(payload_json)); 
+    xhttp.send(JSON.stringify(payload_json));
 }
 
 
@@ -94,7 +94,7 @@ function make_loc(payload_json, callback){
         }
     };
     xhttp.open("POST", "/api/locations", true);
-    xhttp.send(JSON.stringify(payload_json));  
+    xhttp.send(JSON.stringify(payload_json));
 }
 
 
@@ -106,10 +106,10 @@ function delete_loc(code, callback){
         }
     };
     xhttp.open("DELETE", "/api/location/" + code, true);
-    xhttp.send();  
+    xhttp.send();
 }
 
-/* 
+/*
     USER ADMIN
 */
 
@@ -121,7 +121,7 @@ function make_user(payload_json, callback){
         }
     };
     xhttp.open("POST", "/api/user", true);
-    xhttp.send(JSON.stringify(payload_json));     
+    xhttp.send(JSON.stringify(payload_json));
 }
 
 
@@ -135,7 +135,7 @@ function delete_user(pid){
     };
     if (confirm("Delete user " + pid + " ?")){
         xhttp.open("DELETE", "/api/user/" + pid, true);
-        xhttp.send();    
+        xhttp.send();
     }
 }
 
@@ -154,7 +154,7 @@ function toggle_bit(PID, bit, typecode){
 
     xhttp.send(JSON.stringify({
         "typecode": typecode
-    }));   
+    }));
 }
 
 function bulk_create_users(payload){
@@ -166,17 +166,29 @@ function bulk_create_users(payload){
         }
     };
     xhttp.open("POST", "/api/user/bulkcreate", true);
-    xhttp.send(payload);   
+    xhttp.send(payload);
 }
 
 /*
     SCHEDULE
 */
 
+function toggle_active(SID){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            location.reload();
+        }
+    };
+    xhttp.open("GET", "/api/schedule/" + SID + "/activate", true);
+    xhttp.send();
+}
+
 function run_schedule(){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        
+
         if (this.readyState == 4 && this.status == 200) {
             // callback(JSON.parse(this.responseText));
             // cause a reload
@@ -202,8 +214,19 @@ function delete_schedule(code){
     };
     if (confirm("Delete schedule? " + code)){
         xhttp.open("DELETE", "/api/schedule/" + code, true);
-        xhttp.send();  
+        xhttp.send();
     }
+}
+
+function update_schedule(code, payload_json, callback){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("PUT", "/api/schedule/" + code, true);
+    xhttp.send(JSON.stringify(payload_json));
 }
 
 
@@ -224,11 +247,11 @@ function table_from_schedule(table_div, schedule_meta, schedule_data, click_call
         </table>");
     table_div.append(newtable);
     var resolution = schedule_meta.resolution_minutes / 60;
-    
+
     var first_event_index = slots-1;
     var last_event_index = 0;
     var day_keys = Object.keys(schedule_data);
-    
+
     // Determine where the events begin...
     // for(var i = 0; i < slots; i++){
     //     for (var k = 0; k < day_keys.length; k++){
@@ -243,13 +266,13 @@ function table_from_schedule(table_div, schedule_meta, schedule_data, click_call
 
     if (schedule_meta.open_at != null){
         first_event_index = parseInt(schedule_meta.open_at);
-        last_event_index = parseInt(schedule_meta.close_at);        
+        last_event_index = parseInt(schedule_meta.close_at);
     } else {
         first_event_index=BEGIN_TABLE;
-        last_event_index=END_TABLE;   
-    }    
+        last_event_index=END_TABLE;
+    }
 
-    
+
     for(var i = 0; i < slots; i++){
 
         if (i < first_event_index || i > last_event_index ){
