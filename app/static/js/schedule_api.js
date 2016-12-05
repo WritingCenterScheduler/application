@@ -139,7 +139,7 @@ function delete_user(pid){
             location.reload();
         }
     };
-    if (confirm("Delete user " + pid + " ?")){
+    if (confirm("Delete user " + pid + " ?\nThis cannot be undone.")){
         xhttp.open("DELETE", "/api/user/" + pid, true);
         xhttp.send();
     }
@@ -173,6 +173,20 @@ function bulk_create_users(payload){
     };
     xhttp.open("POST", "/api/user/bulkcreate", true);
     xhttp.send(payload);
+}
+
+function randomize_user_color(PID){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            location.reload();
+        }
+    };
+    if (confirm("Generate new color for this user?\nThis cannot be undone.")){
+        xhttp.open("POST", "/api/user/" + PID + "/colorize", true);
+        xhttp.send();
+    }
 }
 
 /*

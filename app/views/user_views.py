@@ -31,7 +31,7 @@ def add_user():
     POST - Create a new user with details specified in the post data body
     """
     try:
-        print(request.data)
+        # print(request.data)
         data = json.loads(request.data.decode("utf-8"))
     except Exception as e:
         return responses.invalid(request.url, e)
@@ -60,8 +60,8 @@ def user(pid):
     DELETE - removes the user with pid
     """
     user = load_user(pid)
-    print(current_user.pid)
-    print(current_user.pid == pid)
+    # print(current_user.pid)
+    # print(str(current_user.pid) == str(pid))
 
     if user:
 
@@ -191,6 +191,18 @@ def admin():
         all_users = models.User.objects(),
         all_schedules = models.Schedule.objects(),
         active_schedule = models.GlobalConfig.get().active_schedule)
+
+@schedule_app.route("/api/user/<path:pid>/colorize", methods=["POST"])
+@login_required
+@decorators.requires_admin
+def colorize(pid):
+    user = load_user(pid)
+    if user:
+        user.randomizeColor()
+        return responses.user_updated(request.url, user.pid)
+    else:
+        return responses.invalid(request.url, "User does not exist")
+
 
 @schedule_app.route("/user/help")
 @login_required

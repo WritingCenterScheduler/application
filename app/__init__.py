@@ -60,6 +60,11 @@ def sanity_checks():
         )
         new_admin.save()
         print(" * Added admin user with PID " + str(config.ADMIN_PID))
+    noColors = any([user.color == None for user in users])
+    if noColors:
+        for user in users:
+            user.randomizeColor()
+            print("Colorized user with PID " + str(user.pid))
     print(" * Sanity checks complete")
 
 
