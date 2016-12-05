@@ -1,6 +1,10 @@
 /*
     The main JS logic for Writing Center Scheduler
-    Written by BD, MK, PK, and RC
+    Written by 
+    * Brandon Davis, 
+    * Moazzam Kahn,
+    * Paul Kovach,
+    * Ryan Court
     Fall 2016, COMP 523
 */
 

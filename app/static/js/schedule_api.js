@@ -1,5 +1,11 @@
 /*
-    Backend api.
+    Written by 
+    * Brandon Davis, 
+    * Moazzam Kahn,
+    * Paul Kovach,
+    * Ryan Court
+    
+    Fall 2016, COMP 523
 */
 
 var MINUTESPERDAY = 60 * 24;

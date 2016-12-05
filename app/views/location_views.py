@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+# * Ryan Court (ryco@cs.unc.edu)
+
 import json
 # necessary flask libraries
 from flask import jsonify, Response, request, redirect, url_for, render_template

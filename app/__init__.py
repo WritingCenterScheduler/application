@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+#
+
 # import python native
 import json
 

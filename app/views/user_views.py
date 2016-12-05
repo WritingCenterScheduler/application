@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+# * Ryan Court (ryco@cs.unc.edu)
+
 import json
 from copy import deepcopy
 import numpy as np

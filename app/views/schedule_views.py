@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+# * Ryan Court (ryco@cs.unc.edu)
+
 import json, string, random, datetime, pprint
 import numpy as np
 from flask import jsonify, Response, request, render_template, url_for
