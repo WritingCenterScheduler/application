@@ -190,7 +190,7 @@ class Location(Document):
         earliest = config.TIMESLOTS_PER_DAY-1
         for loc in all_locations:
             earliest = earliest if earliest < int(loc.open_at) else int(loc.open_at)
-        return earliest
+        return earliest if earliest != config.TIMESLOTS_PER_DAY-1 else 0
 
     @staticmethod
     def get_last_close():
@@ -198,7 +198,7 @@ class Location(Document):
         latest = 0
         for loc in all_locations:
             latest = latest if latest > int(loc.close_at) else int(loc.close_at)
-        return latest
+        return latest if latest != 0 else config.TIMESLOTS_PER_DAY-1
 
 
 class Schedule(Document):
