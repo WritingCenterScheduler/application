@@ -37,11 +37,14 @@ $(document).ready(function(){
     ------------------------------*/
     function initExternalEvents(){
         $('#external-events .fc-event').each(function() {
+            //alert($(this).attr("data-color"))
           // store data so the calendar knows to render an event upon drop
           // alert(document.getElementById("location_selector").value)
           $(this).data('event', {
             location: selector_default(String(document.getElementById("location_selector").value)),
             title: $.trim($(this).text()), // use the element's text as the event title
+            backgroundColor: $(this).attr("data-color"),
+            textColor : '#000000',
             duration: '00:30:00',
             stick: true // maintain when user navigates (see docs on the renderEvent method)
           });
@@ -107,12 +110,12 @@ $(document).ready(function(){
         },
         drop: function(date, calEvent, ui, resourceId)
         {
-            alert("external drop: " + allEvents.length);
+            //alert("external drop: " + allEvents.length);
             $('#calendar').fullCalendar('addEvents', calEvent._id);
         },
         eventDrop: function(calEvent, delta, revertFunc)
         {
-            alert("event drop: " + allEvents.length);
+            //alert("event drop: " + allEvents.length);
             $('#calendar').fullCalendar('addEvents', calEvent._id);
         },
         // Renders events and filters based upon location
@@ -128,12 +131,12 @@ $(document).ready(function(){
     $('#location_selector').on('change',function(){
         filterEvents($('#location_selector').val());
         initExternalEvents();
-        alert($('#calendar').fullCalendar('clientEvents').length);
+        //alert($('#calendar').fullCalendar('clientEvents').length);
         $('#calendar').fullCalendar('rerenderEvents');
     });
 
     $('#external-events .fc-event').on('click',function(){
-        alert($(this).val());
+        //alert($(this).val());
     });
 
     function filterEvents(filter){

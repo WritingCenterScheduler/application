@@ -16,7 +16,9 @@
             <h4>Employees</h4>
             <h6>Drag and drop employees to edit the schedule.</h6>
             {% for u in users %}
-            <div class='fc-event'>{{u.first_name + " " + u.last_name}}</div>
+            <div class='fc-event' id='{{u.pid}}' data-color='{{u.color}}'style='background-color:{{u.color}};color:#000000;font-weight:bold;'>
+                {{u.first_name + " " + u.last_name[0] + "."}}
+            </div>
             {% endfor %}
             <h4>Save Changes</h4>
             <button id="getJson">Get Json Schedule</button>
