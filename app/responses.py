@@ -1,6 +1,6 @@
 # Writing Center Scheduler
 # Fall 2016
-# 
+#
 # Written by
 # * Brandon Davis (davisba@cs.unc.edu)
 #
@@ -54,6 +54,14 @@ def user_updated(uri, pid):
     r["type"] = "user updated"
     r["uri"] = uri
     r["pid"] = pid
+    return Response(json.dumps(r),  mimetype='application/json')
+
+def schedule_created(uri, lcode):
+    r = {}
+    r["status"] = "success"
+    r["type"] = "schedule created"
+    r["uri"] = uri
+    r["lcode"] = lcode
     return Response(json.dumps(r),  mimetype='application/json')
 
 def schedule_updated(uri, code):

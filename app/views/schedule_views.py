@@ -25,6 +25,34 @@ from app.engine.location import Location
 # API Views
 #
 
+@schedule_app.route("/api/schedule", methods=["POST"])
+@login_required
+@decorators.requires_admin
+def new_schedule():
+    """
+    POST - Create a new schedule with details specified in the post data body
+    """
+    new_schedule_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    try:
+        # print(request.data)
+        data = json.loads(request.data.decode("utf-8"))
+    except Exception as e:
+        return responses.invalid(request.url, e)
+
+    new_schedule = models.Schedule()
+    try:
+        new_schedule.init(
+            created_on = datetime.datetime.utcnow(),
+            data = data['data'],
+            sid = new_schedule_id)
+        new_schedule.save()
+    except KeyError as e:
+        return responses.invalid(request.url, e)
+    except NotUniqueError as e:
+        return responses.invalid(request.url, "Schedule ID already exists.")
+    print(new_schedule_id)
+    return responses.schedule_created(request.url, new_schedule_id)
+
 @schedule_app.route("/api/schedules", methods=["GET", "DELETE"])
 @login_required
 @decorators.requires_admin
@@ -98,7 +126,7 @@ def schedule(code):
             except Exception as e:
                 return responses.invalid(request.url, e)
             if payload:
-                # print(payload)
+                print(payload)
                 success = s.update(payload)
                 if success:
                     return responses.schedule_updated(request.url, s.sid)
@@ -262,7 +290,6 @@ def engine_run():
             "code": s.name
         })
 
-    # TODO: Store the schedule as an object
     new_schedule = models.Schedule()
     new_schedule.created_on = datetime.datetime.utcnow()
     new_schedule.data = loc_return_list
