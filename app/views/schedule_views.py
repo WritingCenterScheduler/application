@@ -1,6 +1,6 @@
 # Writing Center Scheduler
 # Fall 2016
-# 
+#
 # Written by
 # * Brandon Davis (davisba@cs.unc.edu)
 # * Ryan Court (ryco@cs.unc.edu)
@@ -103,7 +103,7 @@ def schedule(code):
                 if success:
                     return responses.schedule_updated(request.url, s.sid)
                 else:
-                    return responses.invalid(request.url, "Could not update location")
+                    return responses.invalid(request.url, "Could not update schedule")
             else:
                 return responses.invalid(request.url, "No data")
 
@@ -149,7 +149,6 @@ def schedule_data(code):
     """
     Modifies the schedule referred to by SID
     """
-    # TODO: Give users/locations a unique color
 
     s = models.Schedule.objects().get(sid=code)
     if s:
@@ -176,7 +175,7 @@ def schedule_data(code):
                                             'pid': pid,
                                             'location': str(l.name),
                                             'lcode': l.code,
-                                            'index': i,
+                                            '_index': i,
                                             'start': index2time(i),
                                             'end': index2time(i+1),
                                             'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],

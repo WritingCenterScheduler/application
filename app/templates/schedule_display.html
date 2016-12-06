@@ -18,7 +18,7 @@
             <select id="location_selector">
                 <option value="all">All Locations</option>
                 {% for l in locations %}
-                <option value="{{l.name}}">{{l.name}}</option>
+                <option id="{{l.name}}" value="{{l.name}}" data-code={{l.code}}>{{l.name}}</option>
                 {% endfor %}
             </select>
             <h4>Employees</h4>
