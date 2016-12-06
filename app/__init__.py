@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+#
+
 # import python native
 import json
 
@@ -41,6 +48,7 @@ login_manager.login_view = "login"
 def sanity_checks():
     # Check to make sure there is at least one administrative user.
     users = models.User.objects()
+    locations = models.Location.objects()
     admins = any([user.is_admin for user in users])
     if not admins:
         new_admin = models.User()
@@ -53,12 +61,20 @@ def sanity_checks():
         )
         new_admin.save()
         print(" * Added admin user with PID " + str(config.ADMIN_PID))
-    noColors = any([user.color == None for user in users])
-    if noColors:
-        for user in users:
+
+    for user in users:
+        if user.color == None:
             user.randomizeColor()
-            print("Colorized user with PID " + str(user.pid))
-    print(" * Sanity checks complete")
+            print(" * Colorized user with PID " + str(user.pid))
+
+        if user.desired_hours == None:
+            user.desired_hours = config.DEFAULT_DESIRED_HOURS
+        user.save()
+
+    for loc in locations:
+        pass
+
+    print(" * Sanity checks complete! ")
 
 
 @login_manager.user_loader

@@ -1,3 +1,9 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+
 import os
 import uuid
 
@@ -10,6 +16,7 @@ SSO_LOGOUT_URL = "https://sso.unc.edu/idp/logout.jsp"
 SECRET_KEY = "local" if LOCAL else '1c9dedc4-3f3d-4709-8330-8ab064af9be8' # Regenerate the Secret key at startup in prod.
 TIMESLOT_SIZE_MIN = 30
 TIMESLOTS_PER_DAY = 48
+DEFAULT_DESIRED_HOURS = 8
 DEFAULT_OPEN = "8:30"
 DEFAULT_CLOSE = "19:00"
 

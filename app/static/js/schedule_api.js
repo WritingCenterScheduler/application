@@ -1,5 +1,11 @@
 /*
-    Backend api.
+    Written by 
+    * Brandon Davis, 
+    * Moazzam Kahn,
+    * Paul Kovach,
+    * Ryan Court
+    
+    Fall 2016, COMP 523
 */
 
 var MINUTESPERDAY = 60 * 24;
@@ -33,6 +39,7 @@ function fetch_me(pid, callback){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+            // console.log(this.responseText);
             callback(JSON.parse(this.responseText));
         }
     };
@@ -244,7 +251,7 @@ function update_schedule(code, payload_json, callback){
 }
 
 
-function table_from_schedule(table_div, schedule_meta, schedule_data, click_callback){
+function table_from_schedule(table_div, schedule_meta, schedule_data, open_time, close_time, click_callback){
     TFS_CLICK_CALLBACK_FN = click_callback;
     var slots = MINUTESPERDAY / schedule_meta.resolution_minutes;
     var newtable = $("<table id='user-schedule'>\
@@ -278,7 +285,11 @@ function table_from_schedule(table_div, schedule_meta, schedule_data, click_call
     //     }
     // }
 
-    if (schedule_meta.open_at != null){
+    if (open_time){
+        first_event_index = open_time;
+        last_event_index = close_time;
+    }
+    else if (schedule_meta.open_at != null){
         first_event_index = parseInt(schedule_meta.open_at);
         last_event_index = parseInt(schedule_meta.close_at);
     } else {

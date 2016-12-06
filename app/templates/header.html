@@ -1,3 +1,11 @@
+<!--
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+-->
+
 <html>
     <head>
         <title>Writing Center Scheduler</title>
@@ -32,14 +40,15 @@
                 {% if active_schedule != "None" %}
                     <li><a href="{{ url_for('schedule', code=active_schedule) }}">Schedule</a></li>
                 {% endif %}
+                <li><a href="/admin/help">Help</a></li>
                 {% else %}
                 <!-- Show regular users -->
-                <li><a href="{{url_for('set_availability', pid=current_user.pid)}}">My Schedule</a></li>
-
+                <li><a href="{{url_for('set_availability', pid=current_user.pid)}}">My Availability</a></li>
+                <li><a href="{{url_for('help')}}">Help</a></li>
                 {% endif %}
                 <!-- Show everyone -->
                 <!-- <li><a href="{{url_for('schedule', code='active')}}">Master Schedule</a></li> -->
-                <li><a href="{{url_for('help')}}">Help</a></li>
+
                 <li><a href="{{url_for('logout')}}">Log out</a></li>
 
             </ul>

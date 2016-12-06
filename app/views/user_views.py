@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+#
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+# * Ryan Court (ryco@cs.unc.edu)
+
 import json
 from copy import deepcopy
 import numpy as np
@@ -90,7 +97,15 @@ def user(pid):
                 return responses.invalid(request.url, "No data")
 
         elif request.method == "GET":
-            return Response(user.to_json(), mimetype='application/json')
+            response = """{{
+                    "user": {user},
+                    "open":{first_open},
+                    "close":{last_close}
+                }}""".format(
+                        user=user.to_json(),
+                        first_open=models.Location.get_first_open(),
+                        last_close=models.Location.get_last_close())
+            return Response(response, mimetype="application/json")
 
         else:
             responses.invalid(request.url, "Method not supported")
@@ -208,6 +223,22 @@ def help():
 
     TODO: Found bug.  Admin can see all users.
     """
-    return render_template("help.html",
+
+    return render_template("user_help.html",
+            user=user,
+            active_schedule = models.GlobalConfig.get().active_schedule)
+
+@schedule_app.route("/admin/help")
+@login_required
+def adminhelp():
+    """
+    View for a user to set their own availability
+    Method:
+        1) Generate the UI
+        2) POST the updates to /api/user/<id>
+
+    TODO: Found bug.  Admin can see all users.
+    """
+    return render_template("admin_help.html",
             user=user,
             active_schedule = models.GlobalConfig.get().active_schedule)

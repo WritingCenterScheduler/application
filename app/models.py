@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+#
+
 from mongoengine import *
 import numpy as np
 from . import config
@@ -177,6 +184,22 @@ class Location(Document):
                     print("BOOP")
         return payload
 
+    @staticmethod
+    def get_first_open():
+        all_locations = Location.objects()
+        earliest = config.TIMESLOTS_PER_DAY-1
+        for loc in all_locations:
+            earliest = earliest if earliest < int(loc.open_at) else int(loc.open_at)
+        return earliest
+
+    @staticmethod
+    def get_last_close():
+        all_locations = Location.objects()
+        latest = 0
+        for loc in all_locations:
+            latest = latest if latest > int(loc.close_at) else int(loc.close_at)
+        return latest
+
 
 class Schedule(Document):
     """
@@ -197,6 +220,7 @@ class User(Document):
     availability = DictField()
     resolution_minutes = IntField()
     color = StringField()
+    desired_hours = IntField()
 
     updatable_fields = ["last_name", "first_name", "email", "availability"]
 
@@ -218,6 +242,7 @@ class User(Document):
             # XX(0/1)XX... determines active/inactive
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
         self.availability = config.DEFAULT_AVAILABILITY
+        self.desired_hours = config.DEFAULT_DESIRED_HOURS
         self.color = randomColor(0.5, 0.95)
 
     def update(self, payload):

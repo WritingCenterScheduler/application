@@ -1,4 +1,12 @@
-/* Global */
+/*
+    Written by 
+    * Brandon Davis, 
+    * Moazzam Kahn,
+    * Paul Kovach,
+    * Ryan Court
+    Fall 2016, COMP 523
+*/
+
 html, body {
     max-width: 100%;
     overflow-x: hidden;
@@ -322,4 +330,21 @@ h3.footer-text{
 div.fc-content {
     text-align: left;
     padding-left: 2px;
+}
+
+
+/* Help Page Table of Contents CSS*/
+.TOC li{
+   list-style-type: none;
+   float: inherit;
+   /*background: #ffffff;*/
+   font-size: 1.3em;
+   padding: 1em 2em;
+
+}
+.TOC li:hover{
+
+   background: #ffffff;
+
+
 }

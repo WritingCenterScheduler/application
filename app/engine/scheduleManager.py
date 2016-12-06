@@ -1,4 +1,5 @@
 import numpy as np
+from copy import deepcopy
 import datetime, random
 from . import config
 from .user import User as User
@@ -111,12 +112,71 @@ class ScheduleManager:
         all_location_needs.sort(key=lambda x: x[0], reverse=False)
         return all_location_needs
 
+    def preprocess(self):
+        """
+        Fills up continuous runs with employees who are available within the same run.
+        Where a run is defined as a chain of 2 or more timeslots.
+        """
+
+        # runs of continous need
+        need_runs = []
+        for l in self.locations:
+            for i in range(len(l.requirements)):
+                run = {'loc':l, 'start':None, 'end':None}
+                for j in range(len(l.requirements[0])-1):
+                    if l.requirements[i][j] > 0:
+                        if not run['start']:
+                            run['start'] = (i,j)
+                    if l.requirements[i][j+1] > 0 and run['start']:
+                        run['end'] = (i,j+1)
+                        run['length'] = run['end'][1] - run['start'][1]
+                if run['end']:
+                    need_runs.append(run)
+        # runs of continuous employee availability
+        availability_runs = []
+        for c in self.candidates:
+            for i in range(len(c.availability)):
+                run = {'candidate':c, 'start':None, 'end':None, }
+                for j in range(len(c.availability[0])-1):
+                    if c.availability[i][j] > 0:
+                        if not run['start']:
+                            run['start'] = (i,j)
+                    if c.availability[i][j+1] > 0 and run['start']:
+                        run['end'] = (i,j+1)
+                        run['length'] = run['end'][1] - run['start'][1]
+                if run['end']:
+                    availability_runs.append(run)
+        # runs of continuous employee availability that interesect needed runs
+        candidate_runs = []
+        for nr in need_runs:
+            for ar in availability_runs:
+                run = {'candidate':ar['candidate'], 'start':None, 'end':None, }
+                if ar['start'][0] == nr['start'][0]:
+                    x = [i for i in range(max(ar['start'][1], nr['start'][1]), min(ar['end'][1], nr['end'][1])+1)]
+                    if len(x) > 1 and len(x) < 9:
+                        candidate_runs.append({'loc':nr['loc'], 'candidate':ar['candidate'], 'day':ar['start'][0], 'timeslots':x})
+        # sort by duration of runs in decreasing order
+        candidate_runs.sort(key=lambda x: len(x['timeslots']), reverse=True)
+        while(len(candidate_runs) > 0):
+            c = candidate_runs[0] # The longest candidate run
+            for i in c['timeslots']:
+                c['loc'].schedule_employee(c['candidate'], (c['day'], i))
+            d = deepcopy(c['day'])
+            for c in candidate_runs:
+                # Need has been filled, remove intersecting runs
+                if c['day'] == d:
+                    candidate_runs.remove(c)
+
     def run_schedule(self):
         """
         The main part of the algorithm.
         """
+        for i in range(2):
+            self.preprocess()
         self.calculate_need()
         needs = self.greatest_need()
+
+        """Preferentially schedule the locations requiring returners first."""
         if needs:
             for n in needs:
                 available_candidates = []
@@ -127,8 +187,8 @@ class ScheduleManager:
                     if(n[2].requirements[n[1][0]][n[1][1]] > 0):
                         c = random.choice(available_candidates)
                         n[2].schedule_employee(c, n[1])
-                self.calculate_need()
-                needs = self.greatest_need()
+                    self.calculate_need()
+                    needs = self.greatest_need()
         for l in self.locations:
             for i in range(len(l.requirements)):
                 for j in range(len(l.requirements[0])):
@@ -141,8 +201,8 @@ class ScheduleManager:
                                 c = random.choice(available_candidates)
                                 l.schedule_employee(c, (i,j))
                                 available_candidates.remove(c)
-        #self.calculate_need()
-        #self.compute_schedule_optimality()
+        self.calculate_need()
+        self.compute_schedule_optimality()
 
     def location_cost(self, l):
         """
@@ -153,25 +213,52 @@ class ScheduleManager:
         for i in range(len(l.schedule)):
             for j in range(len(l.schedule[i])):
                 for k in range(len(l.schedule[i][j])):
-                    if l.schedule[i][j][k] != 0:
-                        e = self.search_PID(int(l.schedule[i][j][k]))
-                        if (j > 0 and k > 0) and (l.schedule[i][j-1][k] == l.schedule[i][j][k] or l.schedule[i][j-1][k-1] == l.schedule[i][j][k] or l.schedule[i][j-1][k] == l.schedule[i][j][k-1] or l.schedule[i][j-1][k-1] == l.schedule[i][j][k-1]):
-                            # print (l.schedule[1][1][0])
-                            # print (l.schedule[2][1][0])
-                            pass
-                        elif (j > 0 and k > 0) and (l.schedule[i][j-1][k] != 0 or l.schedule[i][j-1][k-1] != 0):
-                            print ("cost incurred ")
-                            l.cost[i][j] = l.cost[i][j] + (e.pre_availability[i][j] % 2) * 20
-                        if (l.schedule[i][j-1][k] == 0) and l.requirements[i][j] > 0:
-                            l.cost[i][j] = l.cost[i][j] + l.requirements[i][j] * 40
+                    if i != 0 and i != len(l.schedule)-1:
+                        if l.schedule[i][j][k] != 0:
+                            if (l.schedule[i-1][j][1] == l.schedule[i][j][k] or
+                                l.schedule[i-1][j][0] == l.schedule[i][j][k] or
+                                l.schedule[i+1][j][1] == l.schedule[i][j][k] or
+                                l.schedule[i+1][j][0] == l.schedule[i][j][k]):
+                                pass
+                            else:
+                                # print ("cost incurred at: " + str(i) + ', ' + str(j))
+                                # print ("PID: " + str(l.schedule[i][j][k]))
+                                # print ("No matching adjacent PID\n")
+                                l.cost[i][j] += 20.0
+                    elif i == 0:
+                        if l.schedule[i][j][k] != 0:
+                            if (l.schedule[i+1][j][1] == l.schedule[i][j][k] or
+                                l.schedule[i+1][j][0] == l.schedule[i][j][k]):
+                                pass
+                            else:
+                                l.cost[i][j] += 20.0
+                        #     # print ("cost incurred at: " + str(i-1) + ', ' + str(j))
+                        #     # print ("PID: " + str(l.schedule[i-1][j][k]))
+                        #     # print ("Top edge slot with no matching adjacent PID\n")
+                    elif i == len(l.schedule)-1:
+                        if l.schedule[i][j][k] != 0:
+                            if (l.schedule[i-1][j][1] == l.schedule[i][j][k] or
+                                l.schedule[i-1][j][0] == l.schedule[i][j][k]):
+                                pass
+                            else:
+                                # print ("cost incurred at: " + str(i) + ', ' + str(j))
+                                # print ("PID: " + str(l.schedule[i][j][k]))
+                                # print ("No matching adjacent PID\n")
+                                l.cost[i][j] += 20.0
+                    if l.schedule[i][j][k] == 0 and l.requirements[i][j] > 0:
+                        # print ("cost incurred at: " + str(i) + ', ' + str(j))
+                        # print ("No PID in needed slot\n")
+                        l.cost[i][j] += l.requirements[i][j] * 20.0
         l.total_cost = np.sum(l.cost)
 
     def compute_schedule_optimality(self):
         """
         Using self.locations, decide how optimal the schedule is.
         """
-        if not self.locations:
-            raise ValueError('<scheduleManager.locations> array is empty')
-        for l in self.locations:
-            self.location_cost(l)
-            self.cost += l.total_cost
+        if self.cost == 0:
+            if not self.locations:
+                raise ValueError('<scheduleManager.locations> array is empty')
+            for l in self.locations:
+                self.location_cost(l)
+                self.cost += l.total_cost
+        return self.cost
