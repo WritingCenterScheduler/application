@@ -220,6 +220,7 @@ class User(Document):
     availability = DictField()
     resolution_minutes = IntField()
     color = StringField()
+    desired_hours = IntField()
 
     updatable_fields = ["last_name", "first_name", "email", "availability"]
 
@@ -241,6 +242,7 @@ class User(Document):
             # XX(0/1)XX... determines active/inactive
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
         self.availability = config.DEFAULT_AVAILABILITY
+        self.desired_hours = config.DEFAULT_DESIRED_HOURS
         self.color = randomColor(0.5, 0.95)
 
     def update(self, payload):

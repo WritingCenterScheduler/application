@@ -192,6 +192,7 @@ var update_myself = function(){
     me.first_name = data['first_name'];
     me.last_name = data['last_name'];
     me.email = data['email'];
+    me.desired_hours = data['desired_hours'];
 
     update_me(me, function(response){
         if (response['status'] == 'success'){
