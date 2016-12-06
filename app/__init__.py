@@ -64,12 +64,6 @@ def sanity_checks():
         print(" * Added admin user with PID " + str(config.ADMIN_PID))
 
     for user in users:
-        # First thing's first: make sure keys are satisfied...
-        if user.first_name == None \
-                or user.last_name == None:
-            user.delete()
-
-    for user in users:
 
         if user.color == None:
             user.randomizeColor()

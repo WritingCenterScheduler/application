@@ -43,14 +43,14 @@ db.createUser(
     {
         user: "local",
         pwd: "default",
-        roles: [ "dbAdmin" , "read"]
+        roles: [ "dbAdmin" , "readWrite"]
     }
 )
 
 db.grantRolesToUser(
     "local",
     [
-      { role: "read", db: "wss" }
+      { role: "root", db: "wss" }
     ]
 )
 ```
@@ -59,8 +59,10 @@ Create a user for the application (this is not a mongo user)
 
 ```
 db.user.insert({
-  "pid": 720430213,
-  "email": "bd@unc.edu",
+  "pid": 111111111,
+  "first_name": "Tar",
+  "last_name": "Heel",
+  "email": "user@unc.edu",
   "typecode": "110",
 })
 ```
