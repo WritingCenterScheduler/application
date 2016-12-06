@@ -67,9 +67,9 @@ def sanity_checks():
         # First thing's first: make sure keys are satisfied...
         if user.first_name == None \
                 or user.last_name == None:
-            user.first_name = "Tar"
-            user.last_name = "Heel"
-            user.save()
+            user.delete()
+
+    for user in users:
 
         if user.color == None:
             user.randomizeColor()
