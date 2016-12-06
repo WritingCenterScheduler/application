@@ -1,6 +1,6 @@
 # Writing Center Scheduler
 # Fall 2016
-# 
+#
 # Written by
 # * Brandon Davis (davisba@cs.unc.edu)
 # * Ryan Court (ryco@cs.unc.edu)
@@ -24,6 +24,34 @@ from app.engine.location import Location
 #
 # API Views
 #
+
+@schedule_app.route("/api/schedule", methods=["POST"])
+@login_required
+@decorators.requires_admin
+def new_schedule():
+    """
+    POST - Create a new schedule with details specified in the post data body
+    """
+    new_schedule_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    try:
+        # print(request.data)
+        data = json.loads(request.data.decode("utf-8"))
+    except Exception as e:
+        return responses.invalid(request.url, e)
+
+    new_schedule = models.Schedule()
+    try:
+        new_schedule.init(
+            created_on = datetime.datetime.utcnow(),
+            data = data['data'],
+            sid = new_schedule_id)
+        new_schedule.save()
+    except KeyError as e:
+        return responses.invalid(request.url, e)
+    except NotUniqueError as e:
+        return responses.invalid(request.url, "Schedule ID already exists.")
+    print(new_schedule_id)
+    return responses.schedule_created(request.url, new_schedule_id)
 
 @schedule_app.route("/api/schedules", methods=["GET", "DELETE"])
 @login_required
@@ -98,12 +126,12 @@ def schedule(code):
             except Exception as e:
                 return responses.invalid(request.url, e)
             if payload:
-                # print(payload)
+                print(payload)
                 success = s.update(payload)
                 if success:
                     return responses.schedule_updated(request.url, s.sid)
                 else:
-                    return responses.invalid(request.url, "Could not update location")
+                    return responses.invalid(request.url, "Could not update schedule")
             else:
                 return responses.invalid(request.url, "No data")
 
@@ -149,7 +177,6 @@ def schedule_data(code):
     """
     Modifies the schedule referred to by SID
     """
-    # TODO: Give users/locations a unique color
 
     s = models.Schedule.objects().get(sid=code)
     if s:
@@ -176,7 +203,7 @@ def schedule_data(code):
                                             'pid': pid,
                                             'location': str(l.name),
                                             'lcode': l.code,
-                                            'index': i,
+                                            '_index': i,
                                             'start': index2time(i),
                                             'end': index2time(i+1),
                                             'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
@@ -263,7 +290,6 @@ def engine_run():
             "code": s.name
         })
 
-    # TODO: Store the schedule as an object
     new_schedule = models.Schedule()
     new_schedule.created_on = datetime.datetime.utcnow()
     new_schedule.data = loc_return_list

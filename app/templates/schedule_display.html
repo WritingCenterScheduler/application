@@ -10,7 +10,8 @@
 
 {% block body %}
     <br>
-    <div>
+    <div class="loader centered"></div>
+    <div id="wrap">
         <h3>{{schedule_name}}</h3>
         <div id='external-events'>
             <h4>Locations</h4>
@@ -18,7 +19,7 @@
             <select id="location_selector">
                 <option value="all">All Locations</option>
                 {% for l in locations %}
-                <option value="{{l.name}}">{{l.name}}</option>
+                <option id="{{l.name}}" value="{{l.name}}" data-code={{l.code}}>{{l.name}}</option>
                 {% endfor %}
             </select>
             <h4>Employees</h4>
@@ -29,7 +30,9 @@
             </div>
             {% endfor %}
             <h4>Save Changes</h4>
-            <button id="getJson">Get Json Schedule</button>
+            <button id="save-changes" style="display:inline-block;">Save</button>
+            <h4>Save New Schedule</h4>
+            <button id="save-new" style="display:inline-block;">Save New</button>
         </div>
         <div id='calendar'></div>
       </div>

@@ -1,6 +1,6 @@
 # Writing Center Scheduler
 # Fall 2016
-# 
+#
 # Written by
 # * Brandon Davis (davisba@cs.unc.edu)
 #
@@ -8,7 +8,7 @@
 from mongoengine import *
 import numpy as np
 from . import config
-import random
+import random, datetime, string
 
 # Setup the mongo connection
 connect(config.DB_NAME,
@@ -206,10 +206,39 @@ class Schedule(Document):
     Represents a final or partially final schedule.
     over all locations.
     """
-    # TODO
     sid = StringField(required=True, unique=True)
     data = ListField()
     created_on = DateTimeField()
+
+    def init(self,
+            sid=''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(4)),
+            data=[],
+            created_on=datetime.datetime.utcnow()
+        ):
+        self.sid=sid
+        self.data=data
+        self.created_on=created_on
+
+    def update(self, payload):
+        """
+        Updates the schedule based on the provided payload
+        """
+        # print(payload)
+        payload.pop("_id", None)
+        if self.is_payload_safe(payload):
+            for key in payload.keys():
+                setattr(self, key, payload[key])
+            self.save()
+            return True
+        return False
+
+    def is_payload_safe(self, payload):
+        """
+        Makes sure the payload is safe
+        """
+        payload.pop("_id", None)
+        keys = payload.keys()
+        return all(hasattr(self, key) for key in keys)
 
 class User(Document):
     last_name = StringField(required=True)
