@@ -257,7 +257,7 @@ def engine_run():
 
         np_arr = user.to_np_arr()
 
-        if np_arr is not None:
+        if np_arr is not None and user.can_schedule:
             candidate = Employee(np_arr,
                 typecode="010",
                 pid=user.pid)
