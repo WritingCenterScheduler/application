@@ -48,6 +48,7 @@ login_manager.login_view = "login"
 def sanity_checks():
     # Check to make sure there is at least one administrative user.
     users = models.User.objects()
+    locations = models.Location.objects()
     admins = any([user.is_admin for user in users])
     if not admins:
         new_admin = models.User()
@@ -62,15 +63,18 @@ def sanity_checks():
         print(" * Added admin user with PID " + str(config.ADMIN_PID))
 
     for user in users:
-        user.randomizeColor()
-        print(" * Colorized user with PID " + str(user.pid))
+        if user.color == None:
+            user.randomizeColor()
+            print(" * Colorized user with PID " + str(user.pid))
 
         if user.desired_hours == None:
             user.desired_hours = config.DEFAULT_DESIRED_HOURS
-        
         user.save()
-    
-    print(" * Sanity checks complete")
+
+    for loc in locations:
+        pass
+
+    print(" * Sanity checks complete! ")
 
 
 @login_manager.user_loader
