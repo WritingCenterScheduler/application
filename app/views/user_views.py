@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+#
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+# * Ryan Court (ryco@cs.unc.edu)
+
 import json
 from copy import deepcopy
 import numpy as np
@@ -24,7 +31,7 @@ def add_user():
     POST - Create a new user with details specified in the post data body
     """
     try:
-        print(request.data)
+        # print(request.data)
         data = json.loads(request.data.decode("utf-8"))
     except Exception as e:
         return responses.invalid(request.url, e)
@@ -53,8 +60,8 @@ def user(pid):
     DELETE - removes the user with pid
     """
     user = load_user(pid)
-    print(current_user.pid)
-    print(current_user.pid == pid)
+    # print(current_user.pid)
+    # print(str(current_user.pid) == str(pid))
 
     if user:
 
@@ -90,7 +97,15 @@ def user(pid):
                 return responses.invalid(request.url, "No data")
 
         elif request.method == "GET":
-            return Response(user.to_json(), mimetype='application/json')
+            response = """{{
+                    "user": {user},
+                    "open":{first_open},
+                    "close":{last_close}
+                }}""".format(
+                        user=user.to_json(),
+                        first_open=models.Location.get_first_open(),
+                        last_close=models.Location.get_last_close())
+            return Response(response, mimetype="application/json")
 
         else:
             responses.invalid(request.url, "Method not supported")
@@ -185,6 +200,18 @@ def admin():
         all_schedules = models.Schedule.objects(),
         active_schedule = models.GlobalConfig.get().active_schedule)
 
+@schedule_app.route("/api/user/<path:pid>/colorize", methods=["POST"])
+@login_required
+@decorators.requires_admin
+def colorize(pid):
+    user = load_user(pid)
+    if user:
+        user.randomizeColor()
+        return responses.user_updated(request.url, user.pid)
+    else:
+        return responses.invalid(request.url, "User does not exist")
+
+
 @schedule_app.route("/user/help")
 @login_required
 def help():
@@ -200,9 +227,7 @@ def help():
     return render_template("user_help.html",
             user=user,
             active_schedule = models.GlobalConfig.get().active_schedule)
-#<<<<<<< HEAD
-#    return render_template("user_help.html",
-#            user=user)
+
 @schedule_app.route("/admin/help")
 @login_required
 def adminhelp():
@@ -215,5 +240,5 @@ def adminhelp():
     TODO: Found bug.  Admin can see all users.
     """
     return render_template("admin_help.html",
-            user=user)
-#=======
+            user=user,
+            active_schedule = models.GlobalConfig.get().active_schedule)

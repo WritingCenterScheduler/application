@@ -1,3 +1,11 @@
+<!--
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+-->
+
 {% extends "header.html" %}
 {% block body %}
 
@@ -88,7 +96,8 @@
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 <td>
-                    <a href="{{ url_for('set_availability', pid=user.pid) }}">    {{ user.pid }}
+                    <a href="{{url_for('set_availability',pid=user.pid)}}" target="_new">
+                        {{ user.pid }}
                         <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
                 </td>
@@ -105,6 +114,10 @@
 
                     <button onclick="toggle_bit({{user.pid}}, 1, '{{user.typecode}}');">
                         <i class="fa {{'fa-user-plus' if user.is_returner else 'fa-user'}}" aria-hidden="true"></i>
+                    </button>
+
+                    <button onclick="randomize_user_color({{user.pid}});">
+                        <i class="fa fa-diamond" aria-hidden="true"></i>
                     </button>
                 </td>
             </tr>

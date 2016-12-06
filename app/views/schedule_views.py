@@ -1,3 +1,10 @@
+# Writing Center Scheduler
+# Fall 2016
+# 
+# Written by
+# * Brandon Davis (davisba@cs.unc.edu)
+# * Ryan Court (ryco@cs.unc.edu)
+
 import json, string, random, datetime, pprint
 import numpy as np
 from flask import jsonify, Response, request, render_template, url_for
@@ -111,6 +118,30 @@ def index2time(i):
         return (str(int((i*30)/60)) + ":" + str((i * 30) % 60) + "0")
     return (str(int((i*30)/60)) + ":" + str((i * 30) % 60))
 
+def HSVtoRGB(hue, sat, val):
+    """
+    Helper function for converting HSV color value to hex RGB.
+    """
+    h_i = int(hue*6.0)
+    f = (hue * 6.0) - h_i
+    p = val * (1 - sat)
+    q = val * (1 - (f * sat))
+    t = val * (1 - ((1 - f) * sat))
+    if h_i == 0:
+        r, g, b = val, t, p
+    elif h_i == 1:
+        r, g, b = q, val, p
+    elif h_i == 2:
+        r, g, b = p, val, t
+    elif h_i == 3:
+        r, g, b = p, q, val
+    elif h_i == 4:
+        r, g, b = t, p, val
+    else:
+        r, g, b = val, p, q
+    rgb = [r, g, b]
+    return "#%s" % "".join([hex(int(c*256))[2:] for c in rgb])
+
 @schedule_app.route("/api/schedule/<path:code>/data", methods=["GET"])
 @login_required
 @decorators.requires_admin
@@ -123,6 +154,7 @@ def schedule_data(code):
     s = models.Schedule.objects().get(sid=code)
     if s:
         events = []
+        userColors = dict()
         id_counter = 1
         if request.method == "GET":
             schedule_data = json.loads(s.to_json())
@@ -132,13 +164,15 @@ def schedule_data(code):
                     for i in range(len(timeslots)):
                         for pid in timeslots[i]:
                             if pid != None:
+                                # if not pid in userColors:
+                                #     userColors[pid] = HSVtoRGB(random.random(), 0.5, 0.95)
                                 u = load_user(pid)
                                 l = load_location(d['code'])
                                 if u and l:
                                     events.append(
                                         {
                                             '_id':id_counter,
-                                            'title': str(u.first_name + " " + u.last_name),
+                                            'title': str(u.first_name + " " + u.last_name[0] + "."),
                                             'pid': pid,
                                             'location': str(l.name),
                                             'lcode': l.code,
@@ -146,7 +180,8 @@ def schedule_data(code):
                                             'start': index2time(i),
                                             'end': index2time(i+1),
                                             'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
-                                            'textColor' : '#000000'
+                                            'textColor' : '#000000',
+                                            'backgroundColor' : u.color
                                         }
                                     )
                                     id_counter += 1
