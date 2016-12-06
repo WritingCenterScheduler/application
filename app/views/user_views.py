@@ -1,6 +1,6 @@
 # Writing Center Scheduler
 # Fall 2016
-# 
+#
 # Written by
 # * Brandon Davis (davisba@cs.unc.edu)
 # * Ryan Court (ryco@cs.unc.edu)
@@ -227,9 +227,7 @@ def help():
     return render_template("user_help.html",
             user=user,
             active_schedule = models.GlobalConfig.get().active_schedule)
-#<<<<<<< HEAD
-#    return render_template("user_help.html",
-#            user=user)
+
 @schedule_app.route("/admin/help")
 @login_required
 def adminhelp():
@@ -242,5 +240,5 @@ def adminhelp():
     TODO: Found bug.  Admin can see all users.
     """
     return render_template("admin_help.html",
-            user=user)
-#=======
+            user=user,
+            active_schedule = models.GlobalConfig.get().active_schedule)
