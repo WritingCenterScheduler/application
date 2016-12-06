@@ -49,6 +49,7 @@ def sanity_checks():
     # Check to make sure there is at least one administrative user.
     users = models.User.objects()
     locations = models.Location.objects()
+    
     admins = any([user.is_admin for user in users])
     if not admins:
         new_admin = models.User()
@@ -63,6 +64,13 @@ def sanity_checks():
         print(" * Added admin user with PID " + str(config.ADMIN_PID))
 
     for user in users:
+        # First thing's first: make sure keys are satisfied...
+        if user.first_name == None \
+                or user.last_name == None:
+            user.first_name = "Tar"
+            user.last_name = "Heel"
+            user.save()
+
         if user.color == None:
             user.randomizeColor()
             print(" * Colorized user with PID " + str(user.pid))
