@@ -26,7 +26,7 @@ var location_settings_init = function() {
         day = cell.id.substring(0, 3); // first three chars denotes the day
         position = cell.id.substring(3); // the rest of the string denotes position
         var current = loc["requirements"][day][position];
-        
+
         if (current == 0){
             cell.innerText = 1;
             cell.className = 'table-1';
@@ -52,11 +52,11 @@ var location_settings_init = function() {
 
     var path = location.pathname.split("/");
     var code = path[path.length -1];
-    
+
     fetch_loc(code, function(obj){
         console.log(obj);
         loc=obj;
-        
+
         if (obj != null){
             table_from_schedule(table_div, loc, loc.requirements, on_schedule_click);
 
@@ -90,7 +90,7 @@ var user_availability_init = function(){
         day = cell.id.substring(0, 3);
         position = cell.id.substring(3);
         var current = me['availability'][day][position];
-        
+
         if (current == 0){
             cell.innerText = 1;
             cell.className = 'table-1';
@@ -117,7 +117,7 @@ var user_availability_init = function(){
     fetch_me(PID, function(obj){
         console.log(obj);
         me=obj;
-        
+
         if (obj != null){
             table_from_schedule(table_div, obj, obj.availability, on_schedule_click);
         }
@@ -197,7 +197,7 @@ var update_myself = function(){
             $(".fa-check").show();
             $(".fa-check").text(" Failed")
         }
-    });  
+    });
 }
 
 var csv_create_users = function(){
@@ -232,4 +232,33 @@ var row_col_update = function(obj, table_div, cell){
     if (rowcol == "row"){
         current = query_cell(obj, 'sun', pos);
     }
+}
+
+// Functions for opening new window upon click, supports mobile
+$('a[target="_new"]').click(function() {
+    return openWindow(this.href);
+})
+
+// Opens and resizes new window
+// Unfortunately user settings may not allow opening new window, only new tab
+function openWindow(url) {
+    if (window.innerWidth <= 640) {
+        // if width is smaller then 640px, create a temporary a elm that will open the link in new tab
+        var a = document.createElement('a');
+        a.setAttribute("href", url);
+        a.setAttribute("target", "_blank");
+
+        var dispatch = document.createEvent("HTMLEvents");
+        dispatch.initEvent("click", true, true);
+
+        a.dispatchEvent(dispatch);
+    }
+    else {
+        var width = window.innerWidth * 0.66 ;
+        // define the height in
+        var height = width * window.innerHeight / window.innerWidth ;
+        // Ratio the hight to the width as the user screen ratio
+        window.open(url , 'newwindow', 'width=' + width + ', height=' + height + ', top=' + ((window.innerHeight - height) / 2) + ', left=' + ((window.innerWidth - width) / 2));
+    }
+    return false;
 }

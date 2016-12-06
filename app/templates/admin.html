@@ -88,7 +88,8 @@
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
                 <td>
-                    <a href="{{ url_for('set_availability', pid=user.pid) }}">    {{ user.pid }}
+                    <a href="{{url_for('set_availability',pid=user.pid)}}" target="_new">
+                        {{ user.pid }}
                         <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
                 </td>
