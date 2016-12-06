@@ -184,6 +184,22 @@ class Location(Document):
                     print("BOOP")
         return payload
 
+    @staticmethod
+    def get_first_open():
+        all_locations = Location.objects()
+        earliest = config.TIMESLOTS_PER_DAY-1
+        for loc in all_locations:
+            earliest = earliest if earliest < int(loc.open_at) else int(loc.open_at)
+        return earliest
+
+    @staticmethod
+    def get_last_close():
+        all_locations = Location.objects()
+        latest = 0
+        for loc in all_locations:
+            latest = latest if latest > int(loc.close_at) else int(loc.close_at)
+        return latest
+
 
 class Schedule(Document):
     """

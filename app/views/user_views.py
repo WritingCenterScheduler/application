@@ -97,7 +97,15 @@ def user(pid):
                 return responses.invalid(request.url, "No data")
 
         elif request.method == "GET":
-            return Response(user.to_json(), mimetype='application/json')
+            response = """{{
+                    "user": {user},
+                    "open":{first_open},
+                    "close":{last_close}
+                }}""".format(
+                        user=user.to_json(),
+                        first_open=models.Location.get_first_open(),
+                        last_close=models.Location.get_last_close())
+            return Response(response, mimetype="application/json")
 
         else:
             responses.invalid(request.url, "Method not supported")

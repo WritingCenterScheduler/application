@@ -62,7 +62,7 @@ var location_settings_init = function() {
         loc=obj;
         
         if (obj != null){
-            table_from_schedule(table_div, loc, loc.requirements, on_schedule_click);
+            table_from_schedule(table_div, loc, loc.requirements, null, null, on_schedule_click);
 
             var select = $(".timeSelect");
             var hours, minutes, ampm;
@@ -120,10 +120,10 @@ var user_availability_init = function(){
 
     fetch_me(PID, function(obj){
         console.log(obj);
-        me=obj;
-        
+        me=obj.user;
+
         if (obj != null){
-            table_from_schedule(table_div, obj, obj.availability, on_schedule_click);
+            table_from_schedule(table_div, me, me.availability, obj.open, obj.close ,on_schedule_click);
         }
 
     });
