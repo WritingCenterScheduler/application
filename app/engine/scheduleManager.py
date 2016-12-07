@@ -181,7 +181,7 @@ class ScheduleManager:
             for n in needs:
                 available_candidates = []
                 for c in self.candidates:
-                    if c.is_available_at(n[1]) and int(c.typecode[1]) >= int(n[2].type) and n[2].requirements[n[1][0]][n[1][1]] > 0:
+                    if c.is_available_at(n[1], n[2]) and int(c.typecode[1]) >= int(n[2].type) and n[2].requirements[n[1][0]][n[1][1]] > 0:
                         available_candidates.append(c)
                 if available_candidates: # if list is not empty
                     if(n[2].requirements[n[1][0]][n[1][1]] > 0):
@@ -194,7 +194,7 @@ class ScheduleManager:
                 for j in range(len(l.requirements[0])):
                     available_candidates = []
                     for c in self.candidates:
-                        if l.requirements[i][j] > 0 and c.is_available_at((i,j)) and int(c.typecode[1]) >= int(l.type):
+                        if l.requirements[i][j] > 0 and c.is_available_at((i,j), l) and int(c.typecode[1]) >= int(l.type):
                             available_candidates.append(c)
                         if available_candidates: # if list is not empty
                             while(l.requirements[i][j] > 0):
@@ -255,10 +255,10 @@ class ScheduleManager:
         """
         Using self.locations, decide how optimal the schedule is.
         """
-        if self.cost == 0:
-            if not self.locations:
-                raise ValueError('<scheduleManager.locations> array is empty')
-            for l in self.locations:
-                self.location_cost(l)
-                self.cost += l.total_cost
+        if not self.locations:
+            raise ValueError('<scheduleManager.locations> array is empty')
+        self.cost = 0
+        for l in self.locations:
+            self.location_cost(l)
+            self.cost += l.total_cost
         return self.cost

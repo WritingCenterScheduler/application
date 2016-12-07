@@ -139,13 +139,25 @@ $(document).ready(function(){
         {
             s = event.start.toDate();
             event._index = (((s.getHours() + 5) * 2) + (s.getMinutes() / 30));
-            event.dow = event.start.day()
+            event.dow = event.start.day();
+            e = event.end.toDate();
+            event._endex = (((e.getHours() + 5) * 2) + (e.getMinutes() / 30));
         },
         eventReceive: function(event)
         {
             s = event.start.toDate();
             event._index = (((s.getHours() + 5) * 2) + (s.getMinutes() / 30));
+            event.dow = event.start.day();
+            e = event.end.toDate();
+            event._endex = (((e.getHours() + 5) * 2) + (e.getMinutes() / 30));
+        },
+        eventResize: function(event, delta, revertFunc)
+        {
+            s = event.start.toDate();
+            event._index = (((s.getHours() + 5) * 2) + (s.getMinutes() / 30));
             event.dow = event.start.day()
+            e = event.end.toDate();
+            event._endex = (((e.getHours() + 5) * 2) + (e.getMinutes() / 30));
         },
         // Renders events and filters based upon location
         eventRender: function eventRender(calEvent, element, view )
@@ -192,9 +204,9 @@ $(document).ready(function(){
     function _ajaxCallBack(retVal){
         lcode = retVal;
     }
-
     $('#save-changes').on('click', function () {
-        confirm("Save changes to schedule?\nWARNING: This will overwrite the existing schedule.");
+        var conf = confirm("Save changes to schedule?\nWARNING: This will overwrite the existing schedule.");
+        if (conf == false){return;}
         $("location_selector").prop('selectedIndex', 0);
         $.ajax({ //Fetch event information using ajax call to data page
             url : window.location.href + '/json',
@@ -228,11 +240,13 @@ $(document).ready(function(){
         // console.dir(json_sched["data"][0]["schedule"][dows[String(events[1].dow)]][events[1]._index][0]);
         for (var i = 0, len = events.length; i < len; i++) {
             for (var j = 0, dlen = json_sched["data"].length; j < dlen; j++){
-                for (var k = 0, klen = json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index].length; k < klen; k++){
-                    if (String(events[i].lcode) == String(json_sched["data"][j]["code"])){
-                        if (json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index][k] == null){
-                            json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index][k] = events[i].pid;
-                            k = klen;
+                if (String(events[i].lcode) == String(json_sched["data"][j]["code"])){
+                    for (var l = 0, llen = events[i]._endex - events[i]._index; l < llen; l++){
+                        for (var k = 0, klen = json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index].length; k < klen; k++){
+                            if (json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index + l][k] == null){
+                                json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index + l][k] = events[i].pid;
+                                k = klen;
+                            }
                         }
                     }
                 }
@@ -254,7 +268,8 @@ $(document).ready(function(){
     });
 
     $('#save-new').on('click', function () {
-        confirm("Save changes as a new schedule?\nThis will create a new schedule accessible from the Admin page.");
+        var conf = confirm("Save changes as a new schedule?\nThis will create a new schedule accessible from the Admin page.");
+        if (conf == false){return;}
         $("location_selector").prop('selectedIndex', 0);
         $.ajax({ //Fetch event information using ajax call to data page
             url : window.location.href + '/json',
@@ -276,9 +291,7 @@ $(document).ready(function(){
                 }
             }
         }
-        // console.dir(json_sched['data'][0]['schedule']['sun'][20]);
-        // console.log(json_sched['data'][0]['schedule']['sun'][20]);
-        // console.dir(json_sched['data'][0]['schedule']['sun'][22]);
+
         var events = [];
         for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
             events.push($('#calendar').fullCalendar('clientEvents')[i]);
@@ -288,11 +301,13 @@ $(document).ready(function(){
         // console.dir(json_sched["data"][0]["schedule"][dows[String(events[1].dow)]][events[1]._index][0]);
         for (var i = 0, len = events.length; i < len; i++) {
             for (var j = 0, dlen = json_sched["data"].length; j < dlen; j++){
-                for (var k = 0, klen = json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index].length; k < klen; k++){
-                    if (String(events[i].lcode) == String(json_sched["data"][j]["code"])){
-                        if (json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index][k] == null){
-                            json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index][k] = events[i].pid;
-                            k = klen;
+                if (String(events[i].lcode) == String(json_sched["data"][j]["code"])){
+                    for (var l = 0, llen = events[i]._endex - events[i]._index; l < llen; l++){
+                        for (var k = 0, klen = json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index].length; k < klen; k++){
+                            if (json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index + l][k] == null){
+                                json_sched["data"][j]["schedule"][dows[String(events[i].dow)]][events[i]._index + l][k] = events[i].pid;
+                                k = klen;
+                            }
                         }
                     }
                 }

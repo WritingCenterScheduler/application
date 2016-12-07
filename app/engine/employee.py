@@ -8,6 +8,7 @@ class Employee(User):
         self.pre_availability = np.copy(self.availability)
         super(Employee, self).__init__(**kwargs)
         self.schedule = np.zeros(self.availability.shape)
+        self.schedule_locations = [[None for i in range(self.availability.shape[1])] for i in range(self.availability.shape[0])]
         self.total_availability = self.calculate_total_availability()
         self.scheduled_hours = 0.0
 
@@ -26,13 +27,14 @@ class Employee(User):
             availability_frequencies[slot] += 1
         return (availability_frequencies[2] * 2) + availability_frequencies[1]
 
-    def is_available_at(self, timeslot):
+    def is_available_at(self, timeslot, location):
         """
         Returns true or false depending on whether employee is available to be scheduled at a specific timeslot
         :return: Boolean
         """
+        l = len(self.availability)
         x, y = timeslot
-        return self.availability[x][y] > 0
+        return ((self.schedule_locations[(x+1)%l][y] == location) or (self.schedule_locations[(x+1)%l][y] == None)) and ((self.schedule_locations[(x-1)%l][y] == location) or (self.schedule_locations[(x-1)%l][y] == None)) and (self.availability[x][y] > 0)
 
     def reset(self):
         """
@@ -41,15 +43,16 @@ class Employee(User):
         self.availability = self.pre_availability
         self.schedule = np.zeros(self.availability.shape)
         self.total_availability = self.calculate_total_availability()
+        self.schedule_locations = [[None for i in range(self.availability.shape[1])] for i in range(self.availability.shape[0])]
 
-    def schedule_at(self, timeslot):
+    def schedule_at(self, timeslot, location):
         """
         Tells the employee to consider itself scheduled at the timeslot.
         Should update any internal state necessary, especially it's availability
         :param timeslot: Consider itself scheduled at timeslot
         :return: none
         """
-        if self.is_available_at(timeslot):
+        if self.is_available_at(timeslot, location):
             # unpack timeslot
             x, y = timeslot
             self.schedule[x][y] = 1
