@@ -47,12 +47,12 @@ class Location:
         if self.requirements[t[0]][t[1]] > 0:
             if self.schedule[t[0]][t[1]][0] == 0:
                 self.schedule[t[0]][t[1]][0] = e.pid
-                e.schedule_at(t)
+                e.schedule_at(t, self)
                 self.requirements[t[0]][t[1]] -= 1
                 return True
             elif self.schedule[t[0]][t[1]][1] == 0:
                 self.schedule[t[0]][t[1]][1] = e.pid
-                e.schedule_at(t)
+                e.schedule_at(t, self)
                 self.requirements[t[0]][t[1]] -= 1
                 return True
         return False

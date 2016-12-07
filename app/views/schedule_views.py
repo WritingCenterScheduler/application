@@ -1,12 +1,14 @@
 # Writing Center Scheduler
 # Fall 2016
-# 
+#
 # Written by
 # * Brandon Davis (davisba@cs.unc.edu)
 # * Ryan Court (ryco@cs.unc.edu)
 
 import json, string, random, datetime, pprint
 import numpy as np
+from copy import deepcopy
+from itertools import combinations, permutations
 from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
@@ -24,6 +26,33 @@ from app.engine.location import Location
 #
 # API Views
 #
+
+@schedule_app.route("/api/schedule", methods=["POST"])
+@login_required
+@decorators.requires_admin
+def new_schedule():
+    """
+    POST - Create a new schedule with details specified in the post data body
+    """
+    new_schedule_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    try:
+        # print(request.data)
+        data = json.loads(request.data.decode("utf-8"))
+    except Exception as e:
+        return responses.invalid(request.url, e)
+
+    new_schedule = models.Schedule()
+    try:
+        new_schedule.init(
+            created_on = datetime.datetime.utcnow(),
+            data = data['data'],
+            sid = new_schedule_id)
+        new_schedule.save()
+    except KeyError as e:
+        return responses.invalid(request.url, e)
+    except NotUniqueError as e:
+        return responses.invalid(request.url, "Schedule ID already exists.")
+    return responses.schedule_created(request.url, new_schedule_id)
 
 @schedule_app.route("/api/schedules", methods=["GET", "DELETE"])
 @login_required
@@ -58,7 +87,6 @@ def toggle_active_schedule(code):
         gc = models.GlobalConfig.objects().get()
         gc.active_schedule = code
         gc.save()
-        # print(models.GlobalConfig.get().active_schedule)
         return responses.success(request.url, "SUCCESS. Active schedule is now: " + code)
     else:
         return responses.invalid(request.url, "METHOD not supported.")
@@ -118,6 +146,47 @@ def index2time(i):
         return (str(int((i*30)/60)) + ":" + str((i * 30) % 60) + "0")
     return (str(int((i*30)/60)) + ":" + str((i * 30) % 60))
 
+def findOverlap(events):
+    """
+    Checks all combinations of events to find an overlapping event and combines
+    the two into a single contiguous event.
+    """
+    i = 0
+    while(i < (len(events)-1)):
+        if events[i]['pid'] == events[i+1]['pid']:
+            if (events[i]['_index']<= events[i+1]['_endex'] and events[i+1]['_index'] <= events[i]['_endex']):
+                events[i] = {
+                    '_id': ''.join(random.SystemRandom().choice(string.digits) for _ in range(8)),
+                    'title': events[i]['title'],
+                    'pid': events[i]['pid'],
+                    'location': events[i]['location'],
+                    'lcode': events[i]['lcode'],
+                    '_index': min(events[i]['_index'], events[i+1]['_index']),
+                    '_endex': max(events[i]['_endex'], events[i+1]['_endex']),
+                    'start': index2time(min(events[i]['_index'], events[i+1]['_index'])),
+                    'end': index2time(max(events[i]['_endex'], events[i+1]['_endex'])),
+                    'dow': events[i]['dow'],
+                    'textColor' : '#000000',
+                    'backgroundColor' : events[i]['backgroundColor']
+                }
+                events.pop(i+1)
+                i -= 1
+        i += 1
+    return events
+
+def combineEvents(events):
+    """
+    Helper function for combining adjacent events on the calendar
+    """
+    combined_events = []
+    for i in range(7):
+        fullDay = deepcopy([e for e in events if e['dow'][0] == i])
+        if len(fullDay) > 0:
+            fullDay.sort(key=lambda k: k['_index'])
+            fullDay.sort(key=lambda k: k['pid'])
+            combined_events.extend(findOverlap(fullDay))
+    return combined_events
+
 def HSVtoRGB(hue, sat, val):
     """
     Helper function for converting HSV color value to hex RGB.
@@ -149,8 +218,6 @@ def schedule_data(code):
     """
     Modifies the schedule referred to by SID
     """
-    # TODO: Give users/locations a unique color
-
     s = models.Schedule.objects().get(sid=code)
     if s:
         events = []
@@ -158,14 +225,11 @@ def schedule_data(code):
         id_counter = 1
         if request.method == "GET":
             schedule_data = json.loads(s.to_json())
-            # print (schedule_data['data'])
             for d in schedule_data['data']:
                 for day, timeslots in d["schedule"].items():
                     for i in range(len(timeslots)):
                         for pid in timeslots[i]:
                             if pid != None:
-                                # if not pid in userColors:
-                                #     userColors[pid] = HSVtoRGB(random.random(), 0.5, 0.95)
                                 u = load_user(pid)
                                 l = load_location(d['code'])
                                 if u and l:
@@ -173,10 +237,11 @@ def schedule_data(code):
                                         {
                                             '_id':id_counter,
                                             'title': str(u.first_name + " " + u.last_name[0] + "."),
-                                            'pid': pid,
+                                            'pid': int(pid),
                                             'location': str(l.name),
                                             'lcode': l.code,
-                                            'index': i,
+                                            '_index': i,
+                                            '_endex': i+1,
                                             'start': index2time(i),
                                             'end': index2time(i+1),
                                             'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
@@ -185,7 +250,7 @@ def schedule_data(code):
                                         }
                                     )
                                     id_counter += 1
-
+            events = combineEvents(events)
             return Response(json.dumps(events), mimetype='application/json')
 
         else:
@@ -262,8 +327,6 @@ def engine_run():
             "schedule": models.global_np_to_json_dict(s.schedule.astype(int)),
             "code": s.name
         })
-
-    # TODO: Store the schedule as an object
     new_schedule = models.Schedule()
     new_schedule.created_on = datetime.datetime.utcnow()
     new_schedule.data = loc_return_list
