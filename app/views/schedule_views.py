@@ -7,6 +7,7 @@
 
 import json, string, random, datetime, pprint
 import numpy as np
+import math
 from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
@@ -99,11 +100,14 @@ def schedule_to_csv(code, fname):
     for loc in locations.keys():
         rows = ["" for i in range(config.TIMESLOTS_PER_DAY)]
         outstring += loc + "\r\n"
+        for i in range(config.TIMESLOTS_PER_DAY):
+                rows[i] +=  "\"" + str(math.floor(i/2)) + ":" + ("30" if i % 2 != 0 else "00") + "\","
         for col in locations[loc]:
             for dex, cell in enumerate(col):
                 rows[dex] += "\"" + cell + "\"," if cell else ","
         rows = [row[:-1] for row in rows]
         outstring += "\r\n".join(rows)
+        outstring += "\r\n"
 
     return Response(outstring, mimetype="text/csv")
 

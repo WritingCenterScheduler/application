@@ -8,7 +8,7 @@ import os
 import uuid
 
 # For the local environment
-ADMIN_PID = 111111111 # A user to test admin function on local dev
+ADMIN_PID = 720430213 # A user to test admin function on local dev
 NOADMIN_PID = 3 # A user to test non-admin function on local dev
 LOCAL = False if os.getenv("OPENSHIFT_MONGODB_DB_HOST", False) else True
 SSO_LOGOUT_URL = "https://sso.unc.edu/idp/logout.jsp"
