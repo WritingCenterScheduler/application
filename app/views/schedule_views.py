@@ -8,6 +8,8 @@
 import json, string, random, datetime, pprint
 import numpy as np
 import math
+from copy import deepcopy
+from itertools import combinations, permutations
 from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
@@ -27,7 +29,7 @@ from app.engine.location import Location
 #
 
 def schedule_data_to_events(s):
-    
+
     events = []
     userColors = dict()
     id_counter = 1
@@ -93,7 +95,7 @@ def schedule_to_csv(code, fname):
     # Now build the CSV
 
     outstring = ""
-    
+
 
     # return jsonify(locations)
 
@@ -110,7 +112,6 @@ def schedule_to_csv(code, fname):
         outstring += "\r\n"
 
     return Response(outstring, mimetype="text/csv")
-
 
 @schedule_app.route("/api/schedule", methods=["POST"])
 @login_required
@@ -233,6 +234,48 @@ def index2time(i):
         return (str(int((i*30)/60)) + ":" + str((i * 30) % 60) + "0")
     return (str(int((i*30)/60)) + ":" + str((i * 30) % 60))
 
+def findOverlap(events):
+    """
+    Checks all combinations of events to find an overlapping event and combines
+    the two into a single contiguous event.
+    """
+    i = 0
+    while(i < (len(events)-1)):
+        if events[i]['pid'] == events[i+1]['pid']:
+            if (events[i]['_index']<= events[i+1]['_endex'] and events[i+1]['_index'] <= events[i]['_endex']):
+                events[i] = {
+                    '_id': ''.join(random.SystemRandom().choice(string.digits) for _ in range(8)),
+                    'title': events[i]['title'],
+                    'pid': events[i]['pid'],
+                    'location': events[i]['location'],
+                    'lcode': events[i]['lcode'],
+                    '_index': min(events[i]['_index'], events[i+1]['_index']),
+                    '_endex': max(events[i]['_endex'], events[i+1]['_endex']),
+                    'start': index2time(min(events[i]['_index'], events[i+1]['_index'])),
+                    'end': index2time(max(events[i]['_endex'], events[i+1]['_endex'])),
+                    'dow': events[i]['dow'],
+                    'textColor' : '#000000',
+                    'backgroundColor' : events[i]['backgroundColor']
+                }
+                events.pop(i+1)
+                i -= 1
+        i += 1
+    return events
+
+def combineEvents(events):
+    """
+    Helper function for combining adjacent events on the calendar
+    """
+    combined_events = []
+    for i in range(7):
+        fullDay = deepcopy([e for e in events if e['dow'][0] == i])
+        print(len(fullDay))
+        if len(fullDay) > 0:
+            fullDay.sort(key=lambda k: k['_index'])
+            fullDay.sort(key=lambda k: k['pid'])
+            combined_events.extend(findOverlap(fullDay))
+    return combined_events
+
 def HSVtoRGB(hue, sat, val):
     """
     Helper function for converting HSV color value to hex RGB.
@@ -266,17 +309,44 @@ def schedule_data(code):
     """
 
     s = models.Schedule.objects().get(sid=code)
-    if request.method == "GET":
-        if s:  
-            events = schedule_data_to_events(s)
+    if s:
+        events = []
+        id_counter = 1
+        if request.method == "GET":
+            schedule_data = json.loads(s.to_json())
+            # print (schedule_data['data'])
+            for d in schedule_data['data']:
+                for day, timeslots in d["schedule"].items():
+                    for i in range(len(timeslots)):
+                        for pid in timeslots[i]:
+                            if pid != None:
+                                u = load_user(pid)
+                                l = load_location(d['code'])
+                                if u and l:
+                                    events.append(
+                                        {
+                                            '_id':id_counter,
+                                            'title': str(u.first_name + " " + u.last_name[0] + "."),
+                                            'pid': int(pid),
+                                            'location': str(l.name),
+                                            'lcode': l.code,
+                                            '_index': i,
+                                            '_endex': i+1,
+                                            'start': index2time(i),
+                                            'end': index2time(i+1),
+                                            'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
+                                            'textColor' : '#000000',
+                                            'backgroundColor' : u.color
+                                        }
+                                    )
+                                    id_counter += 1
+            events = combineEvents(events)
             return Response(json.dumps(events), mimetype='application/json')
 
         else:
-            return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
+            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
     else:
-        return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
-
-
+        return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
 
 @schedule_app.route("/api/schedule/<code>/json", methods=["GET"])
 @login_required
@@ -315,7 +385,6 @@ def engine_run():
         np_arr = user.to_np_arr()
 
         if np_arr is not None and user.can_schedule:
-            
             candidate = Employee(np_arr,
                 typecode="010",
                 pid=user.pid)
