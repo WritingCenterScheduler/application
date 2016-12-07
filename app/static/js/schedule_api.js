@@ -263,7 +263,7 @@ function update_schedule(code, payload_json, callback){
         }
     };
     xhttp.open("PUT", "/api/schedule/" + code, true);
-    xhttp.send(JSON.stringify(payload_json));
+    xhttp.send(JSON.stringify(payload_json)); // This is where the issue is coming from
 }
 
 
