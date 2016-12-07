@@ -1,10 +1,10 @@
 /*
-    Written by 
-    * Brandon Davis, 
+    Written by
+    * Brandon Davis,
     * Moazzam Kahn,
     * Paul Kovach,
     * Ryan Court
-    
+
     Fall 2016, COMP 523
 */
 
@@ -237,6 +237,22 @@ function delete_schedule(code){
         xhttp.open("DELETE", "/api/schedule/" + code, true);
         xhttp.send();
     }
+}
+
+var csv_from_schedule = function(sid){
+    window.open("/api/schedule/" + sid + "/csv/" + sid + ".csv", "_blank");
+}
+
+
+function make_schedule(payload_json, callback){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(JSON.parse(this.responseText));
+        }
+    };
+    xhttp.open("POST", "/api/schedule", true);
+    xhttp.send(JSON.stringify(payload_json));
 }
 
 function update_schedule(code, payload_json, callback){

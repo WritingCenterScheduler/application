@@ -52,6 +52,7 @@ def new_schedule():
         return responses.invalid(request.url, e)
     except NotUniqueError as e:
         return responses.invalid(request.url, "Schedule ID already exists.")
+    print(new_schedule_id)
     return responses.schedule_created(request.url, new_schedule_id)
 
 @schedule_app.route("/api/schedules", methods=["GET", "DELETE"])
@@ -87,6 +88,7 @@ def toggle_active_schedule(code):
         gc = models.GlobalConfig.objects().get()
         gc.active_schedule = code
         gc.save()
+        # print(models.GlobalConfig.get().active_schedule)
         return responses.success(request.url, "SUCCESS. Active schedule is now: " + code)
     else:
         return responses.invalid(request.url, "METHOD not supported.")
@@ -126,12 +128,12 @@ def schedule(code):
             except Exception as e:
                 return responses.invalid(request.url, e)
             if payload:
-                # print(payload)
+                print(payload)
                 success = s.update(payload)
                 if success:
                     return responses.schedule_updated(request.url, s.sid)
                 else:
-                    return responses.invalid(request.url, "Could not update location")
+                    return responses.invalid(request.url, "Could not update schedule")
             else:
                 return responses.invalid(request.url, "No data")
 
@@ -181,6 +183,7 @@ def combineEvents(events):
     combined_events = []
     for i in range(7):
         fullDay = deepcopy([e for e in events if e['dow'][0] == i])
+        print(len(fullDay))
         if len(fullDay) > 0:
             fullDay.sort(key=lambda k: k['_index'])
             fullDay.sort(key=lambda k: k['pid'])
@@ -218,6 +221,7 @@ def schedule_data(code):
     """
     Modifies the schedule referred to by SID
     """
+
     s = models.Schedule.objects().get(sid=code)
     if s:
         events = []
@@ -225,6 +229,7 @@ def schedule_data(code):
         id_counter = 1
         if request.method == "GET":
             schedule_data = json.loads(s.to_json())
+            # print (schedule_data['data'])
             for d in schedule_data['data']:
                 for day, timeslots in d["schedule"].items():
                     for i in range(len(timeslots)):
@@ -295,7 +300,7 @@ def engine_run():
 
         np_arr = user.to_np_arr()
 
-        if np_arr is not None:
+        if np_arr is not None and user.can_schedule:
             candidate = Employee(np_arr,
                 typecode="010",
                 pid=user.pid)
@@ -327,6 +332,7 @@ def engine_run():
             "schedule": models.global_np_to_json_dict(s.schedule.astype(int)),
             "code": s.name
         })
+
     new_schedule = models.Schedule()
     new_schedule.created_on = datetime.datetime.utcnow()
     new_schedule.data = loc_return_list

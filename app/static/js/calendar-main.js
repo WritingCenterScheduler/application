@@ -7,26 +7,37 @@
  *     For droppable page elements
  * @since 1.0.1
  */
+
+/*
+GLOBAL VARIABLES
+*/
+var sched;
+var lcode;
+
 $(document).ready(function(){
 
     /* Initialize data source for calendar events
     ------------------------------*/
+    $(".footer").css("visibility", "hidden");
+    $("#wrap").css("visibility", "hidden");
     var source = { url: window.location.href + '/data'};
     var allEvents;
     initExternalEvents();
     $.ajax({ //Fetch event information using ajax call to data page
         url : window.location.href + '/data',
+        async:false,
         success : function(result){
+            // console.log(result);
             $("#wrap").css("visibility", "visible");
             $(".footer").css("visibility", "visible");
             $(".loader").css("visibility", "hidden");
-            //console.dir(result)
+            console.dir(result)
             source = result;
             allEvents = result;
         }
     });
 
-    /* Helper function for setting default location for external draggable events.
+    /* Helper functions for setting default location for external draggable events.
     ------------------------------*/
     function selector_default(v)
     {
@@ -35,17 +46,26 @@ $(document).ready(function(){
         }
         return v;
     }
+    function selector_default_code(v)
+    {
+        if (v == 'all'){
+            v = String(document.getElementById("location_selector").options[1].value)
+            return $("[id=\'" + v +"\']").attr('data-code');
+        }
+        return $("[id=\'" + v +"\']").attr('data-code');
+    }
 
     /* Initialize droppable external-events
     ------------------------------*/
     function initExternalEvents(){
         $('#external-events .fc-event').each(function() {
-            //alert($(this).attr("data-color"))
           // store data so the calendar knows to render an event upon drop
           // alert(document.getElementById("location_selector").value)
           $(this).data('event', {
             location: selector_default(String(document.getElementById("location_selector").value)),
+            lcode: selector_default_code(String(document.getElementById("location_selector").value)),
             title: $.trim($(this).text()), // use the element's text as the event title
+            pid: $(this).attr('id'),
             backgroundColor: $(this).attr("data-color"),
             textColor : '#000000',
             duration: '00:30:00',
@@ -91,7 +111,8 @@ $(document).ready(function(){
         eventMouseover: function(calEvent, jsEvent, view)
         {
             if (view.name !== 'agendaDay') {
-                $(jsEvent.target).attr('title', calEvent.pid);
+                //$(jsEvent.target).attr('title', String(calEvent.pid) + '\n' + String(calEvent.lcode) + '/n' + String(calEvent._index));
+                $(jsEvent.target).attr('title', String(calEvent.pid) + '\n' + String(calEvent._index) + '\n' + String(calEvent.dow));
             }
         },
         // Deletes an event
@@ -111,12 +132,11 @@ $(document).ready(function(){
                   $('#calendar').fullCalendar('removeEvents', calEvent._id);
               }
         },
-        drop: function(date, calEvent, ui, resourceId)
+        drop: function(date, jsEvent, ui, resourceId)
         {
-            //alert("external drop: " + allEvents.length);
-            $('#calendar').fullCalendar('addEvents', calEvent._id);
+            // console.log('An external event has been dropped.')
         },
-        eventDrop: function(calEvent, delta, revertFunc)
+        eventDrop: function(event, delta, revertFunc)
         {
             s = event.start.toDate();
             event._index = (((s.getHours() + 5) * 2) + (s.getMinutes() / 30));
@@ -153,7 +173,7 @@ $(document).ready(function(){
     $('#location_selector').on('change',function(){
         filterEvents($('#location_selector').val());
         initExternalEvents();
-        //alert($('#calendar').fullCalendar('clientEvents').length);
+        // alert($('#location_selector').val());
         $('#calendar').fullCalendar('rerenderEvents');
     });
 
@@ -167,7 +187,7 @@ $(document).ready(function(){
         for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
             events.push($('#calendar').fullCalendar('clientEvents')[i]);
         }
-        //alert(events)
+        //console.dir(events)
         for (var i = 0, len = events.length; i < len; i++) {
             if (String(events[i].location) == String(filter))
             {
@@ -181,6 +201,10 @@ $(document).ready(function(){
     function ajaxCallBack(retVal){
         json_sched = retVal;
     }
+    var lcode;
+    function _ajaxCallBack(retVal){
+        lcode = retVal;
+    }
 
     $('#save-changes').on('click', function () {
         var conf = confirm("Save changes to schedule?\nWARNING: This will overwrite the existing schedule.");
@@ -193,22 +217,29 @@ $(document).ready(function(){
                 ajaxCallBack(result);
             }
         });
+        // console.log(json_sched['data'][0]['schedule']['sun'][20]);
         var days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
         for (var i = 0, len = days.length; i < len; i++){
             for (var j = 0, jlen = json_sched["data"].length; j < jlen; j++){
                 for (var k = 0, klen = json_sched["data"][j]["schedule"][days[i]].length; k < klen; k++){
-                    for(var l = 0, llen = json_sched["data"][j]["schedule"][days[i]][k]; l < llen; l++){
-                        json_sched["data"][j]["schedule"][days[i]][k][l] = null;
+                    for(var l = 0, llen = json_sched["data"][j]["schedule"][days[i]][k].length; l < llen; l++){
+                        if (json_sched["data"][j]["schedule"][days[i]][k][l] != null){
+                            json_sched["data"][j]["schedule"][days[i]][k][l] = null;
+                        }
                     }
                 }
             }
         }
-
+        // console.dir(json_sched['data'][0]['schedule']['sun'][20]);
+        // console.log(json_sched['data'][0]['schedule']['sun'][20]);
+        // console.dir(json_sched['data'][0]['schedule']['sun'][22]);
         var events = [];
         for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
             events.push($('#calendar').fullCalendar('clientEvents')[i]);
         }
+        //console.dir(events[1]._index)
         dows = {"0":"sun","1":"mon","2":"tue","3":"wed","4":"thu","5":"fri","6":"sat"};
+        // console.dir(json_sched["data"][0]["schedule"][dows[String(events[1].dow)]][events[1]._index][0]);
         for (var i = 0, len = events.length; i < len; i++) {
             for (var j = 0, dlen = json_sched["data"].length; j < dlen; j++){
                 if (String(events[i].lcode) == String(json_sched["data"][j]["code"])){
@@ -268,6 +299,7 @@ $(document).ready(function(){
         }
         //console.dir(events[1]._index)
         dows = {"0":"sun","1":"mon","2":"tue","3":"wed","4":"thu","5":"fri","6":"sat"};
+        // console.dir(json_sched["data"][0]["schedule"][dows[String(events[1].dow)]][events[1]._index][0]);
         for (var i = 0, len = events.length; i < len; i++) {
             for (var j = 0, dlen = json_sched["data"].length; j < dlen; j++){
                 if (String(events[i].lcode) == String(json_sched["data"][j]["code"])){
