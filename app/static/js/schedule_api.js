@@ -239,6 +239,11 @@ function delete_schedule(code){
     }
 }
 
+var csv_from_schedule = function(sid){
+    window.open("/api/schedule/" + sid + "/csv/" + sid + ".csv", "_blank");
+}
+
+
 function make_schedule(payload_json, callback){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {

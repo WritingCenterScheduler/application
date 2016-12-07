@@ -126,6 +126,14 @@ def load_location(code):
     except DoesNotExist as e:
         return None
 
+def time_to_index(timestring):
+    try:
+        hour_min = timestring.split(':')
+        hour = int(hour_min[0]) * 2
+        hour = hour + 1 if hour_min[1] == "30" else hour
+        return hour
+    except IndexError:
+        return 0
 
 @schedule_app.route("/login", methods=['GET'])
 def login():

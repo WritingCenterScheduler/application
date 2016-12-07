@@ -10,7 +10,7 @@ import numpy as np
 from flask import jsonify, Response, request, render_template, url_for
 from flask_login import current_user, login_required
 # import from init
-from app import schedule_app, load_user, load_location
+from app import schedule_app, load_user, load_location, time_to_index
 # import Mongo Exceptions
 from mongoengine import MultipleObjectsReturned, DoesNotExist, NotUniqueError
 # import local libraries
@@ -24,6 +24,89 @@ from app.engine.location import Location
 #
 # API Views
 #
+
+def schedule_data_to_events(s):
+    
+    events = []
+    userColors = dict()
+    id_counter = 1
+
+    schedule_data = json.loads(s.to_json())
+    # print (schedule_data['data'])
+    for d in schedule_data['data']:
+        for day, timeslots in d["schedule"].items():
+            for i in range(len(timeslots)):
+                for pid in timeslots[i]:
+                    if pid != None:
+                        # if not pid in userColors:
+                        #     userColors[pid] = HSVtoRGB(random.random(), 0.5, 0.95)
+                        u = load_user(pid)
+                        l = load_location(d['code'])
+                        if u and l:
+                            events.append(
+                                {
+                                    '_id':id_counter,
+                                    'title': str(u.first_name + " " + u.last_name[0] + "."),
+                                    'pid': pid,
+                                    'location': str(l.name),
+                                    'lcode': l.code,
+                                    '_index': i,
+                                    'start': index2time(i),
+                                    'end': index2time(i+1),
+                                    'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
+                                    'textColor' : '#000000',
+                                    'backgroundColor' : u.color
+                                }
+                            )
+                            id_counter += 1
+    return events
+
+@schedule_app.route("/api/schedule/<code>/csv/<fname>", methods=["GET"])
+@login_required
+@decorators.requires_admin
+def schedule_to_csv(code, fname):
+    schedule = models.Schedule.objects().get(sid=str(code))
+
+    if schedule == None:
+        return responses.invalid(request.url, "No such schedule")
+
+    events = schedule_data_to_events(schedule)
+
+    locations = {}
+
+    for item in events:
+        if not item['location'] in locations.keys():
+            locations[item['location']] = [ \
+                [None for j in range(config.TIMESLOTS_PER_DAY)] \
+                for i in range(7)]
+
+    for item in events:
+        start = time_to_index(item['start'])
+        end = time_to_index(item['end'])
+        for i in range(start, end):
+            cell = locations[item['location']][item['dow'][0]][i]
+            if cell:
+                locations[item['location']][item['dow'][0]][i] = cell + " " + item['title']
+            else:
+                locations[item['location']][item['dow'][0]][i] = item['title']
+    # Now build the CSV
+
+    outstring = ""
+    
+
+    # return jsonify(locations)
+
+    for loc in locations.keys():
+        rows = ["" for i in range(config.TIMESLOTS_PER_DAY)]
+        outstring += loc + "\r\n"
+        for col in locations[loc]:
+            for dex, cell in enumerate(col):
+                rows[dex] += "\"" + cell + "\"," if cell else ","
+        rows = [row[:-1] for row in rows]
+        outstring += "\r\n".join(rows)
+
+    return Response(outstring, mimetype="text/csv")
+
 
 @schedule_app.route("/api/schedule", methods=["POST"])
 @login_required
@@ -75,7 +158,7 @@ def active_schedule():
     except DoesNotExist:
         return responses.invalid(request.url, "No active schedule")
 
-@schedule_app.route("/api/schedule/<path:code>/activate", methods=["GET"])
+@schedule_app.route("/api/schedule/<code>/activate", methods=["GET"])
 @login_required
 @decorators.requires_admin
 def toggle_active_schedule(code):
@@ -91,7 +174,7 @@ def toggle_active_schedule(code):
     else:
         return responses.invalid(request.url, "METHOD not supported.")
 
-@schedule_app.route("/api/schedule/<path:code>", methods=["GET","PUT","DELETE"])
+@schedule_app.route("/api/schedule/<code>", methods=["GET","PUT","DELETE"])
 @login_required
 @decorators.requires_admin
 def schedule(code):
@@ -170,7 +253,7 @@ def HSVtoRGB(hue, sat, val):
     rgb = [r, g, b]
     return "#%s" % "".join([hex(int(c*256))[2:] for c in rgb])
 
-@schedule_app.route("/api/schedule/<path:code>/data", methods=["GET"])
+@schedule_app.route("/api/schedule/<code>/data", methods=["GET"])
 @login_required
 @decorators.requires_admin
 def schedule_data(code):
@@ -179,49 +262,19 @@ def schedule_data(code):
     """
 
     s = models.Schedule.objects().get(sid=code)
-    if s:
-        events = []
-        userColors = dict()
-        id_counter = 1
-        if request.method == "GET":
-            schedule_data = json.loads(s.to_json())
-            # print (schedule_data['data'])
-            for d in schedule_data['data']:
-                for day, timeslots in d["schedule"].items():
-                    for i in range(len(timeslots)):
-                        for pid in timeslots[i]:
-                            if pid != None:
-                                # if not pid in userColors:
-                                #     userColors[pid] = HSVtoRGB(random.random(), 0.5, 0.95)
-                                u = load_user(pid)
-                                l = load_location(d['code'])
-                                if u and l:
-                                    events.append(
-                                        {
-                                            '_id':id_counter,
-                                            'title': str(u.first_name + " " + u.last_name[0] + "."),
-                                            'pid': pid,
-                                            'location': str(l.name),
-                                            'lcode': l.code,
-                                            '_index': i,
-                                            'start': index2time(i),
-                                            'end': index2time(i+1),
-                                            'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
-                                            'textColor' : '#000000',
-                                            'backgroundColor' : u.color
-                                        }
-                                    )
-                                    id_counter += 1
-
+    if request.method == "GET":
+        if s:  
+            events = schedule_data_to_events(s)
             return Response(json.dumps(events), mimetype='application/json')
 
         else:
-            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
+            return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
     else:
-        return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
+        return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
 
 
-@schedule_app.route("/api/schedule/<path:code>/json", methods=["GET"])
+
+@schedule_app.route("/api/schedule/<code>/json", methods=["GET"])
 @login_required
 @decorators.requires_admin
 def schedule_json(code):
@@ -258,6 +311,7 @@ def engine_run():
         np_arr = user.to_np_arr()
 
         if np_arr is not None and user.can_schedule:
+            
             candidate = Employee(np_arr,
                 typecode="010",
                 pid=user.pid)

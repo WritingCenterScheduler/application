@@ -3,7 +3,7 @@
 #
 # Written by
 # * Brandon Davis (davisba@cs.unc.edu)
-#
+# * Ryan Court (ryco@cs.unc.edu)
 
 from mongoengine import *
 import numpy as np
