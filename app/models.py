@@ -225,6 +225,7 @@ class Schedule(Document):
         """
         # print(payload)
         payload.pop("_id", None)
+        payload.pop("created_on", None) # JS screwed up date formatting.  Drop it.
         if self.is_payload_safe(payload):
             for key in payload.keys():
                 setattr(self, key, payload[key])
