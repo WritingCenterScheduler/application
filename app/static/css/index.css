@@ -251,7 +251,8 @@ li > a:hover, a:hover{
     background-color: #333;
     padding-bottom: 10px;
     padding-top: 10px;
-    position:absolute;
+    position: sticky;
+    bottom:0px;
     width:100%!important;
     left:0em;
 

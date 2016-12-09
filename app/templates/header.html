@@ -45,6 +45,9 @@
                 {% else %}
                 <!-- Show regular users -->
                 <li><a href="{{url_for('set_availability', pid=current_user.pid)}}">My Availability</a></li>
+                {% if active_schedule != "None" %}
+                    <li><a href="{{ url_for('my_schedule', code=active_schedule) }}">My Schedule</a></li>
+                {% endif %}
                 <li><a href="{{url_for('help')}}">Help</a></li>
                 {% endif %}
                 <!-- Show everyone -->

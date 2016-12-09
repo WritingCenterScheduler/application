@@ -226,6 +226,27 @@ def schedule(code):
         else:
             return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
 
+@schedule_app.route("/api/my_schedule/<code>", methods=["GET"])
+@login_required
+def my_schedule(code):
+    """
+    Displays the current_user's schedule referred to by SID.
+    """
+    try:
+        s = models.Schedule.objects().get(sid=str(code))
+    except:
+        return responses.invalid(url_for("my_schedule", code=code), "Schedule NOT FOUND.")
+    if s:
+        if request.method == "GET":
+            return render_template("schedule_display.html",
+                user=current_user,
+                users = models.User.objects(),
+                locations = models.Location.objects(),
+                active_schedule = models.GlobalConfig.get().active_schedule,
+                schedule_name = s.sid)
+        else:
+            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
+
 def index2time(i):
     """
     Helper function for converting matrix index to readable military (24-hour) time.
@@ -320,6 +341,52 @@ def schedule_data(code):
                     for i in range(len(timeslots)):
                         for pid in timeslots[i]:
                             if pid != None:
+                                u = load_user(pid)
+                                l = load_location(d['code'])
+                                if u and l:
+                                    events.append(
+                                        {
+                                            '_id':id_counter,
+                                            'title': str(u.first_name + " " + u.last_name[0] + "."),
+                                            'pid': str(pid),
+                                            'location': str(l.name),
+                                            'lcode': l.code,
+                                            '_index': i,
+                                            '_endex': i+1,
+                                            'start': index2time(i),
+                                            'end': index2time(i+1),
+                                            'dow': [{"sun":0,"mon":1,"tue":2,"wed":3,"thu":4,"fri":5,"sat":6}[day]],
+                                            'textColor' : '#000000',
+                                            'backgroundColor' : u.color
+                                        }
+                                    )
+                                    id_counter += 1
+            events = combineEvents(events)
+            return Response(json.dumps(events), mimetype='application/json')
+
+        else:
+            return responses.invalid(url_for("schedule", code=code), "METHOD not supported.")
+    else:
+        return responses.invalid(url_for("schedule", code=code), "Schedule ID not found")
+
+@schedule_app.route("/api/my_schedule/<code>/data", methods=["GET"])
+@login_required
+def my_schedule_data(code):
+    """
+    Returns the scheduled events of the current_user
+    """
+    s = models.Schedule.objects().get(sid=code)
+    if s:
+        events = []
+        id_counter = 1
+        if request.method == "GET":
+            schedule_data = json.loads(s.to_json())
+            # print (schedule_data['data'])
+            for d in schedule_data['data']:
+                for day, timeslots in d["schedule"].items():
+                    for i in range(len(timeslots)):
+                        for pid in timeslots[i]:
+                            if pid == str(current_user.pid):
                                 u = load_user(pid)
                                 l = load_location(d['code'])
                                 if u and l:
