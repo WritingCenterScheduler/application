@@ -18,7 +18,6 @@ $(document).ready(function(){
 
     /* Initialize data source for calendar events
     ------------------------------*/
-    console.dir(current_user)
     $(".footer").css("visibility", "hidden");
     $("#wrap").css("visibility", "hidden");
     var source = { url: window.location.href + '/data'};
