@@ -170,7 +170,8 @@ $(document).ready(function(){
     /* Initialize the location filter selector
     ------------------------------*/
     $('#location_selector').on('change',function(){
-        filterEventsByPID(("730136771"));
+        // filterEventsByPID(("730136771"));
+        filterEvents($('#location_selector').val());
         initExternalEvents();
         // alert($('#location_selector').val());
         $('#calendar').fullCalendar('rerenderEvents');
@@ -180,57 +181,87 @@ $(document).ready(function(){
         //alert($(this).val());
     });
 
-    // //Filter by location
-    // function filterEvents(filter){
-    //     var newSource = [];
-    //     var events = [];
-    //     for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
-    //         events.push($('#calendar').fullCalendar('clientEvents')[i]);
-    //     }
-    //     //console.dir(events)
-    //     for (var i = 0, len = events.length; i < len; i++) {
-    //         if (String(events[i].location) == String(filter))
-    //         {
-    //             newSource.push(events[i]);
-    //         }
-    //     }
-    //     $('#calendar').fullCalendar('refetchEventSources', newSource);
-    // }
+    //Filter by location
+    function filterEvents(filter){
+        var newSource = [];
+        var events = [];
+        for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
+            events.push($('#calendar').fullCalendar('clientEvents')[i]);
+        }
+        //console.dir(events)
+        for (var i = 0, len = events.length; i < len; i++) {
+            if (String(events[i].location) == String(filter))
+            {
+                newSource.push(events[i]);
+            }
+        }
+        $('#calendar').fullCalendar('refetchEventSources', newSource);
+    }
+
+    //Generate individual's schedule
+    $('#mySchedule').on('click',function(){
+        // alert(('#mySchedule').value);
+        var currPID = document.getElementById("mySchedule").value;
+        
+        // filterEventsByPID(("730136771"));
+        filterEventsByPID(currPID);
+        initExternalEvents();
+        // alert($('#location_selector').val());
+        $('#calendar').fullCalendar('rerenderEvents');
+    });
+
+    //Filter by PID
+    function filterEventsByPID(filter){
+        var newSource = [];
+        var events = [];
+        for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
+            events.push($('#calendar').fullCalendar('clientEvents')[i]);
+        }
+        //console.dir(events)
+        for (var i = 0, len = events.length; i < len; i++) {
+            if (String(events[i].pid) == String(filter))
+            {
+                newSource.push(events[i]);
+            }
+        }
+        $('#calendar').fullCalendar('refetchEventSources', newSource);
+        console.log("Attempted to filter by PID");
+    }
     //Things that could be happening:
     //The other events are not being removed from the calendar
     //Create a button that says my schedule and pass in the PID  value from flask into it, and use that to pass it over from the html to the js file
     //yeah thats the way it is suposed to be done 
     // investigate how the initial function was working
         //filter by PID
-            function filterEventsByPID(filter){
-                alert("hello EVENTS BY PID");
-            var newPIDSource = [];
-            var events = [];
-            var otherEvents = [];
-            for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
-                events.push($('#calendar').fullCalendar('clientEvents')[i]);
-            }
-            //console.dir(events)
-            for (var i = 0, len = events.length; i < len; i++) {
-                if (String(events[i].pid) == 730136771)
-                {
-                    //alert(events[i].pid);
-                    newPIDSource.push(events[i]);
-                    // var piddd = {{user.pid}};
-                    // alert(piddd);
-                }else{
-                    otherEvents.push(events[i]);
-                }
-            }
-            alert(otherEvents);
-            console.log("Other events: "+ otherEvents);
-            console.log(otherEvents);
-            console.log("PID events: "+ newPIDSource);
-            console.log(newPIDSource);
-            // console.log("After editing:");
-            // console.log(newPIDSource);
-           $('#calendar').fullCalendar('refetchEventSources', newPIDSource);//what does this even do?
-    }
+    //         function filterEventsByPID(filter){
+    //             alert("hello EVENTS BY PID");
+    //         var newPIDSource = [];
+    //         var events = [];
+    //         var otherEvents = [];
+    //         for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
+    //             events.push($('#calendar').fullCalendar('clientEvents')[i]);
+    //         }
+    //         //console.dir(events)
+    //         for (var i = 0, len = events.length; i < len; i++) {
+    //             if (String(events[i].pid) == 730136771)
+    //             {
+    //                 //alert(events[i].pid);
+    //                 newPIDSource.push(events[i]);
+    //                 // var piddd = {{user.pid}};
+    //                 // alert(piddd);
+    //             }else{
+    //                 otherEvents.push(events[i]);
+    //             }
+    //         }
+    //         alert(otherEvents);
+    //         console.log("Other events: "+ otherEvents);
+    //         console.log(otherEvents);
+    //         console.log("PID events: "+ newPIDSource);
+    //         console.log(newPIDSource);
+    //         // console.log("After editing:");
+    //         // console.log(newPIDSource);
+    //        $('#calendar').fullCalendar('refetchEventSources', newPIDSource);//what does this even do?
+    // }
 
     var json_sched;
     function ajaxCallBack(retVal){
