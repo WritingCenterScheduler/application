@@ -26,6 +26,19 @@ var location_settings_init = function() {
 
     var table_div = $("#location-table");
 
+    var select = $(".timeSelect");
+    var hours, minutes, ampm;
+    for(var i = 0; i <= 1440; i += 30){
+        hours = Math.floor(i / 60);
+        minutes = i % 60;
+        if (minutes < 10){
+            minutes = '0' + minutes; // adding leading zero
+        }
+        select.append($('<option></option>')
+            .attr('value', i / 30)
+            .text(hours + ':' + minutes));
+    }
+
     var on_schedule_click = function(cell){
         day = cell.id.substring(0, 3); // first three chars denotes the day
         position = cell.id.substring(3); // the rest of the string denotes position
@@ -63,19 +76,6 @@ var location_settings_init = function() {
 
         if (obj != null){
             table_from_schedule(table_div, loc, loc.requirements, null, null, on_schedule_click);
-
-            var select = $(".timeSelect");
-            var hours, minutes, ampm;
-            for(var i = 0; i <= 1440; i += 30){
-                hours = Math.floor(i / 60);
-                minutes = i % 60;
-                if (minutes < 10){
-                    minutes = '0' + minutes; // adding leading zero
-                }
-                select.append($('<option></option>')
-                    .attr('value', i / 30)
-                    .text(hours + ':' + minutes));
-            }
         }
     });
 }
@@ -203,6 +203,20 @@ var update_myself = function(){
             $(".fa-check").show();
             $(".fa-check").text(" Failed")
         }
+    });
+}
+
+var update_schedule_nick = function(sid){
+    var data = {};
+    $("#schedule_nick").serializeArray().map(function(x){data[x.name] = x.value;});
+
+    payload = {
+        // it's important that this only have the "nick" field.  so that no other data is wiped out
+        "nick": data['nick']
+    }
+
+    update_schedule(sid, payload, function(resp){
+        console.log(resp);
     });
 }
 

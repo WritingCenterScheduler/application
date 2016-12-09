@@ -209,6 +209,7 @@ class Schedule(Document):
     sid = StringField(required=True, unique=True)
     data = ListField()
     created_on = DateTimeField()
+    nick = StringField()
 
     def init(self,
             sid=''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(4)),

@@ -134,6 +134,7 @@
         <table>
             <tr>
                 <th>SID</th>
+                <th>Nickname</th>
                 <th>Created On</th>
                 <th>Action</th>
             </tr>
@@ -146,6 +147,7 @@
                         <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
                 </td>
+                <td>{{ s.nick if s.nick else ""}}</td>
                 <td>{{ s.created_on }}</td>
                 <td>
                     <button title="Delete" onclick="delete_schedule('{{ s.sid }}')">

@@ -206,7 +206,8 @@ def schedule(code):
                 users = models.User.objects(),
                 locations = models.Location.objects(),
                 active_schedule = models.GlobalConfig.get().active_schedule,
-                schedule_name = s.sid)
+                schedule_name = s.sid,
+                schedule_nick=s.nick)
         elif request.method == "PUT":
             payload = None
             try:
