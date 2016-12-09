@@ -120,6 +120,10 @@ p {
     color:#999999;
 }
 
+p.icon-key {
+    color: black;
+}
+
 /*Header*/
 img.header-image{
     max-width:100%;

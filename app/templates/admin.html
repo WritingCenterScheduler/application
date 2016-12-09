@@ -70,10 +70,12 @@
                 <button type="button" class="btn btn-success" onclick="csv_create_users()">CREATE</button>
             </form>
 
-            <p>
+            <p class="icon-key">
                 Delete user <i class='fa fa-trash'></i><br>
-                Toggle user enabled for scheduling <i class='fa fa-toggle-on'></i> <br>
+                Toggle user enabled for scheduling / toggle enabled schedule <i class='fa fa-toggle-on'></i> <br>
                 Toggle new user <i class='fa fa-user'></i> vs. returner <i class='fa fa-user-plus'></i><br>
+                Regenrate user color <i class="fa fa-diamond" aria-hidden="true"></i><br>
+                Export Schedule CSV <i class="fa fa-table" aria-hidden="true"></i> 
             </p>
         </div>
 
@@ -134,6 +136,7 @@
         <table>
             <tr>
                 <th>SID</th>
+                <th>Nickname</th>
                 <th>Created On</th>
                 <th>Action</th>
             </tr>
@@ -146,6 +149,7 @@
                         <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
                 </td>
+                <td>{{ s.nick if s.nick else "" }}</td>
                 <td>{{ s.created_on }}</td>
                 <td>
                     <button title="Delete" onclick="delete_schedule('{{ s.sid }}')">

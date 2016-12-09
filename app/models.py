@@ -132,12 +132,12 @@ class Location(Document):
             name="Unknown Location",
             open_at=config.DEFAULT_OPEN,
             close_at=config.DEFAULT_CLOSE,
-            code=-1, # -1 should never happen
             type_code=0 # 0 means anybody
         ):
 
         self.name = name
-        self.code = code
+        max_loc = Location.objects().order_by("-code").limit(-1).first()
+        self.code = max_loc.code + 1 if max_loc else 0 
         self.open_at = open_at
         self.close_at = close_at
         self.resolution_minutes = config.TIMESLOT_SIZE_MIN
@@ -209,6 +209,7 @@ class Schedule(Document):
     sid = StringField(required=True, unique=True)
     data = ListField()
     created_on = DateTimeField()
+    nick = StringField()
 
     def init(self,
             sid=''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(4)),
