@@ -274,6 +274,7 @@ h3.footer-text{
 }
 
 /*FullCalendar Rendered Schedule*/
+
 #wrap {
     display: block;
 }
@@ -377,4 +378,13 @@ div.fc-content {
    background: #ffffff;
 
 
+}
+
+
+.showMySchedule{
+    font-size: 1.5em;
+    background-color: rgba(123,175,212,1);
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
 }
