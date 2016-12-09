@@ -224,48 +224,16 @@ $(document).ready(function(){
                 newSource.push(events[i]);
             }
         }
-        $('#calendar').fullCalendar('refetchEventSources', newSource);
+        $('#calendar').fullCalendar('refetchEventSource', newSource);
+        console.log(newSource);
         console.log("Attempted to filter by PID");
     }
-    //Things that could be happening:
-    //The other events are not being removed from the calendar
-    //Create a button that says my schedule and pass in the PID  value from flask into it, and use that to pass it over from the html to the js file
-    //yeah thats the way it is suposed to be done 
-    // investigate how the initial function was working
-        //filter by PID
-    //         function filterEventsByPID(filter){
-    //             alert("hello EVENTS BY PID");
-    //         var newPIDSource = [];
-    //         var events = [];
-    //         var otherEvents = [];
-    //         for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
-    //             events.push($('#calendar').fullCalendar('clientEvents')[i]);
-    //         }
-    //         //console.dir(events)
-    //         for (var i = 0, len = events.length; i < len; i++) {
-    //             if (String(events[i].pid) == 730136771)
-    //             {
-    //                 //alert(events[i].pid);
-    //                 newPIDSource.push(events[i]);
-    //                 // var piddd = {{user.pid}};
-    //                 // alert(piddd);
-    //             }else{
-    //                 otherEvents.push(events[i]);
-    //             }
-    //         }
-    //         alert(otherEvents);
-    //         console.log("Other events: "+ otherEvents);
-    //         console.log(otherEvents);
-    //         console.log("PID events: "+ newPIDSource);
-    //         console.log(newPIDSource);
-    //         // console.log("After editing:");
-    //         // console.log(newPIDSource);
-    //        $('#calendar').fullCalendar('refetchEventSources', newPIDSource);//what does this even do?
-    // }
+
 
     var json_sched;
     function ajaxCallBack(retVal){
         json_sched = retVal;
+        console.log(retVal);
     }
     var lcode;
     function _ajaxCallBack(retVal){
