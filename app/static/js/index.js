@@ -141,7 +141,7 @@ var make_new_location = function(){
     var data = {};
 
     var Name = document.getElementById('name').value;
-    var Code = document.getElementById('code').value;
+    // var Code = document.getElementById('code').value;
     //alert(Code);
     if (Name== ""  && Code=="") {
         alert("Fill Out All Feilds Before Submitting");
