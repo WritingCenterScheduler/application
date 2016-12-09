@@ -13,7 +13,6 @@
     <div class="loader centered"></div>
     <div id="wrap">
         <h3>{{schedule_name}}</h3>
-        <button  id = "mySchedule" class = "showMySchedule" value = "{{user.pid}}">Show my schedule</button>
         <div id='external-events'>
             <h4>Locations</h4>
             <h6>Select an option from the dropdown menu to filter locations.</h6>
@@ -24,6 +23,14 @@
                 {% endfor %}
             </select>
             <h4>Employees</h4>
+            <h6>Select an option from the dropdown menu to filter employees.</h6>
+            <select id="pid_selector">
+                <option value="all">All Employees</option>
+                {% for u in users %}
+                <option id="{{u.pid}}" value="{{u.pid}}">{{u.first_name + " " + u.last_name[0] + "."}}</option>
+                {% endfor %}
+            </select>
+            <br>
             <h6>Drag and drop employees to edit the schedule.</h6>
             {% for u in users %}
             <div class='fc-event' id='{{u.pid}}' data-color='{{u.color}}'style='background-color:{{u.color}};color:#000000;font-weight:bold;'>

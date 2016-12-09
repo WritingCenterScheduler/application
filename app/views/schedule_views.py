@@ -327,7 +327,7 @@ def schedule_data(code):
                                         {
                                             '_id':id_counter,
                                             'title': str(u.first_name + " " + u.last_name[0] + "."),
-                                            'pid': int(pid),
+                                            'pid': str(pid),
                                             'location': str(l.name),
                                             'lcode': l.code,
                                             '_index': i,

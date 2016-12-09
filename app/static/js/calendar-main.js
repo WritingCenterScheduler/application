@@ -110,7 +110,6 @@ $(document).ready(function(){
         eventMouseover: function(calEvent, jsEvent, view)
         {
             if (view.name !== 'agendaDay') {
-                //$(jsEvent.target).attr('title', String(calEvent.pid) + '\n' + String(calEvent.lcode) + '/n' + String(calEvent._index));
                 $(jsEvent.target).attr('title', String(calEvent.pid) + '\n' + String(calEvent._index) + '\n' + String(calEvent.dow));
             }
         },
@@ -160,75 +159,28 @@ $(document).ready(function(){
             event._endex = (((e.getHours() + 5) * 2) + (e.getMinutes() / 30));
         },
         // Renders events and filters based upon location
-        eventRender: function eventRender(calEvent, element, view )
+        eventRender: function eventRender(event, element, view )
         {
-            //console.log(['all', calEvent.location][($('#location_selector').val()) >= 0 ? 1 : 0])
-            return ['all', calEvent.location].indexOf($('#location_selector').val()) >= 0
+            return ['all', event.location].indexOf($('#location_selector option:selected').val()) >= 0 && ['all', event.pid].indexOf($('#pid_selector option:selected').val()) >= 0;
         }
-    });
-
-    /* Initialize the location filter selector
-    ------------------------------*/
-    $('#location_selector').on('change',function(){
-        // filterEventsByPID(("730136771"));
-        filterEvents($('#location_selector').val());
-        initExternalEvents();
-        // alert($('#location_selector').val());
-        $('#calendar').fullCalendar('rerenderEvents');
     });
 
     $('#external-events .fc-event').on('click',function(){
         //alert($(this).val());
     });
 
-    //Filter by location
-    function filterEvents(filter){
-        var newSource = [];
-        var events = [];
-        for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
-            events.push($('#calendar').fullCalendar('clientEvents')[i]);
-        }
-        //console.dir(events)
-        for (var i = 0, len = events.length; i < len; i++) {
-            if (String(events[i].location) == String(filter))
-            {
-                newSource.push(events[i]);
-            }
-        }
-        $('#calendar').fullCalendar('refetchEventSources', newSource);
-    }
-
-    //Generate individual's schedule
-    $('#mySchedule').on('click',function(){
-        // alert(('#mySchedule').value);
-        var currPID = document.getElementById("mySchedule").value;
-        
-        // filterEventsByPID(("730136771"));
-        filterEventsByPID(currPID);
+    /* Initialize the location filter selector
+    ------------------------------*/
+    $('#location_selector').on('change',function(){
         initExternalEvents();
-        // alert($('#location_selector').val());
         $('#calendar').fullCalendar('rerenderEvents');
     });
 
-    //Filter by PID
-    function filterEventsByPID(filter){
-        var newSource = [];
-        var events = [];
-        for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
-            events.push($('#calendar').fullCalendar('clientEvents')[i]);
-        }
-        //console.dir(events)
-        for (var i = 0, len = events.length; i < len; i++) {
-            if (String(events[i].pid) == String(filter))
-            {
-                newSource.push(events[i]);
-            }
-        }
-        $('#calendar').fullCalendar('refetchEventSource', newSource);
-        console.log(newSource);
-        console.log("Attempted to filter by PID");
-    }
-
+    /* Initialize the pid filter selector
+    ------------------------------*/
+    $('#pid_selector').on('change',function(){
+        $('#calendar').fullCalendar('rerenderEvents');
+    });
 
     var json_sched;
     function ajaxCallBack(retVal){
