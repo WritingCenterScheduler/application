@@ -255,7 +255,8 @@ li > a:hover, a:hover{
     background-color: #333;
     padding-bottom: 10px;
     padding-top: 10px;
-    position:absolute;
+    position: sticky;
+    bottom:0px;
     width:100%!important;
     left:0em;
 
@@ -278,6 +279,7 @@ h3.footer-text{
 }
 
 /*FullCalendar Rendered Schedule*/
+
 #wrap {
     display: block;
 }
@@ -381,4 +383,13 @@ div.fc-content {
    background: #ffffff;
 
 
+}
+
+
+.showMySchedule{
+    font-size: 1.5em;
+    background-color: rgba(123,175,212,1);
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
 }
