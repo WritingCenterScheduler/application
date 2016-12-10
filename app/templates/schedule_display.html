@@ -17,7 +17,7 @@
             <input type="text" id="schedule_nick" name="nick" value='{{schedule_nick}}'>
             <button onclick="update_schedule_nick('{{schedule_name}}')">Update Friendly Name</button>
         </form>
-        <div id='external-events'>
+        <div id='external-events' style="position:relative">
             <h4>Locations</h4>
             <h6>Select an option from the dropdown menu to filter locations.</h6>
             <select id="location_selector">
@@ -37,11 +37,13 @@
             </select>
             <br>
             <h6>Drag and drop employees to edit the schedule.</h6>
-            {% for u in users %}
-            <div class='fc-event' id='{{u.pid}}' data-color='{{u.color}}'style='background-color:{{u.color}};color:#000000;font-weight:bold;'>
-                {{u.first_name + " " + u.last_name[0] + "."}}
+            <div id="container">
+                {% for u in users %}
+                <div class='fc-event' id='{{u.pid}}' data-color='{{u.color}}'style='background-color:{{u.color}};color:#000000;font-weight:bold;'>
+                    {{u.first_name + " " + u.last_name[0] + "."}}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
             <h4>Save Changes</h4>
             <button id="save-changes" style="display:inline-block;">Save</button>
             <h4>Save New Schedule</h4>
@@ -63,4 +65,5 @@
 {% else %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/calendar-individual.js') }}"></script>
 {% endif %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.slimscroll.js') }}"></script>
 {% endblock %}

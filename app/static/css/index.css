@@ -308,7 +308,8 @@ h3.footer-text{
 
 #external-events {
     float: left;
-    width: 20%;
+    position:static;
+    width: 200px;
     padding: 10px;
     border: 1px solid #ccc;
     background: #eee;

@@ -18,6 +18,11 @@ $(document).ready(function(){
 
     /* Initialize data source for calendar events
     ------------------------------*/
+    $(function(){
+        $('#container').slimScroll({
+            height: '250px'
+        });
+    });
     $(".footer").css("visibility", "hidden");
     $("#wrap").css("visibility", "hidden");
     var source = { url: window.location.href + '/data'};
