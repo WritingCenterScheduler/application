@@ -171,8 +171,8 @@ class ScheduleManager:
         """
         The main part of the algorithm.
         """
-        for i in range(2):
-            self.preprocess()
+        # for i in range(2):
+        #     self.preprocess()
         self.calculate_need()
         needs = self.greatest_need()
 

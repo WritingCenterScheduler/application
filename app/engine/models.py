@@ -206,6 +206,8 @@ class Employee(User):
         super(Employee, self).__init__(**kwargs)
         self.schedule = np.zeros(self.availability.shape)
         self.total_availability = self.calculate_total_availability()
+        self.max_hours = 8
+        self.current_hours = 0
 
     def calculate_total_availability(self):
         """
@@ -227,8 +229,11 @@ class Employee(User):
         Returns true or false depending on whether employee is available to be scheduled at a specific timeslot
         :return: Boolean
         """
-        x, y = timeslot
-        return self.availability[x][y] > 0
+        if self.current_hours >= self.max_hours:
+            return False
+        else:
+            x, y = timeslot
+            return self.availability[x][y] > 0
 
     def schedule_at(self, timeslot):
         """
@@ -238,8 +243,12 @@ class Employee(User):
         :return: none
         """
         if self.is_available_at(timeslot):
-            # unpack timeslot
-            x, y = timeslot
-            self.schedule[x][y] = 1
-            self.total_availability -= self.availability[x][y]
-            self.availability[x][y] = 0
+            
+            if self.current_hours >= self.max_hours:
+                self.availability = np.zeros(self.availability.shape)
+            else:
+                # unpack timeslot
+                x, y = timeslot
+                self.schedule[x][y] = 1
+                self.total_availability -= self.availability[x][y]
+                self.availability[x][y] = 0
