@@ -34,24 +34,38 @@
         <h2 id='ManagingYourUsers'>Managing Your Users</h2>
         <p>
 
-            Under the Admin tab you can manage the different users of the application. You can create a new user in
-            the create new users in the create new users table. To create a new user must enter the users PID, their
-            email, and their status as either a returning employee, new employee or an administrator. You MUST hit
-            create in order for the user to be created for the application. Additionally, you may paste a CSV file in
-            order to create a group of users at once. However, in order for this feature to work you must follow the
-            provided format. For example, entering the following:  "John","Doe","720384009","jdoe@live.unc.edu","010"
-            would create a employee user named John Doe.
+            Under the Admin tab you can manage the different users of the application and change which schdule is the
+            currently displayed master schedule.
         </p>
         <p>
-            Under the users table, you can manage the users of the application. You can delete users, toggle
-            employees between returning and new, and set which users you want to try scheduling (green users will be
-            used for scheduling).
+            <strong>ADDING A USER:</strong>
+            You can create a new user in the create new users in the create new users table. To create a new user you
+            must enter the users PID, their email, and their status as either a returning employee, new employee or
+            an administrator. You MUST hit create in order for the user to be created for the application.
+            Additionally, you may paste a CSV file in order to create a group of users at once. However, in order for
+            this feature to work you must follow the provided format. For example, entering the following:
+            "John","Doe","720384009","jdoe@live.unc.edu","010" would create a employee user named John Doe.
         </p>
         <p>
+            <strong>MANAGING USERS:</strong>
+            Under the users table, you can manage the users of the application. You can delete users via the trash
+            can icon , toggle employees between returning and new via the person icon, select a new color for a
+            person (the color that they will be displayed as when you are looking at the master schedule) via the
+            diamond button and set which users you want to try scheduling via the radio button icon (green users will
+            be used for scheduling).
+        </p>
+        <p>
+            <strong>GENERATING A NEW SCHEDULE: </strong>
             Under the Schedules table, you can click the run scheduler to run the scheduler on the currently selected
-            employees. The current master schedule is highlighted in green and can be toggled on the right column of
-            the table. In addition, you can view any of the generated schedules by clicking on their names in the
-            left column.
+            employees.
+        </p>
+        <p>
+            <strong>MANAGING SCHEDULES</strong>
+            The current master schedule is highlighted in green and can be toggled on and off in the right column of
+            the table via the radio button icon. These schedules can be deleted via the trash can button. You may
+            export any schedule to CSV via the button with spreadsheet icon.  In addition, you can view any of the
+            generated schedules by clicking on their names in the left column. The nickname of a schedule may be
+            altered when viewing the actual schedule in the schedule tab.
         </p>
         <img src="{{ url_for('static', filename='assets/Admin.PNG') }}" alt='User management page' width='700'
              height='500' style="display: block; margin: 0 auto;">
@@ -61,14 +75,20 @@
         <br>
 	<h2 id='ManageLocations'>Manage Locations</h2>
         <p>
-            Under the creation tab. You can create a schedule by giving it a name, a unique numeric code, an opening and
+            <strong>CREATING A NEW LOCATION:</strong>
+            Under the creation tab. You can create a schedule by giving it a name, an opening and
             closing time and specifying whether or not you would like the location to be returning employees only or any
-            employee type. Additionally locations can be edited from the the right table. You can update any of the
-            currently selected locations information and it will be updated upon submission. Note that both for schedule
-            creation and for updating schedules you must submit the data/changes before moving on to another page if you
-            want your changes to be saved.
+            employee type.
         </p>
         <p>
+            <strong>EDITING A LOCATIONS:</strong>
+            A locations information can be edited from the the right table. You can update any of the currently
+            selected locations information and it will be updated upon submission. Note that both for schedule
+            creation and for updating schedules you must submit the data/changes before moving on to another page if
+            you want your changes to be saved.
+        </p>
+        <p>
+            <strong>CREATING/UPDATING A LOCATIONS TIME SLOTS:</strong>
             The table view beneath the the data entry tables is used to display and edit information about different
             locations. A white entry (0) indicates that the location does not need any staff at that time. Light blue (1)
             is used to represent that one employee is needed for that time slot at the current selected location. Darker
@@ -78,6 +98,7 @@
             changed to the current location upon its selection.
         </p>
         <p>
+            <strong>DELETING A LOCATION:</strong>
             A location may be deleted by selecting the location that you want to delete from the tabs above the table
             then clicking the delete button below the table. This will open a prompt that will confirm that you do
             indeed want to delete the selected location before proceeding to delete the location.
@@ -100,8 +121,11 @@
 	<h2 id='Schedule'>Editing the Master Schedule</h2>
 
         <p>
-            Under the Schedule tab, you can edit and view the master schedule that you selected in the Admin tab. A
-            students name placed in a certain time slot represents that the student is currently scheduled to work at
+            Under the Schedule tab, you can edit and view the master schedule that you selected in the Admin tab. The
+            schedules four letter assigned name is displayed in the top right corner. If you would like to add a more
+            user-friendly nickname to the schedule this can be done via the text box below the four letter name. You
+            must submit this name before navigating away from the page. A students name placed in a certain time slot
+            represents that the student is currently scheduled to work at
             that time.
         </p>
         <p>
@@ -114,7 +138,9 @@
             <strong>ADDING A EMPLOYEE:</strong>
             On the left hand side of the schedule you can click and drag employees onto the schedule. This is done by
             dragging one of the employees names onto the schedule during the time slot that you would like to add the
-            student.
+            student. If you would like the employee to work more than thirty minutes during that time slot then you
+            must add them, then click and drag the bottom of their assigned time to extend the amount of time that
+            they are working in that time slot.
         </p>
         <p>
             <strong>MOVING AROUND EMPLOYEES:</strong>
@@ -122,11 +148,22 @@
             dropping their name from their current time slot to a different one.
         </p>
         <p>
+            <strong>EXTENDING AN EMPLOYEES HOURS:</strong>
+            The amount of time that an employee is working in a time slot can be extended by clicking and dragging
+            the bottom of their assigned time slot to the desired time and then releasing.
+        </p>
+        <p>
             <strong>FILTERING BY LOCATION:</strong>
-            On the left hand side of the schedule, you will seee a drop down menu. From here you can choose which
-            locations master schedule you would like to display or if you would like to see all of the locations at
-            once. Any changes that you make to an individual locations schedule must be submitted before the changes
-            are saved.
+            On the left hand side of the schedule, you will seee a drop down menu under the heading Locations. From
+            here you can choose which locations master schedule you would like to display or if you would like to see
+            all of the locations at once. Any changes that you make to an schedule must be submitted before the
+            changes are saved.
+        </p>
+        <p>
+            <strong>FILTERING BY EMPLOYEE:</strong>
+            On the left hand side of the schedule, you will see a drop down menu under the heading Employees. This
+            can be used to filter the individual employees and display only one employee on the schedule at time. You
+            can switch between an individual student and all students.
         </p>
         <p>
             <Strong>CHANGING THE AMOUNT OF TIME DISPLAYED:</Strong>
@@ -134,7 +171,20 @@
             calender or to display an individual day. This can be toggled by selecting different tabs in the top left
             corner of the calender.
         </p>
-
+        <p>
+            <Strong>SAVING AND OVERWRITING THE CURRENT SCHEDULE</Strong>
+            You can save the changes that you have made to the current schedule by clicking the save button located
+            in the lower left corner of the page. Note that none of your changes that you have made will be submitted
+            unless you save your changes before leaving the page. Additionally, once you have saved you changes the
+            original schedule will be overwritten and you cannot return the schedule to it's original state.
+        </p>
+        <p>
+            <Strong>SAVING SCHEDULE TO A NEW SCHEDULE</Strong>
+            You can save the edits that you have made into a new schedule by clicking the "Save New" button under the
+            save new schedule section of the page in the lower left corner. Note that unlike the "Save" button this
+            does not destroy the original copy of the schedule but rather saves it to a new schedule under a
+            different name thus both the original and the altered schedules will still be available.
+        </p>
 
 	<img src="{{ url_for('static', filename='assets/schedule.PNG') }}" alt='View Schedule Image'  width='700'
              height='500' style="display: block; margin: 0 auto;">

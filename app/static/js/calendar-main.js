@@ -18,6 +18,11 @@ $(document).ready(function(){
 
     /* Initialize data source for calendar events
     ------------------------------*/
+    $(function(){
+        $('#container').slimScroll({
+            height: '250px'
+        });
+    });
     $(".footer").css("visibility", "hidden");
     $("#wrap").css("visibility", "hidden");
     var source = { url: window.location.href + '/data'};
@@ -110,7 +115,6 @@ $(document).ready(function(){
         eventMouseover: function(calEvent, jsEvent, view)
         {
             if (view.name !== 'agendaDay') {
-                //$(jsEvent.target).attr('title', String(calEvent.pid) + '\n' + String(calEvent.lcode) + '/n' + String(calEvent._index));
                 $(jsEvent.target).attr('title', String(calEvent.pid) + '\n' + String(calEvent._index) + '\n' + String(calEvent.dow));
             }
         },
@@ -160,45 +164,33 @@ $(document).ready(function(){
             event._endex = (((e.getHours() + 5) * 2) + (e.getMinutes() / 30));
         },
         // Renders events and filters based upon location
-        eventRender: function eventRender(calEvent, element, view )
+        eventRender: function eventRender(event, element, view )
         {
-            //console.log(['all', calEvent.location][($('#location_selector').val()) >= 0 ? 1 : 0])
-            return ['all', calEvent.location].indexOf($('#location_selector').val()) >= 0
+            return ['all', event.location].indexOf($('#location_selector option:selected').val()) >= 0 && ['all', event.pid].indexOf($('#pid_selector option:selected').val()) >= 0;
         }
-    });
-
-    /* Initialize the location filter selector
-    ------------------------------*/
-    $('#location_selector').on('change',function(){
-        filterEvents($('#location_selector').val());
-        initExternalEvents();
-        // alert($('#location_selector').val());
-        $('#calendar').fullCalendar('rerenderEvents');
     });
 
     $('#external-events .fc-event').on('click',function(){
         //alert($(this).val());
     });
 
-    function filterEvents(filter){
-        var newSource = [];
-        var events = [];
-        for(var i = 0, len = $('#calendar').fullCalendar('clientEvents').length; i < len; i++){
-            events.push($('#calendar').fullCalendar('clientEvents')[i]);
-        }
-        //console.dir(events)
-        for (var i = 0, len = events.length; i < len; i++) {
-            if (String(events[i].location) == String(filter))
-            {
-                newSource.push(events[i]);
-            }
-        }
-        $('#calendar').fullCalendar('refetchEventSources', newSource);
-    }
+    /* Initialize the location filter selector
+    ------------------------------*/
+    $('#location_selector').on('change',function(){
+        initExternalEvents();
+        $('#calendar').fullCalendar('rerenderEvents');
+    });
+
+    /* Initialize the pid filter selector
+    ------------------------------*/
+    $('#pid_selector').on('change',function(){
+        $('#calendar').fullCalendar('rerenderEvents');
+    });
 
     var json_sched;
     function ajaxCallBack(retVal){
         json_sched = retVal;
+        console.log(retVal);
     }
     var lcode;
     function _ajaxCallBack(retVal){
